@@ -14,7 +14,7 @@ import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import { AdminLoginHeading } from "../DataCenter/DataList";
 import SideAppBar from "../Components/SideAppBar";
 import { StoreMasterHeaders } from "../DataCenter/AdminDataList";
-import { APIBulkMoveWhislist, APICopyIndentStore, APIGetAdminLoginData, APIGetMailerContent, APIGetReportL3, APIGetSkuMaster, APIGetStoreList, APIGetStoreListFromDate, APIGetWishlistData, APIInsContentMailer, APIInsDataLogin, APIInsObjStoreMaster, APIInsSizeMaster, APIInsSkuMaster, APIOpenPortal, APIUpdateGenderShape } from "../HostManager/CommonApiCallL3";
+import { APIBulkMoveWhislist, APICopyIndentStore, APIGetAdminLoginData, APIGetMailerContent, APIGetReportL3, APIGetSkuMaster, APIGetStoreList, APIGetStoreListFromDate, APIGetWishlistData, APIInsContentMailer, APIInsDataLogin, APIInsObjStoreMaster, APIInsSizeMaster, APIOpenPortal, APIUpdateGenderShape } from "../HostManager/CommonApiCallL3";
 import { HOST_URL } from "../HostManager/UrlManager";
 import axios from "axios";
 

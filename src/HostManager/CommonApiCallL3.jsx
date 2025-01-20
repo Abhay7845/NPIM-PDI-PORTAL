@@ -1,4 +1,4 @@
-import { privateApiClient, privateApiClientImage } from "./PrivateClient";
+import { privateApiClient } from "./PrivateClient";
 
 export const APILogin = (url, payload) => {
     return privateApiClient.post(url, payload);
@@ -160,9 +160,7 @@ export const APIGetStoreListFromDate = (url) => {
 export const APISendTestMail = (url, payload) => {
     return privateApiClient.post(url, payload);
 }
-export const APIInsSkuMaster = (url, payload) => {
-    return privateApiClientImage.post({ url: url, data: payload });
-}
+
 
 export const APIGetSkuMaster = (url) => {
     return privateApiClient.get(url);
@@ -198,6 +196,7 @@ export const APIGetEndDayRtp = (url) => {
 export const APIGetWishEndDayRtp = (url) => {
     return privateApiClient.get(url);
 }
+
 export const APISendMail = (url, payload) => {
     return privateApiClient.post(url, payload);
 }

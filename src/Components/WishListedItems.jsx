@@ -385,7 +385,7 @@ const WishListedItems = () => {
           )}
         </Grid>
       </Container>
-    </React.Fragment >
+    </React.Fragment>
   );
 };
 export default WishListedItems;
