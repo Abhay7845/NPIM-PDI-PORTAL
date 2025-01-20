@@ -1,0 +1,16 @@
+<IfModule mod_headers.c>
+    # Prevent Clickjacking
+    Header always set X-Frame-Options "DENY"
+
+    # Prevent Cross-Site Scripting (XSS)
+    Header set X-XSS-Protection "1; mode=block"
+
+    # Prevent MIME-type sniffing
+    Header set X-Content-Type-Options "nosniff"
+
+    # Content Security Policy (CSP)
+    Header set Content-Security-Policy "default 'self'"
+
+    # HTTP Strict Transport Security (HSTS)
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+</IfModule>

@@ -1,0 +1,27 @@
+ .Logo {
+     height: 30px;
+ }
+
+ .HeaderStyle {
+     justify-content: space-between;
+ }
+
+ @media screen and (max-width:500px) {
+     .removeIndentExpress {
+         display: none;
+     }
+ }
+
+
+ /* STATUS TABLE CSS */
+ .StatusTableHeading {
+     font-size: 17px;
+     font-family: 'Nunito Sans';
+     background: linear-gradient(0deg, #FBE9E0 0%, #f6e95efe 0.01%, #f4f44ba3 100%);
+ }
+
+ .StatusTableRowData {
+     font-size: 15px;
+     justify-content: center;
+     align-items: center;
+ }

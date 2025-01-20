@@ -1,0 +1,84 @@
+{
+  "name": "npim-new-ui-with-react",
+  "version": "0.1.0",
+  "homepage": "https://tanishqdigitalnpim.titan.in/NpimPortal",
+  "private": true,
+  "dependencies": {
+    "@azure/msal-browser": "^3.20.0",
+    "@azure/msal-react": "^2.0.22",
+    "@emotion/react": "^11.9.3",
+    "@emotion/styled": "^11.9.3",
+    "@material-ui/core": "^4.11.4",
+    "@material-ui/data-grid": "^4.0.0-alpha.37",
+    "@material-ui/icons": "^4.11.3",
+    "@material-ui/lab": "^4.0.0-alpha.61",
+    "@material-ui/x-grid-data-generator": "^4.0.0-alpha.33",
+    "@mui/icons-material": "^5.14.18",
+    "@mui/material": "^5.8.6",
+    "@mui/x-data-grid": "^5.17.20",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "@tippyjs/react": "^4.2.6",
+    "antd": "^5.20.6",
+    "autoprefixer": "^10.4.19",
+    "axios": "^1.7.7",
+    "base-64": "^1.0.0",
+    "bootstrap": "^5.3.3",
+    "constants": "^0.0.2",
+    "file-saver": "^2.0.5",
+    "formik": "^2.4.5",
+    "html2canvas": "^1.4.1",
+    "material-ui-search-bar": "^1.0.0",
+    "moment": "^2.30.1",
+    "multiselect-react-dropdown": "^1.7.0",
+    "otp-input-react": "^0.3.0",
+    "primereact": "^10.6.3",
+    "react": "^17.0.2",
+    "react-animated-heart": "^0.0.8",
+    "react-blink-text": "^1.0.5",
+    "react-bootstrap": "^1.6.8",
+    "react-bootstrap-icons": "^1.10.2",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "^17.0.2",
+    "react-heart": "^1.0.6",
+    "react-html-table-to-excel": "^2.0.0",
+    "react-icons": "^5.0.1",
+    "react-image-magnify": "^2.7.4",
+    "react-player": "^2.9.0",
+    "react-responsive-carousel": "^3.2.23",
+    "react-router-dom": "^6.11.2",
+    "react-scripts": "^5.0.1",
+    "react-super-responsive-table": "^5.2.2",
+    "react-toastify": "^8.2.0",
+    "recharts": "^2.13.3",
+    "setimmediate": "^1.0.5",
+    "sweetalert": "^2.1.2",
+    "web-vitals": "^1.0.1",
+    "yup": "^1.4.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

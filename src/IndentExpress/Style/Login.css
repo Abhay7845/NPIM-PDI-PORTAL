@@ -1,0 +1,229 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@media screen and (max-width: 800px) {
+    .RegisterLeftStyle {
+        display: none;
+    }
+}
+
+.RegisterLeftRight {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url("../Asset//Img/L1L2Background.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+    animation: changeImage 140s linear infinite;
+}
+
+@media screen and (max-width:982px) {
+    .RegisterLeftRight {
+        display: none;
+    }
+}
+
+@keyframes changeImage {
+    0% {
+        background-image: url("../Asset//Img/SliderImage/Bengali.JPG");
+    }
+
+    5% {
+        background-image: url("../Asset//Img/SliderImage/Bihari.JPG");
+    }
+
+    10% {
+        background-image: url("../Asset//Img/SliderImage/Gujrathi.JPG");
+    }
+
+    15% {
+        background-image: url("../Asset//Img/SliderImage/Kannadiga.JPG");
+    }
+
+    20% {
+        background-image: url("../Asset//Img/SliderImage/Malyali.JPG");
+    }
+
+    25% {
+        background-image: url("../Asset//Img/SliderImage/Marathi.JPG");
+    }
+
+    30% {
+        background-image: url("../Asset//Img/SliderImage/Muslim.JPG");
+    }
+
+    35% {
+        background-image: url("../Asset//Img/SliderImage/Odia.JPG");
+    }
+
+    40% {
+        background-image: url("../Asset//Img/SliderImage/Punjabi.JPG");
+    }
+
+    45% {
+        background-image: url("../Asset//Img/SliderImage/Rajasthani.JPG");
+    }
+
+    50% {
+        background-image: url("../Asset//Img/SliderImage/Tamilian.JPG");
+    }
+
+    55% {
+        background-image: url("../Asset//Img/SliderImage/Bengali.JPG");
+    }
+
+    60% {
+        background-image: url("../Asset//Img/SliderImage/Bihari.JPG");
+    }
+
+    65% {
+        background-image: url("../Asset//Img/SliderImage/Gujrathi.JPG");
+    }
+
+    70% {
+        background-image: url("../Asset//Img/SliderImage/Kannadiga.JPG");
+    }
+
+    75% {
+        background-image: url("../Asset//Img/SliderImage/Malyali.JPG");
+    }
+
+    80% {
+        background-image: url("../Asset//Img/SliderImage/Marathi.JPG");
+    }
+
+    85% {
+        background-image: url("../Asset//Img/SliderImage/Muslim.JPG");
+    }
+
+    90% {
+        background-image: url("../Asset//Img/SliderImage/Odia.JPG");
+    }
+
+    95% {
+        background-image: url("../Asset//Img/SliderImage/Punjabi.JPG");
+    }
+
+    100% {
+        background-image: url("../Asset//Img/SliderImage/Rajasthani.JPG");
+    }
+}
+
+.loginPageStyle {
+    background-color: #f9f7f7;
+}
+
+.Form_style {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: -10%;
+}
+
+@media screen and (max-width:982px) {
+    .Form_style {
+        margin-top: -12%;
+    }
+}
+
+@media screen and (max-width:982px) {
+    .Form_style {
+        height: 108vh;
+        width: 100vw;
+    }
+}
+
+/* LOGIN PAGE ANIMATION STYE */
+.box div {
+    position: absolute;
+    background-color: transparent;
+    font-weight: bold;
+    font-size: 25px;
+}
+
+@media screen and (max-width:982px) {
+    .box div {
+        display: none;
+    }
+}
+
+.box div:nth-child(1) {
+    top: 6%;
+    left: 88%;
+    animation: animate 10s linear infinite;
+}
+
+.box div:nth-child(2) {
+    top: 77%;
+    left: 50%;
+    animation: animate 7s linear infinite;
+}
+
+.box div:nth-child(3) {
+    top: 84%;
+    left: 70%;
+    animation: animate 9s linear infinite;
+}
+
+.box div:nth-child(4) {
+    top: 86%;
+    left: 34%;
+    animation: animate 6s linear infinite;
+}
+
+.box div:nth-child(5) {
+    top: 86%;
+    left: 87%;
+    animation: animate 12s linear infinite;
+}
+
+.box div:nth-child(6) {
+    top: 50%;
+    left: 88%;
+    animation: animate 15s linear infinite;
+}
+
+.box div:nth-child(7) {
+    top: 32%;
+    left: 53%;
+    animation: animate 16s linear infinite;
+}
+
+.box div:nth-child(8) {
+    top: 5%;
+    left: 60%;
+    animation: animate 9s linear infinite;
+}
+
+.box div:nth-child(9) {
+    top: 20%;
+    left: 70%;
+    animation: animate 12s linear infinite;
+}
+
+.box div:nth-child(10) {
+    top: 60%;
+    left: 73%;
+    animation: animate 12s linear infinite;
+}
+
+
+
+@keyframes animate {
+
+    0% {
+        transform: scale(0) translateY(0) rotate(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1.3) translateY(-90px) rotate(360deg);
+        opacity: 0;
+    }
+}

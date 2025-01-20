@@ -1,0 +1,61 @@
+.ReportGenerateStyle {
+    display: flex;
+    justify-content: center;
+    padding-top: 30px;
+    margin: 5px;
+}
+
+@media screen and (max-width:697px) {
+    .ReportGenerateStyle {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+}
+
+@media screen and (max-width:696px) {
+    .Level_Style {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width:697px) {
+    .Parameter_style {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width:697px) {
+    .DownloadButtonStyle {
+        margin-top: 20px;
+    }
+}
+
+@media screen and (max-width:330px) {
+    .DownloadButtonStyle {
+        margin-top: 20px;
+    }
+}
+
+.QuantityFiled {
+    border: 2px solid #d4d1d1;
+    outline: none;
+    padding: 10px;
+    border-radius: 2px;
+}
+
+.excelButton {
+    height: 30px;
+    margin-top: 6px;
+    border: none;
+    background-color: #268d26;
+    outline: none;
+    color: #fff;
+    border-radius: 2px;
+}
+
+.excelButton:hover {
+    background-color: #27ac27;
+}

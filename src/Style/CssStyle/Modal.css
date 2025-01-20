@@ -1,0 +1,22 @@
+/* Modal Background */
+.ModalBackGround {
+    z-index: 1;
+    background-color: #00000080;
+    padding: 1%;
+}
+
+/* Modal Content */
+.ModalContainer {
+    background-color: #fff;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 4px 8px #0000001a;
+    overflow-y: scroll;
+}
+
+/* Close Button */
+.ModalCloseBtn {
+    position: absolute;
+    font-size: 30px;
+    cursor: pointer;
+}

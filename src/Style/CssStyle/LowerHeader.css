@@ -1,0 +1,24 @@
+.lower_header_show {
+  margin: 0%;
+  padding: 0%;
+  box-sizing: border-box;
+  height: 3rem;
+  background-color: rgb(70, 69, 69);
+}
+
+
+.search_bar_btn {
+  color: blanchedalmond;
+}
+
+.onclick_search_bar_btn {
+  color: aqua;
+}
+
+.otp {
+  width: 100% !important;
+  margin: 3px !important;
+  text-align: left !important;
+  outline: none !important;
+  height: 3rem !important;
+}

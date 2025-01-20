@@ -1,0 +1,72 @@
+.product_carousel {
+    position: relative;
+    overflow: hidden;
+    background-color: #f0ebec;
+}
+
+.product_container {
+    display: flex;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    padding-left: 4.3%;
+}
+
+.pre-btn,
+.next-btn {
+    border: none;
+    width: 60px;
+    position: absolute;
+    top: 10px;
+    font-size: 30px;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0ebec;
+}
+
+.next-btn {
+    right: 0;
+}
+
+.pre-btn:hover {
+    font-size: 35px;
+}
+
+.next-btn:hover {
+    font-size: 35px;
+}
+
+.mycard {
+    min-width: 210px;
+    max-width: 210px;
+    margin: 10px;
+    border-radius: 3px;
+    border: 1.5px solid #6c6969;
+}
+
+.pdtImageStyle {
+    width: 100%;
+    height: 180px;
+    margin-top: -32px;
+}
+
+.hearIconsStyle {
+    position: relative;
+    cursor: pointer;
+    border-radius: 45%;
+    float: right;
+    padding: 3px;
+    z-index: 1;
+    width: 32px;
+    background-color: #ffff;
+}
+
+
+.Heading_text {
+    color: #832729;
+    font-family: "Tillana", system-ui;
+    font-weight: 800;
+    font-style: normal;
+    text-align: center;
+}

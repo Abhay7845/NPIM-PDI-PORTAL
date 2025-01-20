@@ -1,0 +1,53 @@
+.nav_menu {
+  display: flex;
+  width: 12wh;
+  height: 100vh;
+  background-color: rgb(22, 23, 24);
+  position: fixed;
+  transition: 1.5s;
+  left: -100%;
+}
+
+.nav_menu ul {
+  display: list-item;
+  list-style: none;
+  margin: 5%;
+  padding: 5%;
+}
+
+.nav_menu ul li {
+  margin-top: 30%;
+  align-items: center;
+  text-decoration: none;
+  width: 10rem;
+}
+
+.menu_text {
+  text-decoration: none;
+  text-align: center;
+  color: rgb(156, 245, 193);
+}
+
+.menu_text:hover {
+  color: whitesmoke;
+}
+
+.navshow {
+  left: 0%;
+  transition: 560ms;
+}
+
+.active_class {
+  text-underline-position: below;
+  color: red;
+}
+
+@media only screen and (max-width: 700px) {
+  .nav_menu {
+    width: 3rem;
+  }
+
+  .menu_text {
+    font-size: 0px;
+  }
+}

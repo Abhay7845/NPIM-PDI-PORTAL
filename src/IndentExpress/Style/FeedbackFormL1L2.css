@@ -1,0 +1,127 @@
+@media screen and (max-width:767px) {
+    .feedBackText {
+        padding-top: 30px;
+    }
+}
+
+@media screen and (max-width:767px) {
+    .itemCodeText {
+        margin-top: 15px;
+    }
+}
+
+@media screen and (max-width:500px) {
+    .hideArrowStyle {
+        display: none;
+    }
+}
+
+.productsDetailsStyle {
+    font-size: 15px;
+}
+
+/* IMAGE STYLE CSS */
+@media screen and (min-width:1200px) {
+    .catalogImage {
+        height: 450px;
+    }
+}
+
+@media screen and (min-width:1200px) {
+    .ReportCatalogImage {
+        height: 435px;
+    }
+}
+
+.SearchInput {
+    outline: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid #c1bfbf;
+    padding: 7px;
+    width: 100%;
+}
+
+.SearchInputLogin {
+    outline: none;
+    border: 1px solid #37b7ee;
+    padding: 7px;
+    border-radius: 5px;
+    width: 100%;
+}
+
+/* CART PAGE STYLE */
+
+.SearchRowByItem {
+    outline: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid #c1bfbf;
+    padding: 7px;
+}
+
+.confirmSendmail {
+    padding: 6px;
+    border: none;
+    background-color: #5050dc;
+    color: #fff;
+    border-radius: 3px;
+    font-style: italic;
+}
+
+.confirmSendmail:hover {
+    background-color: #3838da;
+}
+
+.confirmButtons {
+    display: flex;
+    justify-content: flex-end;
+}
+
+@media screen and (max-width:800px) {
+    .confirmButtons {
+        justify-content: space-between;
+    }
+}
+
+@media screen and (max-width:800px) {
+    .ConfirmCollumreverse {
+        display: flex;
+        flex-direction: column-reverse;
+    }
+}
+
+.excelButton {
+    height: 30px;
+    margin-top: 6px;
+    border: none;
+    background-color: #268d26;
+    outline: none;
+    color: #fff;
+    border-radius: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.excelButton:hover {
+    background-color: #27ac27;
+}
+
+.searchStyle {
+    margin-top: 9px;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+}
+
+.searchStyle:hover {
+    background-color: #ffff;
+}
+
+@media screen and (max-width:767px) {
+    .searchStyle {
+        float: right;
+    }
+}

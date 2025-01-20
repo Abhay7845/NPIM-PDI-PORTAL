@@ -1,0 +1,49 @@
+.SectionStyle {
+    padding: 4px;
+    box-shadow: #00000029 0px 3px 6px, #0000003b 0px 3px 6px;
+}
+
+.IconsStyle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 10px;
+}
+
+.IconsStyle:hover {
+    color: #020257e8;
+    transform: scale(0.9);
+}
+
+.notification {
+    text-decoration: none;
+    position: relative;
+    display: inline-block;
+    border-radius: 2px;
+}
+
+.notification .badge {
+    position: absolute;
+    top: -5px;
+    right: -3px;
+    border-radius: 50%;
+    background: #0000ff;
+}
+
+.itemCodeStyle {
+    background-color: #832729;
+    color: #ffff;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cardFooter {
+    background-color: #832729;
+    padding: 8px;
+    color: #ffff;
+    cursor: pointer;
+}

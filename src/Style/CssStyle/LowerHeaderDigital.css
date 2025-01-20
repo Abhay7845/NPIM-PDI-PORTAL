@@ -1,0 +1,21 @@
+.search_bar_btn {
+    color: blanchedalmond;
+}
+
+.onclick_search_bar_btn {
+    color: aqua;
+}
+
+.otp {
+    width: 100% !important;
+    margin: 3px !important;
+    text-align: left !important;
+    outline: none !important;
+    height: 3rem !important;
+}
+
+.dropDownStyle {
+    display: flex;
+    width: 95%;
+    padding-top: 1%;
+}

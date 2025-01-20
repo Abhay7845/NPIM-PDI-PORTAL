@@ -1,0 +1,15 @@
+.showImageStyle {
+    border: 1.5px solid #e4e2e2;
+    border-radius: 3px;
+}
+
+/* COMPONENTS L3 DROPDOWN STYLE */
+
+.L3SelectDropdown {
+    border: 1px solid #cbc9c9;
+    width: 100%;
+    padding: 7px;
+    outline: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
