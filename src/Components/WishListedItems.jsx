@@ -379,7 +379,7 @@ const WishListedItems = () => {
               switchEnable={setSwitchEnable}
             />
           ) : (
-            <Typography align="center" variant="h5" color="secondary">
+            <Typography className="mt-2" align="center" variant="h6" color="secondary">
               DATA NOT AVAILABLE
             </Typography>
           )}
