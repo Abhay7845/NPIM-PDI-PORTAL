@@ -66,7 +66,6 @@ const ReportL3 = () => {
       }).then(error => setLoading(false));
   };
 
-
   const GetCatByReports = (storeCode) => {
     setLoading(true);
     let urlReport;
@@ -206,9 +205,11 @@ const ReportL3 = () => {
     });
     setLoading(false);
   }
+
   const barHandler = () => {
     setBarOpener(!barOpener);
   };
+
   const statusOpener = () => {
     setStatusCloserOpener(!statusCloserOpener);
   };

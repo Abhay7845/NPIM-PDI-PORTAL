@@ -204,7 +204,7 @@ const WishListedItems = () => {
 
   const MoveToWishlist = (event, setWishListRowData) => {
     console.log("event==>", event);
-    // WishListToEndent(event.itemCode, setWishListRowData);
+    WishListToEndent(event.itemCode, setWishListRowData);
 
     // const isCatPB = rowsData.filter(item => item.catPB);
     // const catPbDataUpper = isCatPB.filter(item => item.catPB.toUpperCase() === event.catPB.toUpperCase());
@@ -234,11 +234,7 @@ const WishListedItems = () => {
     setLoading(false);
   };
 
-  function scrollTop() {
-    window.scrollTo({ top: "0", behavior: "smooth" });
-  }
-
-  function closeHandler(params) {
+  function closeHandler() {
     setAlertPopupStatus({
       status: false,
       main: "",
@@ -246,6 +242,7 @@ const WishListedItems = () => {
     });
     setLoading(false);
   }
+
   const barHandler = () => {
     setBarOpener(!barOpener);
   };
@@ -260,7 +257,7 @@ const WishListedItems = () => {
     setShowInfo(true);
     setSwitchEnable(false);
     DisplayValidationRunner();
-    scrollTop();
+    window.scrollTo({ top: "0", behavior: "smooth" });
     setLoading(false);
   };
 
