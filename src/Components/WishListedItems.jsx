@@ -69,6 +69,7 @@ const WishListedItems = () => {
     setLoading(true);
     APIGetWishlistData(`/NPIML3/get/wishlisted/listdata/${storeCode}`)
       .then(res => res).then((response) => {
+        console.log("response==>", response.data);
         if (response.data.Code === "1000") {
           setCol(WislistLeHeaders);
           setRows(response.data.value);
@@ -138,89 +139,91 @@ const WishListedItems = () => {
       }).catch((error) => setLoading(false));
   }
 
+  // function IndentToProduct(limit, itemCode, setWishListRowData, inputData) {
+  //   console.log("limit==>", limit);
+  //   console.log("inputData==>", inputData);
+  //   const LimitPercent = limit + (limit * 0.1);
+  //   const LimitPercent_Ve = limit - (limit * 0.1);
+  //   console.log("LimitPercent==>", LimitPercent);
+  //   console.log("LimitPercent_Ve==>", LimitPercent_Ve);
+  //   if (inputData > LimitPercent) {
+  //     console.log("1==>");
+  //     if (inputData > LimitPercent && inputData > limit) {
+  //       console.log("2==>");
+  //       const alertMessage = 'The Indent Limit has been crossed for this CatPB, Click on "OK" if you still wish to proceed for Indenting this Product. Instead you can also Wishlist this Product!';
+  //       const isConfirmed = window.confirm(alertMessage);
+  //       if (isConfirmed === true) {
+  //         WishListToEndent(itemCode, setWishListRowData);
+  //       }
+  //       setLoading(false);
+  //     } else if (inputData > LimitPercent_Ve) {
+  //       console.log("3==>");
+  //       const alertMessage = 'You are reaching the max limit For CatPB Click Ok to Proceed';
+  //       const isConfirmed = window.confirm(alertMessage);
+  //       if (isConfirmed === true) {
+  //         WishListToEndent(itemCode, setWishListRowData);
+  //       }
+  //       setLoading(false);
+  //     } else if (inputData > LimitPercent) {
+  //       console.log("5==>");
+  //       const alertMessage = 'The Indent Limit has been crossed for this CatPB, Click on "OK" if you still wish to proceed for Indenting this Product. Instead you can also Wishlist this Product!';
+  //       alert(alertMessage);
+  //       setLoading(false);
+  //     }
+  //     setLoading(false);
+  //   } else if (limit === 0) {
+  //     console.log("6==>");
+  //     const alertMessage = `There is no Limit Available for this "CatPB" Do you still wish to Indent this Product. Click "OK" to continue or click on "Cancel" to wishlist this Product!`;
+  //     const isConfirmed = window.confirm(alertMessage);
+  //     if (isConfirmed === true) {
+  //       WishListToEndent(itemCode, setWishListRowData);
+  //     }
+  //     setLoading(false);
+  //   } else {
+  //     console.log("7==>");
+  //     WishListToEndent(itemCode, setWishListRowData);
+  //   }
+  // }
 
-
-  function IndentToProduct(limit, itemCode, setWishListRowData, inputData) {
-    console.log("limit==>", limit);
-    console.log("inputData==>", inputData);
-    const LimitPercent = limit + (limit * 0.1);
-    const LimitPercent_Ve = limit - (limit * 0.1);
-    console.log("LimitPercent==>", LimitPercent);
-    console.log("LimitPercent_Ve==>", LimitPercent_Ve);
-    if (inputData > LimitPercent) {
-      console.log("1==>");
-      if (inputData > LimitPercent && inputData > limit) {
-        console.log("2==>");
-        const alertMessage = 'The Indent Limit has been crossed for this CatPB, Click on "OK" if you still wish to proceed for Indenting this Product. Instead you can also Wishlist this Product!';
-        const isConfirmed = window.confirm(alertMessage);
-        if (isConfirmed === true) {
-          WishListToEndent(itemCode, setWishListRowData);
-        }
-        setLoading(false);
-      } else if (inputData > LimitPercent_Ve) {
-        console.log("3==>");
-        const alertMessage = 'You are reaching the max limit For CatPB Click Ok to Proceed';
-        const isConfirmed = window.confirm(alertMessage);
-        if (isConfirmed === true) {
-          WishListToEndent(itemCode, setWishListRowData);
-        }
-        setLoading(false);
-      } else if (inputData > LimitPercent) {
-        console.log("5==>");
-        const alertMessage = 'The Indent Limit has been crossed for this CatPB, Click on "OK" if you still wish to proceed for Indenting this Product. Instead you can also Wishlist this Product!';
-        alert(alertMessage);
-        setLoading(false);
-      }
-      setLoading(false);
-    } else if (limit === 0) {
-      console.log("6==>");
-      const alertMessage = `There is no Limit Available for this "CatPB" Do you still wish to Indent this Product. Click "OK" to continue or click on "Cancel" to wishlist this Product!`;
-      const isConfirmed = window.confirm(alertMessage);
-      if (isConfirmed === true) {
-        WishListToEndent(itemCode, setWishListRowData);
-      }
-      setLoading(false);
-    } else {
-      console.log("7==>");
-      WishListToEndent(itemCode, setWishListRowData);
-    }
-  }
-
-  function GetCatPBLimit(event, setWishListRowData, inputData) {
-    const encodedCatPB = encodeURIComponent(event.catPB);
-    setLoading(true);
-    APIGetCatPBStoreWise(`/NPIML3/check/limit/catpb/excel?strCode=${storeCode}&catPB=${encodedCatPB}`)
-      .then(res => res).then(response => {
-        if (response.data.code === "1000") {
-          IndentToProduct(Number(response.data.value[3]), event.itemCode, setWishListRowData, inputData);
-        } else if (response.data.code === "1001") {
-          IndentToProduct(Number(response.data.value[3]) || 0, event.itemCode, setWishListRowData, inputData);
-        }
-      }).catch(error => {
-        setLoading(false);
-        toast.error("CatPB Is Not Available Hence Data Can't Be Saved!", { theme: "colored" });
-      });
-  }
+  // function GetCatPBLimit(event, setWishListRowData, inputData) {
+  //   const encodedCatPB = encodeURIComponent(event.catPB);
+  //   console.log("encodedCatPB==>", encodedCatPB);
+  //   setLoading(true);
+  //   APIGetCatPBStoreWise(`/NPIML3/check/limit/catpb/excel?strCode=${storeCode}&catPB=${encodedCatPB}`)
+  //     .then(res => res).then(response => {
+  //       if (response.data.code === "1000") {
+  //         IndentToProduct(Number(response.data.value[3]), event.itemCode, setWishListRowData, inputData);
+  //       } else if (response.data.code === "1001") {
+  //         IndentToProduct(Number(response.data.value[3]) || 0, event.itemCode, setWishListRowData, inputData);
+  //       }
+  //     }).catch(error => {
+  //       setLoading(false);
+  //       toast.error("CatPB Is Not Available Hence Data Can't Be Saved!", { theme: "colored" });
+  //     });
+  // }
 
   const MoveToWishlist = (event, setWishListRowData) => {
-    const isCatPB = rowsData.filter(item => item.catPB);
-    const catPbDataUpper = isCatPB.filter(item => item.catPB.toUpperCase() === event.catPB.toUpperCase());
-    const catPbWiseData = catPbDataUpper.filter(item => item.catPB.replace(/\s+/g, '').trim() == event.catPB.replace(/\s+/g, '').trim());
-    const tolCostVal = catPbWiseData.map(item => Number(item.tolCost));
-    const tolSum = tolCostVal.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-    console.log("tolSum==>", tolSum);
+    console.log("event==>", event);
+    // WishListToEndent(event.itemCode, setWishListRowData);
 
-    let inputData = 0;
-    const bangle11Digit = (event.category === "BANGLE" || event.category === "BANGLES") && event.itemCode.charAt(10);
-    if (event.category.toUpperCase() === "BANGLE" || event.category === "BANGLES") {
-      const singleBanglePrice = Number(event.stdUCP) / Number(bangle11Digit) || 1;
-      inputData = singleBanglePrice * Number(event.uom) * Number(event.itemQty);
-    } else {
-      inputData = Number(event.itemQty) * Number(event.stdUCP);
-    }
-    console.log("inputData==>", inputData);
-    console.log("inputData + tolSum==>", inputData + tolSum);
-    GetCatPBLimit(event, setWishListRowData, inputData + tolSum);
+    // const isCatPB = rowsData.filter(item => item.catPB);
+    // const catPbDataUpper = isCatPB.filter(item => item.catPB.toUpperCase() === event.catPB.toUpperCase());
+    // const catPbWiseData = catPbDataUpper.filter(item => item.catPB.replace(/\s+/g, '').trim() == event.catPB.replace(/\s+/g, '').trim());
+    // const tolCostVal = catPbWiseData.map(item => Number(item.tolCost));
+    // const tolSum = tolCostVal.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    // console.log("tolSum==>", tolSum);
+
+    // let inputData = 0;
+    // const bangle11Digit = (event.category === "BANGLE" || event.category === "BANGLES") && event.itemCode.charAt(10);
+    // if (event.category.toUpperCase() === "BANGLE" || event.category === "BANGLES") {
+    //   const singleBanglePrice = Number(event.stdUCP) / Number(bangle11Digit) || 1;
+    //   inputData = singleBanglePrice * Number(event.uom) * Number(event.itemQty);
+    // } else {
+    //   inputData = Number(event.itemQty) * Number(event.stdUCP);
+    // }
+    // console.log("inputData==>", inputData);
+    // console.log("inputData + tolSum==>", inputData + tolSum);
+    // GetCatPBLimit(event, setWishListRowData, inputData + tolSum);
   }
 
   const reportDropHandler = (input) => {
@@ -326,66 +329,65 @@ const WishListedItems = () => {
     "Cancel_Item_List",
   ];
 
-  return (
-    <React.Fragment>
-      <CssBaseline />
-      <AlertPopup
-        status={alertPopupStatus.status}
-        mainLable={alertPopupStatus.main}
-        containLable={alertPopupStatus.contain}
-        procideHandler=""
-        discardHandler=""
-        closeHandler={closeHandler}
-      />
-      <Drawer anchor="top" open={statusCloserOpener} onClick={statusOpener}>
-        <StatusTabular statusData={statusData} />
-      </Drawer>
-      <Container className={classes.root} maxWidth="xl">
-        <Grid item xs={12}>
-          <UpperHeader storeCode={storeCode} />
-          <Loading flag={loading} />
-          {loading === true && <Loader />}
-          <ReportsAppBar
-            reportDropHandler={reportDropHandler}
-            reportOptions={reportOption}
-            barHandler={barHandler}
-            showInformationHandler={showInformationHandler}
-            showInfo={showInfo}
-            switchEnable={switchEnable}
-            droptype="Wishlist"
-            statusOpener={statusOpener}
+  return (<React.Fragment>
+    <CssBaseline />
+    <AlertPopup
+      status={alertPopupStatus.status}
+      mainLable={alertPopupStatus.main}
+      containLable={alertPopupStatus.contain}
+      procideHandler=""
+      discardHandler=""
+      closeHandler={closeHandler}
+    />
+    <Drawer anchor="top" open={statusCloserOpener} onClick={statusOpener}>
+      <StatusTabular statusData={statusData} />
+    </Drawer>
+    <Container className={classes.root} maxWidth="xl">
+      <Grid item xs={12}>
+        <UpperHeader storeCode={storeCode} />
+        <Loading flag={loading} />
+        {loading === true && <Loader />}
+        <ReportsAppBar
+          reportDropHandler={reportDropHandler}
+          reportOptions={reportOption}
+          barHandler={barHandler}
+          showInformationHandler={showInformationHandler}
+          showInfo={showInfo}
+          switchEnable={switchEnable}
+          droptype="Wishlist"
+          statusOpener={statusOpener}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        {rows.length > 0 ? (
+          <LazyLoadingDataGridForWishlist
+            col={col}
+            rows={rows}
+            autoHeight={true}
+            autoPageSize={true}
+            reportLabel="Wishlist"
+            rowDataHandler={rowDataHandler}
+            handelOpen={handelOpen}
+            handelClose={handelClose}
+            handelYes={handelYes}
+            popupOpen={popupOpen}
+            isConfirmed={isConfirmed}
+            dataRowInformation={dataRowInformation}
+            allDataFromValidation={allDataFromValidation}
+            DeleteRowData={DeleteRowData}
+            MoveToWishlist={MoveToWishlist}
+            getCatPbRow={getCatPbRow}
+            showInfo={setShowInfo}
+            switchEnable={setSwitchEnable}
           />
-        </Grid>
-        <Grid item xs={12}>
-          {rows.length > 0 ? (
-            <LazyLoadingDataGridForWishlist
-              col={col}
-              rows={rows}
-              autoHeight={true}
-              autoPageSize={true}
-              reportLabel="Wishlist"
-              rowDataHandler={rowDataHandler}
-              handelOpen={handelOpen}
-              handelClose={handelClose}
-              handelYes={handelYes}
-              popupOpen={popupOpen}
-              isConfirmed={isConfirmed}
-              dataRowInformation={dataRowInformation}
-              allDataFromValidation={allDataFromValidation}
-              DeleteRowData={DeleteRowData}
-              MoveToWishlist={MoveToWishlist}
-              getCatPbRow={getCatPbRow}
-              showInfo={setShowInfo}
-              switchEnable={setSwitchEnable}
-            />
-          ) : (
-            <Typography className="mt-2" align="center" variant="h6" color="secondary">
-              DATA NOT AVAILABLE
-            </Typography>
-          )}
-        </Grid>
-      </Container>
-    </React.Fragment>
+        ) : (
+          <Typography className="mt-2" align="center" variant="h6" color="secondary">
+            DATA NOT AVAILABLE
+          </Typography>
+        )}
+      </Grid>
+    </Container>
+  </React.Fragment>
   );
 };
 export default WishListedItems;

@@ -14,7 +14,7 @@ import AlertPopup, { ModelPopup } from "./AlertPopup";
 import EditItemWiseProducts from "./EditItemWiseProducts";
 import { Button } from "@material-ui/core";
 import SingleImgCreator from "./SingleImgCreator";
-import { APIDeleteUpdate, APIGetCatPBStoreWise, APIGetItemWiseRptL3, APIInsLimit, APIMailContentIndent, APIMoveToWishList, APIPNPIMProductData, APIUpdateStaus, APIYesItemWiseRtp } from "../HostManager/CommonApiCallL3";
+import { APIDeleteUpdate, APIGetItemWiseRptL3, APIMailContentIndent, APIMoveToWishList, APIPNPIMProductData, APIUpdateStaus, APIYesItemWiseRtp } from "../HostManager/CommonApiCallL3";
 
 const AddedCartTable = () => {
     const { storeCode, rsoName } = useParams();
@@ -247,7 +247,6 @@ const AddedCartTable = () => {
             .then(res => res).then(response => {
                 if (response.data.code === "1000") {
                     const success = 'Thankyou for completing the Indent Confirmation Process successfully';
-
                     const msg = response?.data?.value?.storeNPIMStatus === "LOCKED"
                         ? `${response?.data?.value?.storeNPIMStatus} and mail already sent!`
                         : response?.data?.mailStatus === "sent successfully" && success;

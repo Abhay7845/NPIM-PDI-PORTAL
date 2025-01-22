@@ -7,8 +7,6 @@ import NPIMHome from "./Components/NPIMHome";
 import GetProductsHome from "./Components/GetProductsHome";
 import FeedbackL1AndL2 from "./pages/FeedbackL1AndL2";
 import ReportL1AndL2 from "./pages/ReportL1AndL2";
-import IndentL3 from "./pages/IndentL3";
-import IndentL3Digital from "./pages/IndentL3Digital";
 import ReportL3 from "./pages/ReportL3";
 import WishListedItems from "./Components/WishListedItems";
 import DayEndReportAdmin from "./pages/DayEndReportAdmin";
@@ -40,6 +38,7 @@ import UpdateAutomail from "./IndentExpress/Admin/UpdateAutomail";
 import NewFeedbackL1AndL2 from "./pages/NewFeedbackL1AndL2";
 import NewReportL1AndL2 from "./pages/NewReportL1AndL2";
 import DayEndDayReportsAdminL1L2 from "./pages/DayEndDayReportsAdminL1L2";
+import IndentL3Digital from "./pages/IndentL3Digital";
 
 function App() {
   return (
@@ -89,10 +88,6 @@ function App() {
             <Route
               path="/NpimPortal/indentL3Digital/:storeCode/:rsoName"
               element={<IndentL3Digital />}
-            />
-            <Route
-              path="/NpimPortal/indentL3/:storeCode/:rsoName"
-              element={<IndentL3 />}
             />
             <Route
               path="/NpimPortal/cart/product/L3/:storeCode/:rsoName"

@@ -65,11 +65,9 @@ const ReportL3 = () => {
         }
       }).then(error => setLoading(false));
   };
-  useEffect(() => {
 
-  }, [statusCloserOpener, reportLabel, modification, popupOpen, storeCode]);
 
-  const GetCatByReports = () => {
+  const GetCatByReports = (storeCode) => {
     setLoading(true);
     let urlReport;
     switch (reportLabel) {
@@ -84,9 +82,6 @@ const ReportL3 = () => {
         break;
       case "Category":
         urlReport = `/NPIML3/npim/summary/report/L3/${storeCode}/Category`;
-        break;
-      case "CatPB_Report":
-        urlReport = `/NPIML3/get/catPB/reports/${storeCode}`;
         break;
       case "Cancel_Item_List":
         urlReport = `/NPIML3/npim/get/item/cancel/list/${storeCode}`;
@@ -110,6 +105,10 @@ const ReportL3 = () => {
       setCol([]);
       setRows([]);
     });
+  }
+
+  const GetStatuaDetials = (storeCode) => {
+    setLoading(true);
     APIGetStatuL3(`/NPIML3/npim/get/status/L3/${storeCode}`)
       .then(res => res).then((response) => {
         if (response.data.code === "1000") {
@@ -122,6 +121,26 @@ const ReportL3 = () => {
       }).catch((error) => setLoading(false));
   }
 
+
+  const GetCatPBRepots = (storeCode) => {
+    APIGetAllDropdownList(`/NPIML3/get/catPB/reports/${storeCode}`).then(res => res)
+      .then((response) => {
+        console.log("response==>", response.data);
+        if (response.data.code === "1000") {
+          setCol(response.data.coloum);
+          setRows(response.data.value);
+        } else {
+          setCol([]);
+          setRows([]);
+        }
+        setLoading(false);
+      }).catch((error) => {
+        setLoading(false);
+        setCol([]);
+        setRows([]);
+      });
+  }
+
   const InsertIntoLimitCatPb = (storeCode) => {
     setLoading(true);
     APIInsLimit(`/NPIML3/ins/limit/table/${storeCode}/""`)
@@ -129,26 +148,30 @@ const ReportL3 = () => {
         console.log("response==>", response.data);
         if (response.data.Code === "1000") {
           if (response.data.value.toUpperCase() === "SUCCESS") {
-            GetCatByReports();
-          } else {
-            setAlertPopupStatus({
-              status: true,
-              main: "Data Not Found",
-              contain: "",
-            });
+            GetCatPBRepots(storeCode);
           }
         }
-      }).catch(err => setLoading(false));
+        setLoading(false);
+      }).catch(err => {
+        setLoading(false);
+        setCol([]);
+        setRows([]);
+      });
   }
 
   useEffect(() => {
-    InsertIntoLimitCatPb(storeCode);
+    if (reportLabel === "CatPB_Report") {
+      InsertIntoLimitCatPb(storeCode);
+    } else {
+      GetCatByReports(storeCode);
+    }
+    GetStatuaDetials(storeCode);
   }, [statusCloserOpener, reportLabel, modification, popupOpen, storeCode]);
 
 
   const reportDropHandler = (input) => {
     if (input === "CatPB_Report") {
-      sessionStorage.setItem("CatPBReport", input)
+      sessionStorage.setItem("CatPBReport", input);
     } else {
       sessionStorage.removeItem("CatPBReport")
     }
@@ -159,9 +182,6 @@ const ReportL3 = () => {
     setLoading(false);
   };
 
-  function scrollTop() {
-    window.scrollTo({ top: "0", behavior: "smooth" });
-  }
 
   const LoadDataOnWishListing = () => {
     APIGetItemWiseRptL3(`/NPIML3/npim/item/wise/rpt/L3/${storeCode}`)
@@ -199,7 +219,7 @@ const ReportL3 = () => {
     setShowInfo(true);
     setSwitchEnable(false);
     DisplayValidationRunner();
-    scrollTop();
+    window.scrollTo({ top: "0", behavior: "smooth" });
   };
 
   const DeleteRowData = (event) => {
