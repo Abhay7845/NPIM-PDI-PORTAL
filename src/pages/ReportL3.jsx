@@ -35,7 +35,6 @@ const ReportL3 = () => {
   const [digit, setDigit] = useState("");
   const [modification, setModification] = useState(true);
   const [switchEnable, setSwitchEnable] = useState(false);
-  const [setSelectState, setSetSelectState] = useState([]);
   const [alertPopupStatus, setAlertPopupStatus] = useState({
     status: false,
     main: "",
@@ -361,22 +360,6 @@ const ReportL3 = () => {
     });
   }
 
-  function tegSelectionResHandler(tegSelectionData) {
-    if (tegSelectionData === "Separate") {
-      APIGetCatList(`/npim/get/set/category/list/${dataRowInformation.itemCode}`)
-        .then((response) => {
-          if (response.data.code === "1000") {
-            setSetSelectState(response.data.value.map((element) => element.category));
-          }
-        }).catch(error => setLoading(false));
-    } else if (tegSelectionData === "Set") {
-      APISetCatCode(`/npim/item/set/category/code/${dataRowInformation.itemCode}`).then((response) => {
-        if (response.data.code === "1000") {
-          setSetSelectState(response.data.value);
-        }
-      }).catch((error) => setLoading(false));
-    }
-  }
 
   function DisplayValidationRunner() {
     setAllDataFromValidation({
@@ -514,7 +497,6 @@ const ReportL3 = () => {
                       digit={dataRowInformation.itemCode[6]}
                       itemCode={dataRowInformation.itemCode}
                       setType2option={["Chain", "Dori"]}
-                      setSelectOptions={setSelectState}
                       sizeUomQuantityResHandler={sizeUomQuantityResHandler}
                       sizeQuantityResHandler={sizeQuantityResHandler}
                       stoneQualityResHandler={stoneQualityResHandler}
@@ -522,7 +504,6 @@ const ReportL3 = () => {
                       typeSet2ResHandler={typeSet2ResHandler}
                       quantityResHandler={quantityResHandler}
                       findingsResHandler={findingsResHandler}
-                      tegSelectionResHandler={tegSelectionResHandler}
                       setSelectResHandler={tegQuantityResHandler}
                       allDataFromValidation={allDataFromValidation}
                       feedShowState={dataRowInformation}

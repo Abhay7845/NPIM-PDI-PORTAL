@@ -14,7 +14,6 @@ import { toast } from "react-toastify";
 const EditItemWiseProducts = ({ itemWiseData, rows, productsData, AlertPopupStatus, ItemWiseReport, editProductsData }) => {
     const { storeCode, rsoName } = useParams();
     const [loading, setLoading] = useState(false);
-    const [setSelectState, setSetSelectState] = useState([]);
     const [allDataFromValidation, setAllDataFromValidation] = useState({
         sizeUomQuantityRes: [],
         sizeQuantityRes: [],
@@ -24,22 +23,6 @@ const EditItemWiseProducts = ({ itemWiseData, rows, productsData, AlertPopupStat
         quantityRes: "",
         findingsRes: "",
     });
-    function tegSelectionResHandler(tegSelectionData) {
-        if (tegSelectionData === "Separate") {
-            APIGetCatList(`/npim/get/set/category/list/${productsData.itemCode}`)
-                .then(res => res).then((response) => {
-                    if (response.data.code === "1000") {
-                        setSetSelectState(response.data.value.map((element) => element.category));
-                    }
-                }).catch(error => setLoading(false));
-        } else if (tegSelectionData === "Set") {
-            APISetCatCode(`/npim/item/set/category/code/${productsData.itemCode}`).then((response) => {
-                if (response.data.code === "1000") {
-                    setSetSelectState(response.data.value);
-                }
-            }).catch((error) => setLoading(false));
-        }
-    }
 
     function sizeUomQuantityResHandler(sizeUomQuantityData) {
         setAllDataFromValidation({
@@ -417,7 +400,6 @@ const EditItemWiseProducts = ({ itemWiseData, rows, productsData, AlertPopupStat
                                 digit={productsData.itemCode[6]}
                                 itemCode={productsData.itemCode}
                                 setType2option={["Chain", "Dori"]}
-                                setSelectOptions={setSelectState}
                                 sizeUomQuantityResHandler={sizeUomQuantityResHandler}
                                 sizeQuantityResHandler={sizeQuantityResHandler}
                                 stoneQualityResHandler={stoneQualityResHandler}
@@ -425,7 +407,6 @@ const EditItemWiseProducts = ({ itemWiseData, rows, productsData, AlertPopupStat
                                 typeSet2ResHandler={typeSet2ResHandler}
                                 quantityResHandler={quantityResHandler}
                                 findingsResHandler={findingsResHandler}
-                                tegSelectionResHandler={tegSelectionResHandler}
                                 allDataFromValidation={allDataFromValidation}
                                 feedShowState={productsData}
                             />
