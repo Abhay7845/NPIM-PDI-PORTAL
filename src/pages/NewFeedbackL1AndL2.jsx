@@ -102,6 +102,7 @@ const NewFeedbackL1AndL2 = () => {
         setLoading(true);
         APIDNPIMProductData(`/NPIM/base/dnpim/get/product/details/`, productDetails)
             .then(res => res).then((response) => {
+                console.log("response==>", response.data);
                 if (response.data.code === "1001") {
                     document.getElementById("result").style.visibility = "hidden";
                     setAlertPopupStatus({
@@ -266,8 +267,7 @@ const NewFeedbackL1AndL2 = () => {
                 itemCode: dropState,
                 setDropState: setDropState,
             });
-        }
-        if (sessionStorage.getItem("Npim-type") === "DNPIM") {
+        } else if (sessionStorage.getItem("Npim-type") === "DNPIM") {
             setProductDetailsDigital({
                 storeCode: storeCode,
                 collection: dropState.collection,

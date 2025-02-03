@@ -85,9 +85,6 @@ const ReportL3 = () => {
       case "Cancel_Item_List":
         urlReport = `/NPIML3/npim/get/item/cancel/list/${storeCode}`;
         break;
-      default:
-        urlReport = `/NPIML3/npim/item/wise/rpt/L3/${storeCode}`;
-        break;
     }
     APIGetAllDropdownList(urlReport).then(res => res).then((response) => {
       if (response.data.code === "1000") {
@@ -119,7 +116,6 @@ const ReportL3 = () => {
         setLoading(false);
       }).catch((error) => setLoading(false));
   }
-
 
   const GetCatPBRepots = (storeCode) => {
     APIGetAllDropdownList(`/NPIML3/get/catPB/reports/${storeCode}`).then(res => res)
@@ -197,7 +193,7 @@ const ReportL3 = () => {
       }).catch((error) => setLoading(false));
   }
 
-  function closeHandler(params) {
+  function closeHandler() {
     setAlertPopupStatus({
       status: false,
       main: "",

@@ -104,6 +104,7 @@ const GetProductsHome = () => {
     }
 
     const GetCardSttudValue = (storeCode) => {
+        console.log("storeCode123checking==>");
         APIGetReportL3(`/NPIML3/npim/summary/report/L3/${storeCode}/StuddedValue`)
             .then(res => res).then(response => {
                 if (response.data.code === "1000") {

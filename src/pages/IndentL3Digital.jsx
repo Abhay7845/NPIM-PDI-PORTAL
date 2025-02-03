@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import 'setimmediate';
+import Blink from "react-blink-text";
 import { Container, Grid, Typography, CssBaseline } from "@material-ui/core";
 import ImgShow from "../Components/ImgShow";
 import LowerHeader from "../Components/LowerHeader";
@@ -34,14 +35,9 @@ const IndentL3Digital = () => {
     const getCartItemCode = sessionStorage.getItem("CartItemCode");
     const roleType = sessionStorage.getItem("store_value");
     const loginData = JSON.parse(sessionStorage.getItem("loginData"));
-    const [feedShowState, setFeedShowState] = useState({
-        ...NpimDataDisplay,
-        strCode: storeCode,
-    });
-
+    const [feedShowState, setFeedShowState] = useState({ ...NpimDataDisplay, strCode: storeCode, });
     const [loading, setLoading] = useState(false);
     const [resetDrop, SetResetDrop] = useState(true);
-    const [rowsData, setRowsData] = useState([]);
     const [alertPopupStatus, setAlertPopupStatus] = useState({
         status: false,
         main: "",
@@ -83,7 +79,6 @@ const IndentL3Digital = () => {
     });
 
     const [digit, setDigit] = useState("");
-    const [setSelectState, setSetSelectState] = useState([]);
 
     const onSearchClick = (dropState, setDropState) => {
         setProductDetails({
@@ -135,25 +130,6 @@ const IndentL3Digital = () => {
                 setLoading(false);
             }).catch((error) => setLoading(false));
     };
-
-    const GetItemWiseReports = (storeCode) => {
-        setLoading(true);
-        APIGetItemWiseRptL3(`/NPIML3/npim/item/wise/rpt/L3/${storeCode}`)
-            .then(res => res).then(response => {
-                if (response.data.code === "1000") {
-                    setRowsData(response.data.value);
-                } else if (response.data.code === "1001") {
-                    setRowsData([]);
-                }
-                setLoading(false);
-            }).catch(error => setLoading(false));
-    }
-
-    const isCatPB = rowsData.filter(item => item.catPB);
-    const catPbDataUpper = isCatPB.filter(item => item.catPB.toUpperCase() === feedShowState.catPB.toUpperCase());
-    const catPbWiseData = catPbDataUpper.filter(item => item.catPB.replace(/\s+/g, '').trim() == feedShowState.catPB.replace(/\s+/g, '').trim());
-    const tolCostVal = catPbWiseData.map(item => Number(item.tolCost));
-    const tolSum = tolCostVal.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
     const GetProductDetailsBySearchPnpim = (productDetails) => {
         setLoading(true);
@@ -213,13 +189,13 @@ const IndentL3Digital = () => {
                     }
                     productDetails.setDropState("");
                 } else if (response.data.code === "1000") {
-                    if (productDetails.itemCode === "") {
-                        document.getElementById("result").style.visibility = "hidden";
-                    } else if (productDetails.itemCode !== "") {
-                        document.getElementById("result").style.visibility = "visible";
-                    }
                     setFeedShowState(response.data.value);
                     setDigit(response.data.value.itemCode[6]);
+                    if (productDetails.itemCode === "") {
+                        document.getElementById("result").style.visibility = "hidden";
+                    } else if (productDetails.itemCode) {
+                        document.getElementById("result").style.visibility = "visible";
+                    }
                 }
                 setLoading(false);
             }).catch((error) => setLoading(false));
@@ -301,7 +277,7 @@ const IndentL3Digital = () => {
         if (productDetails.itemCode) {
             CheckItemCode(productDetails.itemCode);
         }
-        GetItemWiseReports(storeCode);
+        // GetItemWiseReports(storeCode);
     }, [productDetails.itemCode]);
 
     const navBarList = [
@@ -504,10 +480,31 @@ const IndentL3Digital = () => {
     //         });
     // }
 
-    const onClickSubmitBtnHandler = (value) => {
-        IndentYourProduct(value);
-        window.scrollTo({ top: "0", behavior: "smooth" });
+    const onClickSubmitBtnHandler = async (value) => {
+        // IndentYourProduct(value);
+        // window.scrollTo({ top: "0", behavior: "smooth" });
 
+        const GetItemWiseReports = async (storeCode) => {
+            try {
+                setLoading(true);
+                const response = await APIGetItemWiseRptL3(`/NPIML3/npim/item/wise/rpt/L3/${storeCode}`);
+                setLoading(false);
+                if (response.data.code === "1000") {
+                    const isCatPB = response.data.value.filter(item => item.catPB);
+                    const catPbDataUpper = isCatPB.filter(item_1 => item_1.catPB.toUpperCase() === feedShowState.catPB.toUpperCase());
+                    const catPbWiseData = catPbDataUpper.filter(item_2 => item_2.catPB.replace(/\s+/g, '').trim() == feedShowState.catPB.replace(/\s+/g, '').trim());
+                    const tolCostVal = catPbWiseData.map(item_3 => Number(item_3.tolCost));
+                    return tolCostVal.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+                } else {
+                    return 0
+                }
+            } catch (error) {
+                return setLoading(false);
+            }
+        }
+
+        const tolSum = await GetItemWiseReports(storeCode);
+        console.log("tolSum==>", tolSum);
 
         // const itemsToExclude = ['Only_MANGALSUTRA', 'ONLY_BANGLE', 'Only_FINGERRING'];
         // const filteredTags = allDataFromValidation.tegQuantityRes.filter(item => !itemsToExclude.includes(item.size));
@@ -622,9 +619,6 @@ const IndentL3Digital = () => {
         SetResetDrop(true);
     }
 
-    function allDataChangeHandler(allValidationInput) {
-        setAllDataFromValidation(allValidationInput);
-    }
 
     function sizeUomQuantityResHandler(sizeUomQuantityData) {
         setImmediate(() => {
@@ -712,24 +706,6 @@ const IndentL3Digital = () => {
         });
     }
 
-    function tegSelectionResHandler(tegSelectionData) {
-        if (tegSelectionData.target.value === "Separate") {
-            APIGetCatList(`/npim/get/set/category/list/${feedShowState.itemCode}`)
-                .then((response) => {
-                    if (response.data.code === 1000) {
-                        setSetSelectState(response.data.value.map((element) => element.category));
-                    }
-                }).catch(error => setLoading(false));
-        } else if (tegSelectionData.target.value === "Set") {
-            APISetCatCode(`/npim/item/set/category/code/${feedShowState.itemCode}`)
-                .then((response) => {
-                    if (response.data.code === 1000) {
-                        setSetSelectState(response.data.value);
-                    }
-                }).catch(error => setLoading(false));
-        }
-    }
-
     return (
         <React.Fragment>
             <CssBaseline />
@@ -797,10 +773,7 @@ const IndentL3Digital = () => {
                                         <Grid item xs={12} sm={6}>
                                             <h5 className="text-center my-1"><b>Product Specification</b></h5>
                                             {feedShowState.adVariant && (
-                                                <BlinkingComponent
-                                                    color="red"
-                                                    text="AD-Variant"
-                                                    fontSize={15}
+                                                <BlinkingComponent text="AD-Variant"
                                                 />
                                             )}
                                             <ProductDetailsTabular information={feedShowState} />
@@ -811,9 +784,7 @@ const IndentL3Digital = () => {
                                                 {feedShowState.btqCount && (
                                                     <div className="d-flex justify-content-between mt-2">
                                                         <BlinkingComponent
-                                                            color="red"
                                                             text={`${feedShowState.btqCount} Btqs Indented`}
-                                                            fontSize={15}
                                                         />
                                                         <b style={{ marginLeft: "34%", color: "red" }} >Wishlist</b>
                                                         <Heart isActive={isClick} onClick={() => {
@@ -824,14 +795,12 @@ const IndentL3Digital = () => {
                                                         />
                                                     </div>)}
                                                 <br />
-                                                <Grid>
-                                                    {digit && (
+                                                {digit && (
+                                                    <Grid>
                                                         <DisplayValidationComponent
                                                             digit={feedShowState.itemCode[6]}
                                                             itemCode={feedShowState.itemCode}
                                                             setType2option={["Chain", "Dori"]}
-                                                            setSelectOptions={setSelectState}
-                                                            allDataChangeHandler={allDataChangeHandler}
                                                             sizeUomQuantityResHandler={sizeUomQuantityResHandler}
                                                             sizeQuantityResHandler={sizeQuantityResHandler}
                                                             stoneQualityResHandler={stoneQualityResHandler}
@@ -839,12 +808,11 @@ const IndentL3Digital = () => {
                                                             typeSet2ResHandler={typeSet2ResHandler}
                                                             quantityResHandler={quantityResHandler}
                                                             findingsResHandler={findingsResHandler}
-                                                            tegSelectionResHandler={tegSelectionResHandler}
                                                             allDataFromValidation={allDataFromValidation}
                                                             feedShowState={feedShowState}
                                                         />
-                                                    )}
-                                                </Grid>
+                                                    </Grid>
+                                                )}
                                                 {SmallDataTable(feedShowState)}
                                             </div>
                                         </Grid>

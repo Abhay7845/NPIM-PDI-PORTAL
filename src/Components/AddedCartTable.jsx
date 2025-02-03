@@ -75,6 +75,9 @@ const AddedCartTable = () => {
                 if (response.data.code === "1000") {
                     setRows(response.data.value);
                     setCols(response.data.coloum);
+                } else {
+                    setRows([]);
+                    setCols([]);
                 }
                 setLoading(false);
             }).catch(error => setLoading(false));

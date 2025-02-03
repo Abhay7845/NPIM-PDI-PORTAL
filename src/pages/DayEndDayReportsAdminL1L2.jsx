@@ -179,7 +179,6 @@ const DayEndDayReportsAdminL1L2 = () => {
         return filedResp;
     });
 
-
     return (
         <React.Fragment>
             <CssBaseline />

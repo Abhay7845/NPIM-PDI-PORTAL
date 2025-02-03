@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Typography, Button, Container } from "@material-ui/core";
 import { DataGrid } from "@material-ui/data-grid";
 import SingleImgCreator from "./SingleImgCreator";
-import Blink from "react-blink-text";
 import "../Style/CssStyle/LowerHeader.css";
 import useStyles from "../Style/ComponentForL3";
 import { imageUrl } from "../DataCenter/DataList";
@@ -204,104 +203,97 @@ function ProductDetailsTabularL3(props) {
 
 function SmallDataTable(props) {
   const digit = props.itemCode[6];
-  if (digit) {
-    if (
-      digit === "0" ||
-      digit === "1" ||
-      digit === "2" ||
-      digit === "3" ||
-      digit === "4" ||
-      digit === "5" ||
-      digit === "6" ||
-      digit === "7" ||
-      digit === "N" ||
-      digit === "T" ||
-      digit === "G"
-    ) {
-      if (props.childNodesE || props.childNodesN) {
-        return (
-          <table className="table table-bordered mt-3" style={{ marginLeft: "0%" }}>
-            <thead>
-              <tr>
-                <th>CATEGORY</th>
-                <th>StdWt</th>
-                <th>UCP</th>
-              </tr>
-            </thead>
-            <tbody>
-              {props.childNodeF &&
-                <tr>
-                  <td>FINGER RING</td>
-                  {props.stdWtF && <td>{parseFloat(props.stdWtF).toFixed(3)}</td>}
-                  {props.stdUcpF && <td>{parseFloat(props.stdUcpF).toFixed(3)}</td>}
-                </tr>
-              }
-              {props.childNodesE &&
-                <tr>
-                  <td>EAR RING</td>
-                  {props.stdWtE && <td>{parseFloat(props.stdWtE).toFixed(3)}</td>}
-                  {props.stdUcpE && <td>{parseFloat(props.stdUcpE).toFixed(3)}</td>}
-                </tr>
-              }
-              {props.childNodesN &&
-                <tr>
-                  <td>NECKWEAR</td>
-                  {props.stdWtN && <td>{parseFloat(props.stdWtN).toFixed(3)}</td>}
-                  {props.stdUcpN && <td>{parseFloat(props.stdUcpN).toFixed(3)}</td>}
-                </tr>
-              }
-              {props.childNodeH &&
-                <tr>
-                  <td>HARAM</td>
-                  {props.stdWtH && <td>{parseFloat(props.stdWtH).toFixed(3)}</td>}
-                  {props.stdUcpH && <td>{parseFloat(props.stdUcpH).toFixed(3)}</td>}
-                </tr>
-              }
-              {props.childNodeK &&
-                <tr>
-                  <td>TIKKA</td>
-                  {props.stdWtK && <td>{parseFloat(props.stdWtK).toFixed(3)}</td>}
-                  {props.stdUcpK && <td>{parseFloat(props.stdUcpK).toFixed(3)}</td>}
-                </tr>
-              }
-              {props.childNodeV &&
-                <tr>
-                  <td>BANGLE</td>
-                  {props.stdWtV && <td>{parseFloat(props.stdWtV).toFixed(3)}</td>}
-                  {props.stdUcpV && <td>{parseFloat(props.stdUcpV).toFixed(3)}</td>}
-                </tr>
-              }
-              {props.childNodeO &&
-                <tr>
-                  <td>OTHER</td>
-                  {props.stdWtO && <td>{parseFloat(props.stdWtO).toFixed(3)}</td>}
-                  {props.stdUcpO && <td>{parseFloat(props.stdUcpO).toFixed(3)}</td>}
-                </tr>
-              }
-              {props.childNodeH && props.childNodesE && <tr>
-                <td>SET2 TAG_H</td>
-                {props.stdWtE && props.stdWtH && <td>{parseFloat(Number(props.stdWtE) + Number(props.stdWtH)).toFixed(3)}</td>}
-                {props.stdUcpE && props.stdUcpH && <td>{parseFloat(Number(props.stdUcpE) + Number(props.stdUcpH)).toFixed(3)}</td>}
-              </tr>}
-              {props.childNodesN && props.childNodesE && <tr>
-                <td>SET2 TAG</td>
-                {props.stdWtN && props.stdWtE && <td>{parseFloat(Number(props.stdWtN) + Number(props.stdWtE)).toFixed(3)}</td>}
-                {props.stdUcpE && props.stdUcpN && <td>{parseFloat(Number(props.stdUcpE) + Number(props.stdUcpN)).toFixed(3)}</td>}
-              </tr>}
-            </tbody>
-          </table>
-        );
-      }
+  if (
+    digit === "0" ||
+    digit === "1" ||
+    digit === "2" ||
+    digit === "3" ||
+    digit === "4" ||
+    digit === "5" ||
+    digit === "6" ||
+    digit === "7" ||
+    digit === "N" ||
+    digit === "T" ||
+    digit === "G"
+  ) {
+    if (props.childNodesE || props.childNodesN) {
+      return (
+        <table className="table table-bordered mt-3" style={{ marginLeft: "0%" }}>
+          <thead>
+            <tr>
+              <th>CATEGORY</th>
+              <th>StdWt</th>
+              <th>UCP</th>
+            </tr>
+          </thead>
+          <tbody>
+            {props.childNodeF && <tr>
+              <td>FINGER RING</td>
+              {props.stdWtF && <td>{parseFloat(props.stdWtF).toFixed(3)}</td>}
+              {props.stdUcpF && <td>{parseFloat(props.stdUcpF).toFixed(3)}</td>}
+            </tr>}
+            {props.childNodesE && <tr>
+              <td>EAR RING</td>
+              {props.stdWtE && <td>{parseFloat(props.stdWtE).toFixed(3)}</td>}
+              {props.stdUcpE && <td>{parseFloat(props.stdUcpE).toFixed(3)}</td>}
+            </tr>}
+            {props.childNodesN && <tr>
+              <td>NECKWEAR</td>
+              {props.stdWtN && <td>{parseFloat(props.stdWtN).toFixed(3)}</td>}
+              {props.stdUcpN && <td>{parseFloat(props.stdUcpN).toFixed(3)}</td>}
+            </tr>}
+            {props.childNodeH && <tr>
+              <td>HARAM</td>
+              {props.stdWtH && <td>{parseFloat(props.stdWtH).toFixed(3)}</td>}
+              {props.stdUcpH && <td>{parseFloat(props.stdUcpH).toFixed(3)}</td>}
+            </tr>}
+            {props.childNodeK && <tr>
+              <td>TIKKA</td>
+              {props.stdWtK && <td>{parseFloat(props.stdWtK).toFixed(3)}</td>}
+              {props.stdUcpK && <td>{parseFloat(props.stdUcpK).toFixed(3)}</td>}
+            </tr>}
+            {props.childNodeV && <tr>
+              <td>BANGLE</td>
+              {props.stdWtV && <td>{parseFloat(props.stdWtV).toFixed(3)}</td>}
+              {props.stdUcpV && <td>{parseFloat(props.stdUcpV).toFixed(3)}</td>}
+            </tr>}
+            {props.childNodeO && <tr>
+              <td>OTHER</td>
+              {props.stdWtO && <td>{parseFloat(props.stdWtO).toFixed(3)}</td>}
+              {props.stdUcpO && <td>{parseFloat(props.stdUcpO).toFixed(3)}</td>}
+            </tr>}
+            {props.childNodeH && props.childNodesE && <tr>
+              <td>SET2 TAG_H</td>
+              {props.stdWtE && props.stdWtH && <td>{parseFloat(Number(props.stdWtE) + Number(props.stdWtH)).toFixed(3)}</td>}
+              {props.stdUcpE && props.stdUcpH && <td>{parseFloat(Number(props.stdUcpE) + Number(props.stdUcpH)).toFixed(3)}</td>}
+            </tr>}
+            {props.childNodesN && props.childNodesE && <tr>
+              <td>SET2 TAG</td>
+              {props.stdWtN && props.stdWtE && <td>{parseFloat(Number(props.stdWtN) + Number(props.stdWtE)).toFixed(3)}</td>}
+              {props.stdUcpE && props.stdUcpN && <td>{parseFloat(Number(props.stdUcpE) + Number(props.stdUcpN)).toFixed(3)}</td>}
+            </tr>}
+          </tbody>
+        </table>
+      );
     }
   }
 }
 
-function BlinkingComponent(props) {
-  const { color, text, fontSize } = props;
+function BlinkingComponent({ text, color = "red", fontSize = "15px", interval = 500 }) {
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setVisible((prev) => !prev);
+    }, interval);
+
+    return () => clearInterval(timer);
+  }, [interval]);
+
   return (
-    <Blink color={color} text={text} fontSize={fontSize}>
-      Testing the Blink
-    </Blink>
+    <span style={{ color, fontSize, visibility: visible ? "visible" : "hidden" }}>
+      {text}
+    </span>
   );
 }
 

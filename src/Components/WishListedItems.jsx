@@ -32,7 +32,6 @@ const WishListedItems = () => {
   const [showInfo, setShowInfo] = useState(false);
   const [modification, setModification] = useState(true);
   const [switchEnable, setSwitchEnable] = useState(false);
-  const [rowsData, setRowsData] = useState([]);
   const [alertPopupStatus, setAlertPopupStatus] = useState({
     status: false,
     main: "",
@@ -81,22 +80,9 @@ const WishListedItems = () => {
       }).catch((error) => setLoading(false));
   }
 
-  const GetItemWiseReports = (storeCode) => {
-    setLoading(true);
-    APIGetItemWiseRptL3(`/NPIML3/npim/item/wise/rpt/L3/${storeCode}`)
-      .then(res => res).then(response => {
-        if (response.data.code === "1000") {
-          setRowsData(response.data.value);
-        } else if (response.data.code === "1001") {
-          setRowsData([]);
-        }
-        setLoading(false);
-      }).catch(error => setLoading(false));
-  }
 
   useEffect(() => {
     GetWhishlistData(storeCode);
-    GetItemWiseReports(storeCode);
     APIGetStatuL3(`/NPIML3/npim/get/status/L3/${storeCode}`)
       .then(res => res).then((response) => {
         if (response.data.code === "1000") {
@@ -121,23 +107,23 @@ const WishListedItems = () => {
       }).catch((error) => setLoading(false));
   }
 
-  const WishListToEndent = (itemCode, setWishListRowData) => {
-    setLoading(true);
-    APIMoveToIndent(`/NPIML3/npim/move/item/wishlist/to/indent/${itemCode}/${storeCode}/Indent`)
-      .then(res => res).then((response) => {
-        if (response.data.Code === "1000") {
-          setAlertPopupStatus({
-            status: true,
-            main: 'Item Indented Successfully',
-            contain: "",
-          });
-          LoadDataOnWishListing(storeCode);
-          setWishListRowData({});
-          setLoading(false);
-        }
-        GetWhishlistData(storeCode);
-      }).catch((error) => setLoading(false));
-  }
+  // const WishListToEndent = (itemCode, setWishListRowData) => {
+  //   setLoading(true);
+  //   APIMoveToIndent(`/NPIML3/npim/move/item/wishlist/to/indent/${itemCode}/${storeCode}/Indent`)
+  //     .then(res => res).then((response) => {
+  //       if (response.data.Code === "1000") {
+  //         setAlertPopupStatus({
+  //           status: true,
+  //           main: 'Item Indented Successfully',
+  //           contain: "",
+  //         });
+  //         LoadDataOnWishListing(storeCode);
+  //         setWishListRowData({});
+  //         setLoading(false);
+  //       }
+  //       GetWhishlistData(storeCode);
+  //     }).catch((error) => setLoading(false));
+  // }
 
   // function IndentToProduct(limit, itemCode, setWishListRowData, inputData) {
   //   console.log("limit==>", limit);
@@ -202,16 +188,31 @@ const WishListedItems = () => {
   //     });
   // }
 
-  const MoveToWishlist = (event, setWishListRowData) => {
-    console.log("event==>", event);
-    WishListToEndent(event.itemCode, setWishListRowData);
+  const MoveToWishlist = async (event, setWishListRowData) => {
+    // WishListToEndent(event.itemCode, setWishListRowData);
 
-    // const isCatPB = rowsData.filter(item => item.catPB);
-    // const catPbDataUpper = isCatPB.filter(item => item.catPB.toUpperCase() === event.catPB.toUpperCase());
-    // const catPbWiseData = catPbDataUpper.filter(item => item.catPB.replace(/\s+/g, '').trim() == event.catPB.replace(/\s+/g, '').trim());
-    // const tolCostVal = catPbWiseData.map(item => Number(item.tolCost));
-    // const tolSum = tolCostVal.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-    // console.log("tolSum==>", tolSum);
+    const GetItemWiseReports = async (storeCode) => {
+      try {
+        setLoading(true);
+        const response = await APIGetItemWiseRptL3(`/NPIML3/npim/item/wise/rpt/L3/${storeCode}`);
+        setLoading(false);
+        if (response.data.code === "1000") {
+          const isCatPB = response.data.value.filter(item => item.catPB);
+          const catPbDataUpper = isCatPB.filter(item_1 => item_1.catPB.toUpperCase() === feedShowState.catPB.toUpperCase());
+          const catPbWiseData = catPbDataUpper.filter(item_2 => item_2.catPB.replace(/\s+/g, '').trim() == feedShowState.catPB.replace(/\s+/g, '').trim());
+          const tolCostVal = catPbWiseData.map(item_3 => Number(item_3.tolCost));
+          return tolCostVal.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+        } else {
+          return 0
+        }
+      } catch (error) {
+        return setLoading(false);
+      }
+    }
+
+    const tolSum = await GetItemWiseReports(storeCode);
+    console.log("tolSum==>", tolSum);
+
 
     // let inputData = 0;
     // const bangle11Digit = (event.category === "BANGLE" || event.category === "BANGLES") && event.itemCode.charAt(10);
