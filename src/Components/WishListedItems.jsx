@@ -68,7 +68,6 @@ const WishListedItems = () => {
     setLoading(true);
     APIGetWishlistData(`/NPIML3/get/wishlisted/listdata/${storeCode}`)
       .then(res => res).then((response) => {
-        console.log("response==>", response.data);
         if (response.data.Code === "1000") {
           setCol(WislistLeHeaders);
           setRows(response.data.value);

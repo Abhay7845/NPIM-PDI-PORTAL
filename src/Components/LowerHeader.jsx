@@ -9,7 +9,7 @@ import { L1L2Reports, specialChars } from "../DataCenter/DataList";
 import { BsCardList, BsCart3 } from "react-icons/bs";
 import { BiHomeAlt } from "react-icons/bi";
 import { AiOutlineHeart, AiOutlineBarChart } from "react-icons/ai";
-import { APIGetReportL3 } from "../HostManager/CommonApiCallL3";
+// import { APIGetReportL3 } from "../HostManager/CommonApiCallL3";
 import StatusTabularL1L2 from "./StatusTabularL1L2";
 
 const LowerHeader = (props) => {
@@ -19,8 +19,8 @@ const LowerHeader = (props) => {
   const [statusCloserOpener, setStatusCloserOpener] = useState(false);
   const [dropState, setDropState] = useState("");
   const [itemCodeValid, setItemCodeValid] = useState(false);
-  const [cardStuddData, setCardStuddData] = useState([]);
-  const [cardPlainData, setCardPlainData] = useState([]);
+  // const [cardStuddData, setCardStuddData] = useState([]);
+  // const [cardPlainData, setCardPlainData] = useState([]);
   const loginData = JSON.parse(sessionStorage.getItem("loginData"));
 
   const newChangeHandler = (inputValue) => {
@@ -60,9 +60,6 @@ const LowerHeader = (props) => {
     }
   }, [dropState]);
 
-  const statusOpener = (event) => {
-    setStatusCloserOpener(!statusCloserOpener);
-  };
 
   const ReportsRouting = () => {
     if (loginData.role === "L1" || loginData.role === "L2") {
@@ -72,32 +69,32 @@ const LowerHeader = (props) => {
     }
   }
 
-  const GetCardSttudValue = (storeCode) => {
-    APIGetReportL3(`/NPIML3/npim/summary/report/L3/${storeCode}/StuddedValue`)
-      .then(res => res).then(response => {
-        if (response.data.code === "1000") {
-          setCardStuddData(response.data.value);
-        }
-      }).catch(error => console.log(""));
-  }
+  // const GetCardSttudValue = (storeCode) => {
+  //   APIGetReportL3(`/NPIML3/npim/summary/report/L3/${storeCode}/StuddedValue`)
+  //     .then(res => res).then(response => {
+  //       if (response.data.code === "1000") {
+  //         setCardStuddData(response.data.value);
+  //       }
+  //     }).catch(error => console.log(""));
+  // }
 
-  const GetCardPlainValue = (storeCode) => {
-    APIGetReportL3(`/NPIML3/npim/summary/report/L3/${storeCode}/PlainValue`)
-      .then(res => res).then(response => {
-        if (response.data.code === "1000") {
-          setCardPlainData(response.data.value);
-        }
-      }).catch(error => console.log(""));
-  }
+  // const GetCardPlainValue = (storeCode) => {
+  //   APIGetReportL3(`/NPIML3/npim/summary/report/L3/${storeCode}/PlainValue`)
+  //     .then(res => res).then(response => {
+  //       if (response.data.code === "1000") {
+  //         setCardPlainData(response.data.value);
+  //       }
+  //     }).catch(error => console.log(""));
+  // }
 
-  useEffect(() => {
-    GetCardSttudValue(storeCode);
-    GetCardPlainValue(storeCode);
-  }, [storeCode, dropState]);
+  // useEffect(() => {
+  //   GetCardSttudValue(storeCode);
+  //   GetCardPlainValue(storeCode);
+  // }, [storeCode, dropState]);
 
   return (
     <React.Fragment>
-      <Drawer anchor="top" open={statusCloserOpener} onClick={statusOpener}>
+      <Drawer anchor="top" open={statusCloserOpener} onClick={() => setStatusCloserOpener(!statusCloserOpener)}>
         {loginData.role === "L3" ? <StatusTabular statusData={props.statusData} /> :
           <StatusTabularL1L2 statusData={props.statusData} />}
       </Drawer>
@@ -115,7 +112,6 @@ const LowerHeader = (props) => {
                     name="phydata"
                     placeholder="Enter 14 digit Item Code"
                     type="text"
-                    id="textitemcode"
                     value={dropState}
                     onChange={(e) => {
                       const inputValue = e.target.value.toUpperCase();
@@ -135,10 +131,10 @@ const LowerHeader = (props) => {
                     <SearchIcon />
                   </IconButton>
                 </div>
-                {loginData.role === "L3" && <div className="d-flex mt-4">
+                {/* {loginData.role === "L3" && <div className="d-flex mt-4">
                   <h6><span className="text-primary">▣ </span><b style={{ color: "#832729" }}>STUDDED VALUE (Crs) - {cardStuddData.length > 0 ? parseFloat(parseFloat(cardStuddData[0].tolValue) / 10000000).toFixed(3) : 0}</b></h6>
                   <h6 className="mx-4"><span className="text-primary">▣ </span><b style={{ color: "#832729" }}>PLAIN VALUE (Kgs) - {cardPlainData.length > 0 ? (parseFloat(cardPlainData[0].totWeight) / 1000).toFixed(3) : 0}</b></h6>
-                </div>}
+                </div>} */}
                 <div className="d-flex">
                   {loginData.role === "L3" && <div className="IconsStyle" onClick={() => navigate(`/NpimPortal/get/products/home/${storeCode}/${rsoName}`)}>
                     <BiHomeAlt size={23} />
@@ -148,7 +144,7 @@ const LowerHeader = (props) => {
                     <BsCart3 size={23} />
                     <b>Cart</b>
                   </div>}
-                  <div className="IconsStyle" onClick={statusOpener}>
+                  <div className="IconsStyle" onClick={() => setStatusCloserOpener(!statusCloserOpener)}>
                     <AiOutlineBarChart size={23} />
                     <b>Status</b>
                   </div>

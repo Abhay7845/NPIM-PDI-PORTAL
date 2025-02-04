@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import 'setimmediate';
-import Blink from "react-blink-text";
 import { Container, Grid, Typography, CssBaseline } from "@material-ui/core";
 import ImgShow from "../Components/ImgShow";
 import LowerHeader from "../Components/LowerHeader";
@@ -277,7 +276,6 @@ const IndentL3Digital = () => {
         if (productDetails.itemCode) {
             CheckItemCode(productDetails.itemCode);
         }
-        // GetItemWiseReports(storeCode);
     }, [productDetails.itemCode]);
 
     const navBarList = [
@@ -322,6 +320,7 @@ const IndentL3Digital = () => {
             setDropState: "",
         });
     }
+
     const IndentYourProduct = (value) => {
         const itemsToExclude = ['Only_MANGALSUTRA', 'ONLY_BANGLE', 'Only_FINGERRING'];
         const filteredTags = allDataFromValidation.tegQuantityRes.filter(item => !itemsToExclude.includes(item.size));
@@ -483,6 +482,15 @@ const IndentL3Digital = () => {
     const onClickSubmitBtnHandler = async (value) => {
         // IndentYourProduct(value);
         // window.scrollTo({ top: "0", behavior: "smooth" });
+        setProductDetails({
+            storeCode: storeCode,
+            collection: "ALL",
+            consumerBase: "ALL",
+            group: "ALL",
+            category: "ALL",
+            itemCode: "",
+            setDropState: "",
+        });
 
         const GetItemWiseReports = async (storeCode) => {
             try {
@@ -503,8 +511,8 @@ const IndentL3Digital = () => {
             }
         }
 
-        const tolSum = await GetItemWiseReports(storeCode);
-        console.log("tolSum==>", tolSum);
+        // const tolSum = await GetItemWiseReports(storeCode);
+        // console.log("tolSum==>", tolSum);
 
         // const itemsToExclude = ['Only_MANGALSUTRA', 'ONLY_BANGLE', 'Only_FINGERRING'];
         // const filteredTags = allDataFromValidation.tegQuantityRes.filter(item => !itemsToExclude.includes(item.size));

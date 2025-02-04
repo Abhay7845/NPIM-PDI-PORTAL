@@ -266,7 +266,6 @@ export default function DisplayValidationComponent(props) {
                     optionsListGenst={CoupleGentsSize}
                     onChangeHandler={sizeQuantityResHandler}
                     CategoryData={feedShowState}
-                    labelName="FOR LADIES"
                 />
             )}
 

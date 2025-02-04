@@ -104,30 +104,32 @@ const GetProductsHome = () => {
     }
 
     const GetCardSttudValue = (storeCode) => {
-        console.log("storeCode123checking==>");
+        setLoading(true);
         APIGetReportL3(`/NPIML3/npim/summary/report/L3/${storeCode}/StuddedValue`)
             .then(res => res).then(response => {
+                console.log("response==>", response.data);
                 if (response.data.code === "1000") {
                     setCardStuddData(response.data.value);
                 }
+                setLoading(false);
             }).catch(error => setLoading(false));
     }
 
     const GetCardPlainValue = (storeCode) => {
+        setLoading(true);
         APIGetReportL3(`/NPIML3/npim/summary/report/L3/${storeCode}/PlainValue`)
             .then(res => res).then(response => {
                 if (response.data.code === "1000") {
                     setCardPlainData(response.data.value);
                 }
-            }).catch(error => setLoading(false))
+                setLoading(false);
+            }).catch(error => setLoading(false));
     }
 
     const SeprateCard = statusData.row.length > 0 && statusData.row[statusData.row.length - 1];
 
     useEffect(() => {
         GetStatusReport(storeCode);
-        GetCardSttudValue(storeCode);
-        GetCardPlainValue(storeCode);
     }, [storeCode]);
 
 
@@ -135,7 +137,7 @@ const GetProductsHome = () => {
         <div style={{ backgroundColor: "#f0ebec", height: "100vh" }}>
             {loading === true && <Loader />}
             <UpperHeader />
-            <GetPdtLowerHeader />
+            <GetPdtLowerHeader GetCardSttudValue={GetCardSttudValue} GetCardPlainValue={GetCardPlainValue} />
             <AlertPopup
                 status={alertPopupStatus.status}
                 mainLable={alertPopupStatus.main}
