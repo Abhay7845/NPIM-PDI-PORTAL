@@ -60,7 +60,6 @@ const LowerHeader = (props) => {
     }
   }, [dropState]);
 
-
   const ReportsRouting = () => {
     if (loginData.role === "L1" || loginData.role === "L2") {
       navigate(`/${L1L2Reports}/${storeCode}/${rsoName}`);

@@ -117,3 +117,14 @@ export const sizeUCPToKey = {
     Set2Tag: "stdUcpN",
     Set2Tag_H: "stdUcpH"
 };
+
+export const sizeSTDWTToKey = {
+    Single_Tag: "stdWt",
+    Only_EARRING: "stdWtE",
+    Only_OTHER: "stdWtF",
+    Only_NECKWEAR: "stdWtH",
+    Only_TIKKA: "stdWtK",
+    Only_HARAM: "stdWtN",
+    Set2Tag: "stdWtO",
+    Set2Tag_H: "stdWtV"
+};

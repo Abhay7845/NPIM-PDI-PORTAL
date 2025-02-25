@@ -29,7 +29,7 @@ export const APIGetDropdownCategory = (url) => {
 export const APIGetStatusPortal = (url) => {
     return privateApiClient.get(url);
 }
-export const APIGetCatPBStoreWise = (url) => {
+export const APIGetLimitCatPBWise = (url) => {
     return privateApiClient.get(url);
 }
 export const APIAdminGetParameter = (url) => {
@@ -130,8 +130,9 @@ export const APIInsWishList = (url, payload) => {
 export const APIGetWishlistData = (url) => {
     return privateApiClient.get(url);
 }
-export const APIInsLimit = (url) => {
-    return privateApiClient.get(url);
+
+export const APIInsLimit = (url, payload) => {
+    return privateApiClient.post(url, payload);
 }
 
 // -----------------------------ADDMON ----------------------

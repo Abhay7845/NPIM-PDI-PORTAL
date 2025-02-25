@@ -5,6 +5,7 @@ import SingleImgCreator from "./SingleImgCreator";
 import "../Style/CssStyle/LowerHeader.css";
 import useStyles from "../Style/ComponentForL3";
 import { imageUrl } from "../DataCenter/DataList";
+import Blink from "react-blink-text";
 
 function DataGridReport(props) {
   const classes = useStyles();
@@ -279,21 +280,11 @@ function SmallDataTable(props) {
   }
 }
 
-function BlinkingComponent({ text, color = "red", fontSize = "15px", interval = 500 }) {
-  const [visible, setVisible] = useState(true);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setVisible((prev) => !prev);
-    }, interval);
-
-    return () => clearInterval(timer);
-  }, [interval]);
-
+function BlinkingComponent({ color, text, fontSize }) {
   return (
-    <span style={{ color, fontSize, visibility: visible ? "visible" : "hidden" }}>
-      {text}
-    </span>
+    <Blink color={color} text={text} fontSize={fontSize}>
+      Testing the Blink
+    </Blink>
   );
 }
 

@@ -1,14 +1,14 @@
 /* eslint-disable no-restricted-globals */
 import React, { useEffect, useState } from "react";
 import ImgShow from "./ImgShow";
-import { imageUrl, sizeUCPToKey } from "../DataCenter/DataList";
+import { imageUrl, sizeSTDWTToKey, sizeUCPToKey } from "../DataCenter/DataList";
 import { Button, Typography } from "@material-ui/core";
 import { ProductDetailsTabularL3 } from "./ComponentForL3";
 import StaticTabularInformation from "./StaticTabularInformation";
 import DisplayValidationComponent from "./DisplayValidationForL3";
 import { useParams } from "react-router-dom";
 import Loader from "./Loader";
-import { APIDeleteUpdate, APIGetCatList, APIGetCatPBStoreWise, APIInsLimit, APISetCatCode, APIUpdateFormL3 } from "../HostManager/CommonApiCallL3";
+import { APIDeleteUpdate, APIGetCatList, APIGetCatPBStoreWise, APIGetItemWiseRptL3, APIGetLimitCatPBWise, APIInsLimit, APISetCatCode, APIUpdateFormL3 } from "../HostManager/CommonApiCallL3";
 import { toast } from "react-toastify";
 
 const EditItemWiseProducts = ({ itemWiseData, rows, productsData, AlertPopupStatus, ItemWiseReport, editProductsData }) => {
@@ -180,160 +180,283 @@ const EditItemWiseProducts = ({ itemWiseData, rows, productsData, AlertPopupStat
             }).catch((error) => setLoading(false));
     }
 
-    // const FinalSubmit = (inputData, limit) => {
-    //     console.log("limit==>", limit);
-    //     console.log("inputData==>", inputData);
-    //     const LimitPercent = limit + (limit * 0.1);
-    //     const LimitPercent_Ve = limit - (limit * 0.1);
-    //     console.log("LimitPercent==>", LimitPercent);
-    //     console.log("LimitPercent_Ve==>", LimitPercent_Ve);
-    //     if (inputData > LimitPercent) {
-    //         console.log("1==>");
-    //         if (inputData > LimitPercent && inputData > limit) {
-    //             console.log("2==>");
-    //             const alertMessage = 'The Indent Limit has been crossed for this CatPB, Click on "OK" if you still wish to proceed for Indenting this Product. Instead you can also Wishlist this Product!';
-    //             const isConfirmed = window.confirm(alertMessage);
-    //             if (isConfirmed === true) {
-    //                 UpdateIndentedProduct("report");
-    //             }
-    //             setLoading(false);
-    //         } else if (inputData > LimitPercent_Ve) {
-    //             console.log("3==>");
-    //             const alertMessage = 'You are reaching the max limit For CatPB Click Ok to Proceed';
-    //             const isConfirmed = window.confirm(alertMessage);
-    //             if (isConfirmed === true) {
-    //                 UpdateIndentedProduct("report");
-    //             }
-    //             setLoading(false);
-    //         } else if (inputData > LimitPercent) {
-    //             console.log("5==>");
-    //             const alertMessage = 'The Indent Limit has been crossed for this CatPB, Click on "OK" if you still wish to proceed for Indenting this Product. Instead you can also Wishlist this Product!';
-    //             alert(alertMessage);
-    //             setLoading(false);
-    //         }
-    //         setLoading(false);
-    //     } else if (limit === 0) {
-    //         console.log("6==>");
-    //         const alertMessage = `There is no Limit Available for this "CatPB" Do you still wish to Indent this Product. Click "OK" to continue or click on "Cancel" to wishlist this Product!`;
-    //         const isConfirmed = window.confirm(alertMessage);
-    //         if (isConfirmed === true) {
-    //             UpdateIndentedProduct("report");
-    //         }
-    //         setLoading(false);
-    //     } else {
-    //         console.log("7==>");
-    //         UpdateIndentedProduct("report");
-    //     }
-    // }
+    const InseartCatPBLimit = (TotalCalLimit, TotalStdWt, TolQInpQnty) => {
+        const encodedCatPB = encodeURIComponent(productsData.catPB)
+        const InsLimitPayload = {
+            activity: productsData.activity,
+            totWeight: TotalStdWt,
+            totQty: TolQInpQnty,
+            totCost: TotalCalLimit,
+            catPB: encodedCatPB,
+            storeCode: storeCode,
+        }
+        console.log("InsLimitPayload==>", InsLimitPayload);
+        APIInsLimit('/NPIML3/new/limit/table/ins', InsLimitPayload).then(res => res)
+            .then(response => console.log("response==>", response.data))
+            .catch(err => console.log(err));
+    }
 
-    // const GetCatPBLimit = (inputData) => {
-    //     const encodedCatPB = encodeURIComponent(productsData.catPB);
-    //     console.log("encodedCatPB==>", encodedCatPB);
-    //     setLoading(true);
-    //     APIGetCatPBStoreWise(`/NPIML3/check/limit/catpb/excel?strCode=${storeCode}&catPB=${encodedCatPB}`)
-    //         .then(res => res).then((response) => {
-    //             if (response.data.code === "1000") {
-    //                 FinalSubmit(inputData, Number(response.data.value[3]));
-    //             } else {
-    //                 FinalSubmit(inputData, Number(response.data.value[3]) || 0);
-    //             }
-    //         }).catch(error => {
-    //             setLoading(false);
-    //             toast.error("CatPB Is Not Available Hence Data Can't Be Saved!", { theme: "colored" });
-    //         });
-    // }
+    const ValiDateLimit = (TotalCalLimit, limit, TotalStdWt, TolQInpQnty) => {
+        console.log("limit==>", limit);
+        const LimitPercent = limit + (limit * 0.1);
+        const LimitPercent_Ve = limit - (limit * 0.1);
+        console.log("LimitPercent==>", LimitPercent);
+        console.log("LimitPercent_Ve==>", LimitPercent_Ve);
+        if (TotalCalLimit > LimitPercent) {
+            if (TotalCalLimit > LimitPercent && TotalCalLimit > limit) {
+                const alertMessage = 'The Indent Limit has been crossed for this CatPB, Click on "OK" if you still wish to proceed for Indenting this Product. Instead you can also Wishlist this Product!';
+                const isConfirmed = window.confirm(alertMessage);
+                if (isConfirmed === true) {
+                    UpdateIndentedProduct("report");
+                    InseartCatPBLimit(TotalCalLimit, TotalStdWt, TolQInpQnty);
+                }
+                setLoading(false);
+            } else if (TotalCalLimit > LimitPercent_Ve) {
+                const alertMessage = 'You are reaching the max limit For CatPB Click Ok to Proceed';
+                const isConfirmed = window.confirm(alertMessage);
+                if (isConfirmed === true) {
+                    UpdateIndentedProduct("report");
+                    InseartCatPBLimit(TotalCalLimit, TotalStdWt, TolQInpQnty);
+                }
+                setLoading(false);
+            } else if (TotalCalLimit > LimitPercent) {
+                const alertMessage = 'The Indent Limit has been crossed for this CatPB, Click on "OK" if you still wish to proceed for Indenting this Product. Instead you can also Wishlist this Product!';
+                alert(alertMessage);
+                setLoading(false);
+            }
+            setLoading(false);
+        } else if (limit === 0) {
+            const alertMessage = `There is no Limit Available for this "CatPB" Do you still wish to Indent this Product. Click "OK" to continue or click on "Cancel" to wishlist this Product!`;
+            const isConfirmed = window.confirm(alertMessage);
+            if (isConfirmed === true) {
+                UpdateIndentedProduct("report");
+                InseartCatPBLimit(TotalCalLimit, TotalStdWt, TolQInpQnty);
+            }
+            setLoading(false);
+        } else {
+            UpdateIndentedProduct("report");
+            InseartCatPBLimit(TotalCalLimit, TotalStdWt, TolQInpQnty);
+        }
+    }
 
-    const UpdateReportsPdtDetails = () => {
-        UpdateIndentedProduct("report");
 
-        // console.log("productsData==>", productsData);
-        // const itemsToExclude = ['Only_MANGALSUTRA', 'ONLY_BANGLE', 'Only_FINGERRING'];
-        // const filteredTags = allDataFromValidation.tegQuantityRes.filter(item => !itemsToExclude.includes(item.size));
-        // const SizableTag = allDataFromValidation.tegQuantityRes.map(tag => tag.size)
-        // const stdUcpVal = allDataFromValidation.stoneQualityRes.split("-");
+    const GetCatPBLimit = (TotalCalLimit, TotalStdWt, TolQInpQnty) => {
+        setLoading(true);
+        const encodedCatPB = encodeURIComponent(productsData.catPB);
+        APIGetLimitCatPBWise(`/NPIML3/limit/against/total?storeCode=${storeCode}&catPB=${encodedCatPB}`)
+            .then(res => res).then((response) => {
+                if (response.data.code === "1000") {
+                    console.log("response==>", response.data);
+                    const getLimit = response.data.limitResp.length > 0 ? response.data.limitResp.map(item => item.limit)[0] : 0;
+                    const sumTotCost = response.data.sumTableResp.length > 0 ? response.data.sumTableResp.map(item => item.sumTotCost)[0] : 0;
+                    console.log("sumTotCost==>", TotalCalLimit + getLimit);
+                    ValiDateLimit(TotalCalLimit + sumTotCost, getLimit, TotalStdWt, TolQInpQnty);
+                }
+            }).catch(error => {
+                console.log(error)
+                setLoading(false);
+                toast.error("CatPB Is Not Available Hence Data Can't Be Saved!", { theme: "colored" });
+            });
+    }
 
-        // const QuantitySum = (data) => {
-        //     let totalSum = 0;
-        //     data.forEach(item => {
-        //         Object.values(item).forEach(value => {
-        //             const number = parseFloat(value);
-        //             if (!isNaN(number)) {
-        //                 totalSum += number;
-        //             }
-        //         });
-        //     });
-        //     return totalSum;
-        // }
+    const UpdateReportsPdtDetails = async () => {
+        // UpdateIndentedProduct("report");
 
-        // /// for SET TAG 
-        // const TagQunatityData = filteredTags.map(item => {
-        //     const costKey = sizeUCPToKey[item.size];
-        //     const unitCost = stdUcpVal[1] ? Number(stdUcpVal[1]) : Number(productsData[costKey]);
-        //     const quantity = Number(item.quantity);
-        //     const set2TagUnitCost = item.size === "Set2Tag" && stdUcpVal[1] ? Number(stdUcpVal[1]) : Number(productsData.stdUcpN) + stdUcpVal[1] ? Number(stdUcpVal[1]) : Number(productsData.stdUcpE);
-        //     const set2Tag_HUnitCost = item.size === "Set2Tag_H" && stdUcpVal[1] ? Number(stdUcpVal[1]) : Number(productsData.stdUcpH) + stdUcpVal[1] ? Number(stdUcpVal[1]) : Number(productsData.stdUcpE);
-        //     return {
-        //         size: item.size,
-        //         quantity: (item.size === "Set2Tag" && set2TagUnitCost * quantity) || (item.size === "Set2Tag_H" && set2Tag_HUnitCost * quantity) || unitCost * quantity,
-        //     };
-        // });
+        const GetItemWiseReports = async (storeCode) => {
+            try {
+                setLoading(true);
+                const response = await APIGetItemWiseRptL3(`/NPIML3/npim/item/wise/rpt/L3/${storeCode}`);
+                setLoading(false);
+                if (response.data.code === "1000") {
+                    const isCatPB = response.data.value.filter(item => item.catPB);
+                    const catPbDataUpper = isCatPB.filter(item_1 => item_1.catPB.toUpperCase() === productsData.catPB.toUpperCase());
+                    const catPbWiseData = catPbDataUpper.filter(item_2 => item_2.catPB.replace(/\s+/g, '').trim() == productsData.catPB.replace(/\s+/g, '').trim());
+                    const tolCostVal = catPbWiseData.map(item_3 => Number(item_3.tolCost));
+                    return tolCostVal.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+                } else {
+                    return 0;
+                }
+            } catch (error) {
+                return setLoading(false);
+            }
+        }
+        const tolSum = await GetItemWiseReports(storeCode);
+        console.log("tolSum==>", tolSum);
 
-        // // FOR BANGLE 
-        // let UmoSizeLimit = 0;
-        // const bangle11Digit = productsData.category === "BANGLE" || productsData.category === "BANGLES" ? productsData.itemCode.charAt(10) : productsData.childNodeV.charAt(10);
-        // if (SizableTag.includes("Only_BANGLE")) {
-        //     const singleBanglePrice = Number(parseFloat(stdUcpVal[1] ? stdUcpVal[1] : productsData.stdUcpV).toFixed(1)) / Number(bangle11Digit) || 1;
-        //     const sizeUomQuantityPrise = allDataFromValidation.sizeUomQuantityRes.map(item => {
-        //         const updatedItem = { size: item.size };
-        //         for (const key in item) {
-        //             if (key.startsWith('uom') && item[key] !== "") {
-        //                 const uomVal = Number(key.substring(3));
-        //                 updatedItem[key] = Number(item[key]) * singleBanglePrice * uomVal;
-        //             } else if (key !== "size") {
-        //                 updatedItem[key] = item[key];
-        //             }
-        //         }
-        //         return updatedItem;
-        //     });
-        //     UmoSizeLimit = QuantitySum(sizeUomQuantityPrise);
-        // } else {
-        //     const singleBanglePrice = Number(parseFloat(stdUcpVal[1] ? stdUcpVal[1] : productsData.stdUCP).toFixed(1)) / Number(bangle11Digit) || 1;
-        //     const sizeUomQuantityPrise = allDataFromValidation.sizeUomQuantityRes.map(item => {
-        //         const updatedItem = { size: item.size };
-        //         for (const key in item) {
-        //             if (key.startsWith('uom') && item[key] !== "") {
-        //                 const uomVal = Number(key.substring(3));
-        //                 updatedItem[key] = Number(item[key]) * singleBanglePrice * uomVal;
-        //             } else if (key !== "size") {
-        //                 updatedItem[key] = item[key];
-        //             }
-        //         }
-        //         return updatedItem;
-        //     });
-        //     UmoSizeLimit = QuantitySum(sizeUomQuantityPrise)
-        // }
-        // console.log("tolSum==>", tolSum);
-        // const EditPdtTolCost = tolSum - Number(productsData.tolCost);
-        // console.log("EditPdtTolCost==>", EditPdtTolCost);
+        const itemsToExclude = ['Only_MANGALSUTRA', 'ONLY_BANGLE', 'Only_FINGERRING'];
+        const filteredTags = allDataFromValidation.tegQuantityRes.filter(item => !itemsToExclude.includes(item.size));
+        const SizableTag = allDataFromValidation.tegQuantityRes.map(tag => tag.size);
+        const stdUcpVal = allDataFromValidation.stoneQualityRes.split("-");
 
-        // const tagSizeLimit = QuantitySum(TagQunatityData);
-        // console.log("tagSizeLimit==>", tagSizeLimit);
-        // const SizeQuntyTotal = QuantitySum(allDataFromValidation.sizeQuantityRes);
-        // console.log("SizeQuntyTotal==>", SizeQuntyTotal);
+        const QuantitySum = (data) => {
+            let totalSum = 0;
+            data.forEach(item => {
+                Object.values(item).forEach(value => {
+                    const number = parseFloat(value);
+                    if (!isNaN(number)) {
+                        totalSum += number;
+                    }
+                });
+            });
+            return totalSum;
+        }
 
-        // let sizeLimit = 0;
-        // if (SizableTag.includes("Only_FINGERRING")) {
-        //     sizeLimit = SizeQuntyTotal * parseFloat(Number(stdUcpVal[1] ? stdUcpVal[1] : productsData.stdUcpF).toFixed(2));
-        // } else if (SizableTag.includes("Only_MANGALSUTRA")) {
-        //     sizeLimit = SizeQuntyTotal * parseFloat(Number(stdUcpVal[1] ? stdUcpVal[1] : productsData.stdUcpN).toFixed(2));
-        // } else {
-        //     sizeLimit = SizeQuntyTotal * parseFloat(Number(stdUcpVal[1] ? stdUcpVal[1] : productsData.stdUCP).toFixed(2));
-        // }
-        // console.log("sizeLimit==>", sizeLimit);
-        // const indQuntyLimit = Number(allDataFromValidation.quantityRes) * Number(stdUcpVal[1] ? stdUcpVal[1] : productsData.stdUCP);
-        // const TotalLimit = tagSizeLimit + sizeLimit + UmoSizeLimit + indQuntyLimit + EditPdtTolCost;
-        // console.log("TotalLimit==>", TotalLimit);
-        // GetCatPBLimit(TotalLimit);
+        // < ----------------------------TOTAL QUANTITY CALCULATION---------------------------->
+        const TagQnty = QuantitySum(filteredTags);
+        console.log("totalTagQnty==>", TagQnty);
+        const BangleQnty = QuantitySum(allDataFromValidation.sizeUomQuantityRes);
+        console.log("totalBangleQnty==>", BangleQnty);
+        const SizeQnty = QuantitySum(allDataFromValidation.sizeQuantityRes);
+        console.log("totalSizeQnty==>", SizeQnty);
+        const TolQInpQnty = TagQnty + BangleQnty + SizeQnty + Number(allDataFromValidation.quantityRes);
+        console.log("TolQInpQnty==>", TolQInpQnty);
+
+
+        // -------------------------> STDUCP for SET TAG---------------------->
+        const TagQunatityUCPData = filteredTags.map(item => {
+            const costKey = sizeUCPToKey[item.size];
+            const unitCost = stdUcpVal[1] ? Number(stdUcpVal[1]) : Number(productsData[costKey]);
+            const quantity = Number(item.quantity);
+            const set2TagUnitCost = item.size === "Set2Tag" && stdUcpVal[1] ? Number(stdUcpVal[1]) : Number(productsData.stdUcpN) + stdUcpVal[1] ? Number(stdUcpVal[1]) : Number(productsData.stdUcpE);
+            const set2Tag_HUnitCost = item.size === "Set2Tag_H" && stdUcpVal[1] ? Number(stdUcpVal[1]) : Number(productsData.stdUcpH) + stdUcpVal[1] ? Number(stdUcpVal[1]) : Number(productsData.stdUcpE);
+            return {
+                size: item.size,
+                quantity: (item.size === "Set2Tag" && set2TagUnitCost * quantity) || (item.size === "Set2Tag_H" && set2Tag_HUnitCost * quantity) || (unitCost * quantity),
+            };
+        });
+        console.log("TagQunatityUCPData==>", TagQunatityUCPData);
+
+        // -------------------------> STDWT for SET TAG---------------------->
+        const TagQunatityStdWtData = filteredTags.map(item => {
+            const costKey = sizeSTDWTToKey[item.size];
+            const unitCost = Number(productsData[costKey]);
+            console.log("unitCost==>", unitCost);
+            const quantity = Number(item.quantity);
+            const set2TagUnitCost = item.size === "Set2Tag" && Number(productsData.stdWtE) + Number(productsData.stdWtN);
+            const set2Tag_HUnitCost = item.size === "Set2Tag_H" && Number(productsData.stdWtE) + Number(productsData.stdWtH);
+            return {
+                size: item.size,
+                quantity: (item.size === "Set2Tag" && set2TagUnitCost * quantity) || (item.size === "Set2Tag_H" && set2Tag_HUnitCost * quantity) || (unitCost * quantity),
+            };
+        });
+        console.log("TagQunatityStdWtData==>", TagQunatityStdWtData);
+        const TolTagSdtWeith = QuantitySum(TagQunatityStdWtData);
+        console.log("TolTagSdtWeith==>", TolTagSdtWeith);
+
+
+        // < --------------------------------------- FOR BANGLE STDUCP--------------------------------------->
+        let UmoSizeLimit = 0;
+        const bangle11Digit = productsData.category === "BANGLE" || productsData.category === "BANGLES" ? productsData.itemCode.charAt(10) : productsData.childNodeV.charAt(10);
+        if (SizableTag.includes("Only_BANGLE")) {
+            const singleBanglePrice = Number(parseFloat(stdUcpVal[1] ? stdUcpVal[1] : productsData.stdUcpV).toFixed(1)) / Number(bangle11Digit) || 1;
+            const sizeUomQuantityPrise = allDataFromValidation.sizeUomQuantityRes.map(item => {
+                const updatedItem = { size: item.size };
+                for (const key in item) {
+                    if (key.startsWith('uom') && item[key] !== "") {
+                        const uomVal = Number(key.substring(3));
+                        updatedItem[key] = Number(item[key]) * singleBanglePrice * uomVal;
+                    } else if (key !== "size") {
+                        updatedItem[key] = item[key];
+                    }
+                }
+                return updatedItem;
+            });
+            UmoSizeLimit = QuantitySum(sizeUomQuantityPrise);
+        } else {
+            const singleBanglePrice = Number(parseFloat(stdUcpVal[1] ? stdUcpVal[1] : productsData.stdUCP).toFixed(1)) / Number(bangle11Digit) || 1;
+            const sizeUomQuantityPrise = allDataFromValidation.sizeUomQuantityRes.map(item => {
+                const updatedItem = { size: item.size };
+                for (const key in item) {
+                    if (key.startsWith('uom') && item[key] !== "") {
+                        const uomVal = Number(key.substring(3));
+                        updatedItem[key] = Number(item[key]) * singleBanglePrice * uomVal;
+                    } else if (key !== "size") {
+                        updatedItem[key] = item[key];
+                    }
+                }
+                return updatedItem;
+            });
+            UmoSizeLimit = QuantitySum(sizeUomQuantityPrise)
+        }
+
+
+        // < --------------------------------------- FOR BANGLE STD WT--------------------------------------->
+        let UmoSizeStdWt = 0;
+        if (SizableTag.includes("Only_BANGLE")) {
+            const singleBanglePrice = Number(productsData.stdWtV) / Number(bangle11Digit) || 1;
+            const sizeUomQuantityPrise = allDataFromValidation.sizeUomQuantityRes.map(item => {
+                const updatedItem = { size: item.size };
+                for (const key in item) {
+                    if (key.startsWith('uom') && item[key] !== "") {
+                        const uomVal = Number(key.substring(3));
+                        updatedItem[key] = Number(item[key]) * singleBanglePrice * uomVal;
+                    } else if (key !== "size") {
+                        updatedItem[key] = item[key];
+                    }
+                }
+                return updatedItem;
+            });
+            UmoSizeStdWt = QuantitySum(sizeUomQuantityPrise);
+        } else {
+            const singleBanglePrice = Number(productsData.stdWt) / Number(bangle11Digit) || 1;
+            const sizeUomQuantityPrise = allDataFromValidation.sizeUomQuantityRes.map(item => {
+                const updatedItem = { size: item.size };
+                for (const key in item) {
+                    if (key.startsWith('uom') && item[key] !== "") {
+                        const uomVal = Number(key.substring(3));
+                        updatedItem[key] = Number(item[key]) * singleBanglePrice * uomVal;
+                    } else if (key !== "size") {
+                        updatedItem[key] = item[key];
+                    }
+                }
+                return updatedItem;
+            });
+            console.log("sizeUomQuantityPrise==>", sizeUomQuantityPrise);
+            UmoSizeStdWt = QuantitySum(sizeUomQuantityPrise);
+        }
+        console.log("UmoSizeStdWt==>", UmoSizeStdWt);
+
+
+        const tagSizeLimit = QuantitySum(TagQunatityUCPData);
+        console.log("tagSizeLimit==>", tagSizeLimit);
+        const SizeQuntyTotal = QuantitySum(allDataFromValidation.sizeQuantityRes);
+        console.log("SizeQuntyTotal==>", SizeQuntyTotal);
+
+        // < --------------------------------------- SIZABLE CALCULATION FOR UCP--------------------------------------->
+        let sizeUCPLimit = 0;
+        if (SizableTag.includes("Only_FINGERRING")) {
+            sizeUCPLimit = SizeQuntyTotal * parseFloat(Number(stdUcpVal[1] ? stdUcpVal[1] : productsData.stdUcpF).toFixed(2));
+        } else if (SizableTag.includes("Only_MANGALSUTRA")) {
+            sizeUCPLimit = SizeQuntyTotal * parseFloat(Number(stdUcpVal[1] ? stdUcpVal[1] : productsData.stdUcpN).toFixed(2));
+        } else {
+            sizeUCPLimit = SizeQuntyTotal * parseFloat(Number(stdUcpVal[1] ? stdUcpVal[1] : productsData.stdUCP).toFixed(2));
+        }
+
+
+        // < --------------------------------------- SIZABLE CALCULATION FOR STD WT--------------------------------------->
+        let TotalsizeStdWt = 0;
+        if (SizableTag.includes("Only_FINGERRING")) {
+            TotalsizeStdWt = SizeQuntyTotal * parseFloat(Number(productsData.stdWtF).toFixed(2));
+        } else if (SizableTag.includes("Only_MANGALSUTRA")) {
+            TotalsizeStdWt = SizeQuntyTotal * parseFloat(Number(productsData.stdWtN).toFixed(2));
+        } else {
+            TotalsizeStdWt = SizeQuntyTotal * parseFloat(Number(productsData.stdWt).toFixed(2));
+        }
+        console.log("TotalsizeStdWt==>", TotalsizeStdWt);
+
+
+        // <------------- INPUT CALCULATION FOR UCP ------------------------------->
+        const indQuntyLimit = Number(allDataFromValidation.quantityRes) * Number(stdUcpVal[1] ? stdUcpVal[1] : productsData.stdUCP);
+
+        // <------------- INPUT CALCULATION FOR STD ------------------------------->
+        const InputStdWt = Number(allDataFromValidation.quantityRes) * Number(productsData.stdWt);
+        console.log("InputStdWt==>", InputStdWt);
+
+        const TotalCalLimit = tagSizeLimit + sizeUCPLimit + Number(parseFloat(UmoSizeLimit).toFixed(3)) + indQuntyLimit + tolSum;
+        console.log("TotalCalLimit==>", TotalCalLimit);
+        const TotalStdWt = TolTagSdtWeith + TotalsizeStdWt + Number(parseFloat(UmoSizeStdWt).toFixed(3)) + InputStdWt;
+        console.log("TotalStdWt==>", TotalStdWt);
+        GetCatPBLimit(TotalCalLimit, TotalStdWt, TolQInpQnty);
     }
 
     const onClickCancelBtnHandler = () => {

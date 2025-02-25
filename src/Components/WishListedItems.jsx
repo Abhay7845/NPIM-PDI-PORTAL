@@ -11,7 +11,7 @@ import useStyle from "../Style/ReportL3";
 import { WislistLeHeaders } from "../DataCenter/DataList";
 import Loader from "./Loader";
 import { toast } from 'react-toastify';
-import { APIDeleteUpdate, APIGetCatPBStoreWise, APIGetItemWiseRptL3, APIGetStatuL3, APIGetWishlistData, APIInsLimit, APIInsWishList, APIMoveToIndent, APIPNPIMProductData } from "../HostManager/CommonApiCallL3";
+import { APIDeleteUpdate, APIGetCatPBStoreWise, APIGetItemWiseRptL3, APIGetLimitCatPBWise, APIGetStatuL3, APIGetWishlistData, APIInsLimit, APIInsWishList, APIMoveToIndent, APIPNPIMProductData } from "../HostManager/CommonApiCallL3";
 
 const WishListedItems = () => {
   const classes = useStyle();
@@ -106,90 +106,106 @@ const WishListedItems = () => {
       }).catch((error) => setLoading(false));
   }
 
-  // const WishListToEndent = (itemCode, setWishListRowData) => {
-  //   setLoading(true);
-  //   APIMoveToIndent(`/NPIML3/npim/move/item/wishlist/to/indent/${itemCode}/${storeCode}/Indent`)
-  //     .then(res => res).then((response) => {
-  //       if (response.data.Code === "1000") {
-  //         setAlertPopupStatus({
-  //           status: true,
-  //           main: 'Item Indented Successfully',
-  //           contain: "",
-  //         });
-  //         LoadDataOnWishListing(storeCode);
-  //         setWishListRowData({});
-  //         setLoading(false);
-  //       }
-  //       GetWhishlistData(storeCode);
-  //     }).catch((error) => setLoading(false));
-  // }
+  const WishListToEndent = (event, setWishListRowData) => {
+    setLoading(true);
+    APIMoveToIndent(`/NPIML3/npim/move/item/wishlist/to/indent/${event.itemCode}/${storeCode}/Indent`)
+      .then(res => res).then((response) => {
+        if (response.data.Code === "1000") {
+          setAlertPopupStatus({
+            status: true,
+            main: 'Item Indented Successfully',
+            contain: "",
+          });
+          LoadDataOnWishListing(storeCode);
+          setWishListRowData({});
+          setLoading(false);
+        }
+        GetWhishlistData(storeCode);
+      }).catch((error) => setLoading(false));
+  }
 
-  // function IndentToProduct(limit, itemCode, setWishListRowData, inputData) {
-  //   console.log("limit==>", limit);
-  //   console.log("inputData==>", inputData);
-  //   const LimitPercent = limit + (limit * 0.1);
-  //   const LimitPercent_Ve = limit - (limit * 0.1);
-  //   console.log("LimitPercent==>", LimitPercent);
-  //   console.log("LimitPercent_Ve==>", LimitPercent_Ve);
-  //   if (inputData > LimitPercent) {
-  //     console.log("1==>");
-  //     if (inputData > LimitPercent && inputData > limit) {
-  //       console.log("2==>");
-  //       const alertMessage = 'The Indent Limit has been crossed for this CatPB, Click on "OK" if you still wish to proceed for Indenting this Product. Instead you can also Wishlist this Product!';
-  //       const isConfirmed = window.confirm(alertMessage);
-  //       if (isConfirmed === true) {
-  //         WishListToEndent(itemCode, setWishListRowData);
-  //       }
-  //       setLoading(false);
-  //     } else if (inputData > LimitPercent_Ve) {
-  //       console.log("3==>");
-  //       const alertMessage = 'You are reaching the max limit For CatPB Click Ok to Proceed';
-  //       const isConfirmed = window.confirm(alertMessage);
-  //       if (isConfirmed === true) {
-  //         WishListToEndent(itemCode, setWishListRowData);
-  //       }
-  //       setLoading(false);
-  //     } else if (inputData > LimitPercent) {
-  //       console.log("5==>");
-  //       const alertMessage = 'The Indent Limit has been crossed for this CatPB, Click on "OK" if you still wish to proceed for Indenting this Product. Instead you can also Wishlist this Product!';
-  //       alert(alertMessage);
-  //       setLoading(false);
-  //     }
-  //     setLoading(false);
-  //   } else if (limit === 0) {
-  //     console.log("6==>");
-  //     const alertMessage = `There is no Limit Available for this "CatPB" Do you still wish to Indent this Product. Click "OK" to continue or click on "Cancel" to wishlist this Product!`;
-  //     const isConfirmed = window.confirm(alertMessage);
-  //     if (isConfirmed === true) {
-  //       WishListToEndent(itemCode, setWishListRowData);
-  //     }
-  //     setLoading(false);
-  //   } else {
-  //     console.log("7==>");
-  //     WishListToEndent(itemCode, setWishListRowData);
-  //   }
-  // }
+  const InseartCatPBLimit = (event, TotalCalLimit, TotalStdWt) => {
+    const encodedCatPB = encodeURIComponent(event.catPB)
+    const InsLimitPayload = {
+      activity: event.activity,
+      totWeight: TotalStdWt,
+      totQty: Number(event.itemQty),
+      totCost: TotalCalLimit,
+      catPB: encodedCatPB,
+      storeCode: storeCode,
+    }
+    console.log("InsLimitPayload==>", InsLimitPayload);
+    APIInsLimit('/NPIML3/new/limit/table/ins', InsLimitPayload).then(res => res)
+      .then(response => console.log("response==>", response.data))
+      .catch(err => console.log(err));
+  }
 
-  // function GetCatPBLimit(event, setWishListRowData, inputData) {
-  //   const encodedCatPB = encodeURIComponent(event.catPB);
-  //   console.log("encodedCatPB==>", encodedCatPB);
-  //   setLoading(true);
-  //   APIGetCatPBStoreWise(`/NPIML3/check/limit/catpb/excel?strCode=${storeCode}&catPB=${encodedCatPB}`)
-  //     .then(res => res).then(response => {
-  //       if (response.data.code === "1000") {
-  //         IndentToProduct(Number(response.data.value[3]), event.itemCode, setWishListRowData, inputData);
-  //       } else if (response.data.code === "1001") {
-  //         IndentToProduct(Number(response.data.value[3]) || 0, event.itemCode, setWishListRowData, inputData);
-  //       }
-  //     }).catch(error => {
-  //       setLoading(false);
-  //       toast.error("CatPB Is Not Available Hence Data Can't Be Saved!", { theme: "colored" });
-  //     });
-  // }
+  const ValiDateLimit = (event, setWishListRowData, TotalCalLimit, limit, TotalStdWt) => {
+    console.log("limit==>", limit);
+    const LimitPercent = limit + (limit * 0.1);
+    const LimitPercent_Ve = limit - (limit * 0.1);
+    console.log("LimitPercent==>", LimitPercent);
+    console.log("LimitPercent_Ve==>", LimitPercent_Ve);
+    if (TotalCalLimit > LimitPercent) {
+      if (TotalCalLimit > LimitPercent && TotalCalLimit > limit) {
+        const alertMessage = 'The Indent Limit has been crossed for this CatPB, Click on "OK" if you still wish to proceed for Indenting this Product. Instead you can also Wishlist this Product!';
+        const isConfirmed = window.confirm(alertMessage);
+        if (isConfirmed === true) {
+          WishListToEndent(event, setWishListRowData);
+          InseartCatPBLimit(event, TotalCalLimit, TotalStdWt);
+        }
+        setLoading(false);
+      } else if (TotalCalLimit > LimitPercent_Ve) {
+        const alertMessage = 'You are reaching the max limit For CatPB Click Ok to Proceed';
+        const isConfirmed = window.confirm(alertMessage);
+        if (isConfirmed === true) {
+          WishListToEndent(event, setWishListRowData);
+          InseartCatPBLimit(event, TotalCalLimit, TotalStdWt);
+        }
+        setLoading(false);
+      } else if (TotalCalLimit > LimitPercent) {
+        const alertMessage = 'The Indent Limit has been crossed for this CatPB, Click on "OK" if you still wish to proceed for Indenting this Product. Instead you can also Wishlist this Product!';
+        alert(alertMessage);
+        setLoading(false);
+      }
+      setLoading(false);
+    } else if (limit === 0) {
+      const alertMessage = `There is no Limit Available for this "CatPB" Do you still wish to Indent this Product. Click "OK" to continue or click on "Cancel" to wishlist this Product!`;
+      const isConfirmed = window.confirm(alertMessage);
+      if (isConfirmed === true) {
+        WishListToEndent(event, setWishListRowData);
+        InseartCatPBLimit(event, TotalCalLimit, TotalStdWt);
+      }
+      setLoading(false);
+    } else {
+      WishListToEndent(event, setWishListRowData);
+      InseartCatPBLimit(event, TotalCalLimit, TotalStdWt);
+    }
+  }
+
+  const GetCatPBLimit = (event, setWishListRowData, TotalCalLimit, TotalStdWt) => {
+    setLoading(true);
+    const encodedCatPB = encodeURIComponent(event.catPB);
+    APIGetLimitCatPBWise(`/NPIML3/limit/against/total?storeCode=${storeCode}&catPB=${encodedCatPB}`)
+      .then(res => res).then((response) => {
+        if (response.data.code === "1000") {
+          console.log("response==>", response.data);
+          const getLimit = response.data.limitResp.length > 0 ? response.data.limitResp.map(item => item.limit)[0] : 0;
+          const sumTotCost = response.data.sumTableResp.length > 0 ? response.data.sumTableResp.map(item => item.sumTotCost)[0] : 0;
+          console.log("sumTotCost==>", sumTotCost);
+          console.log("getLimit==>", TotalCalLimit + getLimit);
+          ValiDateLimit(event, setWishListRowData, TotalCalLimit + sumTotCost, getLimit, TotalStdWt);
+        }
+      }).catch(error => {
+        console.log("error==>", error);
+        setLoading(false);
+        toast.error("CatPB Is Not Available Hence Data Can't Be Saved!", { theme: "colored" });
+      });
+  }
 
   const MoveToWishlist = async (event, setWishListRowData) => {
     // WishListToEndent(event.itemCode, setWishListRowData);
-
+    console.log("event==>", event);
     const GetItemWiseReports = async (storeCode) => {
       try {
         setLoading(true);
@@ -197,8 +213,8 @@ const WishListedItems = () => {
         setLoading(false);
         if (response.data.code === "1000") {
           const isCatPB = response.data.value.filter(item => item.catPB);
-          const catPbDataUpper = isCatPB.filter(item_1 => item_1.catPB.toUpperCase() === feedShowState.catPB.toUpperCase());
-          const catPbWiseData = catPbDataUpper.filter(item_2 => item_2.catPB.replace(/\s+/g, '').trim() == feedShowState.catPB.replace(/\s+/g, '').trim());
+          const catPbDataUpper = isCatPB.filter(item_1 => item_1.catPB.toUpperCase() === event.catPB.toUpperCase());
+          const catPbWiseData = catPbDataUpper.filter(item_2 => item_2.catPB.replace(/\s+/g, '').trim() == event.catPB.replace(/\s+/g, '').trim());
           const tolCostVal = catPbWiseData.map(item_3 => Number(item_3.tolCost));
           return tolCostVal.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
         } else {
@@ -212,18 +228,27 @@ const WishListedItems = () => {
     const tolSum = await GetItemWiseReports(storeCode);
     console.log("tolSum==>", tolSum);
 
+    // <------------------------------------ UMO UCP LIMIT CALUCATION-------------------------------->
+    let TotalCalLimit = 0;
+    const bangle11Digit = (event.category === "BANGLE" || event.category === "BANGLES") && event.itemCode.charAt(10);
+    if (event.category.toUpperCase() === "BANGLE" || event.category === "BANGLES") {
+      const singleBanglePrice = Number(event.stdUCP) / Number(bangle11Digit) || 1;
+      TotalCalLimit = singleBanglePrice * Number(event.uom) * Number(event.itemQty);
+    } else {
+      TotalCalLimit = Number(event.itemQty) * Number(event.stdUCP);
+    }
+    console.log("TotalCalLimit + tolSum==>", TotalCalLimit + tolSum);
 
-    // let inputData = 0;
-    // const bangle11Digit = (event.category === "BANGLE" || event.category === "BANGLES") && event.itemCode.charAt(10);
-    // if (event.category.toUpperCase() === "BANGLE" || event.category === "BANGLES") {
-    //   const singleBanglePrice = Number(event.stdUCP) / Number(bangle11Digit) || 1;
-    //   inputData = singleBanglePrice * Number(event.uom) * Number(event.itemQty);
-    // } else {
-    //   inputData = Number(event.itemQty) * Number(event.stdUCP);
-    // }
-    // console.log("inputData==>", inputData);
-    // console.log("inputData + tolSum==>", inputData + tolSum);
-    // GetCatPBLimit(event, setWishListRowData, inputData + tolSum);
+    // <------------------------------------ UMO STD WT CALUCATION-------------------------------->
+    let TotalStdWt = 0;
+    if (event.category.toUpperCase() === "BANGLE" || event.category === "BANGLES") {
+      const singleBanglePrice = Number(event.stdWt) / Number(bangle11Digit) || 1;
+      TotalStdWt = singleBanglePrice * Number(event.uom) * Number(event.itemQty);
+    } else {
+      TotalStdWt = Number(event.itemQty) * Number(event.stdWt);
+    }
+    console.log("TotalStdWt==>", TotalStdWt);
+    GetCatPBLimit(event, setWishListRowData, TotalCalLimit + tolSum, TotalStdWt);
   }
 
   const reportDropHandler = (input) => {
