@@ -10,8 +10,8 @@ import { useNavigate } from "react-router-dom";
 import { LoginInitialValue, LoginSchema } from "../validationSchema/LoginSchema";
 import ShowError from "../validationSchema/ShowError";
 import { useMsal } from '@azure/msal-react';
-// import { loginRequest } from "../DataCenter/AzurConfig";
-// import micIcon from "../images/mic-icon.png"
+import { loginRequest } from "../DataCenter/AzurConfig";
+import micIcon from "../images/mic-icon.png"
 import { APILogin } from "../HostManager/CommonApiCallL3";
 import { INDENT_HOST_URL } from "../HostManager/UrlManager";
 import axios from "axios";
@@ -102,11 +102,20 @@ const Login = ({ open, setOpen }) => {
   };
 
 
-  // const LoginByAzzure = async () => {
-  //   instance.loginPopup(loginRequest).then(response => {
-  //     console.log("response==>", response);
-  //   }).catch(error => console.log("error==>", error));
-  // };
+  const LoginByAzzure = async () => {
+    instance.loginPopup(loginRequest).then(response => {
+      console.log("response==>", response);
+      const headers = {
+        'Authorization': `Bearer ${response.idToken}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Cache-Control': "no-cach",
+        "access-control-allow-origin": "*"
+      }
+      console.log("headers==>", headers);
+      sessionStorage.setItem("authToken", response.idToken);
+    }).catch(error => console.log("error==>", error));
+  };
 
   return (
     <React.Fragment>
@@ -150,9 +159,7 @@ const Login = ({ open, setOpen }) => {
                 <Form>
                   {errorSms && <h6 className="text-center text-danger my-3"><b>{errorSms}</b></h6>}
                   <div className="my-1">
-                    <b>
-                      Username <span className="text-danger"> *</span>
-                    </b>
+                    <b>Username <span className="text-danger"> *</span></b>
                     <Field
                       placeholder="Username"
                       name="userName"
@@ -161,9 +168,7 @@ const Login = ({ open, setOpen }) => {
                     <ShowError name="userName" />
                   </div>
                   <div className="my-2">
-                    <b>
-                      Password <span className="text-danger"> *</span>
-                    </b>
+                    <b>Password <span className="text-danger"> *</span></b>
                     <div className="d-flex">
                       <Field
                         type={passwordShown ? "text" : "password"}
@@ -192,9 +197,7 @@ const Login = ({ open, setOpen }) => {
                     <ShowError name="password" />
                   </div>
                   <div className="my-2">
-                    <b>
-                      RSO Name <span className="text-danger"> *</span>
-                    </b>
+                    <b>RSO Name <span className="text-danger"> *</span></b>
                     <Field
                       placeholder="RSO Name"
                       className="GInput"
@@ -208,7 +211,6 @@ const Login = ({ open, setOpen }) => {
                         <span
                           className="spinner-border spinner-border-sm"
                           role="status"
-                          aria-hidden="true"
                         />
                       ) : (
                         <span>LOGIN</span>
@@ -217,10 +219,10 @@ const Login = ({ open, setOpen }) => {
                   </div>
                 </Form>
               </Formik>
-              {/*<button className="m_LoginBtn" onClick={LoginByAzzure}>
+              <button className="m_LoginBtn" onClick={LoginByAzzure}>
                 <img src={micIcon} width="23" alt="micIcon" />
                 <span className="mx-3 mt-3">Continue With Microsoft</span>
-              </button>*/}
+              </button>
             </div>
           </div>
         </Box>

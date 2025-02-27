@@ -486,7 +486,7 @@ const IndentL3Digital = () => {
                     const limit = parseFloat(getLimit).toFixed(2);
                     const sumTotCost = response.data.sumTableResp.length > 0 ? response.data.sumTableResp.map(item => item.sumTotCost)[0] : 0;
                     console.log("sumTotCost==>", sumTotCost);
-                    console.log("limit==>", limit);
+                    console.log("limit==>", Number(limit));
                     ValiDateLimit(TotalCalLimit + sumTotCost, Number(limit), indtype, TotalStdWt, TolQInpQnty);
                 }
             }).catch(error => {

@@ -1,6 +1,9 @@
 import axios from 'axios';
 import { HOST_URL } from './UrlManager';
 
+const token = sessionStorage.getItem("authToken");
+console.log("token==>", token);
+
 export const privateApiClient = axios.create({
     baseURL: HOST_URL,
     headers: {

@@ -181,13 +181,12 @@ const EditItemWiseProducts = ({ itemWiseData, rows, productsData, AlertPopupStat
     }
 
     const InseartCatPBLimit = (TotalCalLimit, TotalStdWt, TolQInpQnty) => {
-        const encodedCatPB = encodeURIComponent(productsData.catPB)
         const InsLimitPayload = {
             activity: productsData.activity,
             totWeight: TotalStdWt,
             totQty: TolQInpQnty,
             totCost: TotalCalLimit,
-            catPB: encodedCatPB,
+            catPB: productsData.catPB,
             storeCode: storeCode,
         }
         console.log("InsLimitPayload==>", InsLimitPayload);
@@ -248,9 +247,10 @@ const EditItemWiseProducts = ({ itemWiseData, rows, productsData, AlertPopupStat
                 if (response.data.code === "1000") {
                     console.log("response==>", response.data);
                     const getLimit = response.data.limitResp.length > 0 ? response.data.limitResp.map(item => item.limit)[0] : 0;
+                    const limit = parseFloat(getLimit).toFixed(2);
                     const sumTotCost = response.data.sumTableResp.length > 0 ? response.data.sumTableResp.map(item => item.sumTotCost)[0] : 0;
-                    console.log("sumTotCost==>", TotalCalLimit + getLimit);
-                    ValiDateLimit(TotalCalLimit + sumTotCost, getLimit, TotalStdWt, TolQInpQnty);
+                    console.log("limit==>", Number(limit));
+                    ValiDateLimit(TotalCalLimit + sumTotCost, Number(limit), TotalStdWt, TolQInpQnty);
                 }
             }).catch(error => {
                 console.log(error)

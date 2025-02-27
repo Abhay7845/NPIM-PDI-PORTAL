@@ -125,13 +125,12 @@ const WishListedItems = () => {
   }
 
   const InseartCatPBLimit = (event, TotalCalLimit, TotalStdWt) => {
-    const encodedCatPB = encodeURIComponent(event.catPB)
     const InsLimitPayload = {
       activity: event.activity,
       totWeight: TotalStdWt,
       totQty: Number(event.itemQty),
       totCost: TotalCalLimit,
-      catPB: encodedCatPB,
+      catPB: event.catPB,
       storeCode: storeCode,
     }
     console.log("InsLimitPayload==>", InsLimitPayload);
@@ -191,10 +190,11 @@ const WishListedItems = () => {
         if (response.data.code === "1000") {
           console.log("response==>", response.data);
           const getLimit = response.data.limitResp.length > 0 ? response.data.limitResp.map(item => item.limit)[0] : 0;
+          const limit = parseFloat(getLimit).toFixed(2);
           const sumTotCost = response.data.sumTableResp.length > 0 ? response.data.sumTableResp.map(item => item.sumTotCost)[0] : 0;
           console.log("sumTotCost==>", sumTotCost);
-          console.log("getLimit==>", TotalCalLimit + getLimit);
-          ValiDateLimit(event, setWishListRowData, TotalCalLimit + sumTotCost, getLimit, TotalStdWt);
+          console.log("limit==>", Number(limit));
+          ValiDateLimit(event, setWishListRowData, TotalCalLimit + sumTotCost, Number(limit), TotalStdWt);
         }
       }).catch(error => {
         console.log("error==>", error);
