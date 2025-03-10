@@ -124,12 +124,13 @@ const WishListedItems = () => {
       }).catch((error) => setLoading(false));
   }
 
-  const InseartCatPBLimit = (event, TotalCalLimit, TotalStdWt) => {
+  const InseartCatPBLimit = (event, TotalCost, TotalStdWt) => {
     const InsLimitPayload = {
+      uniqueId: `${storeCode}${event.itemCode}`,
       activity: event.activity,
       totWeight: TotalStdWt,
       totQty: Number(event.itemQty),
-      totCost: TotalCalLimit,
+      totCost: TotalCost,
       catPB: event.catPB,
       storeCode: storeCode,
     }
@@ -139,7 +140,7 @@ const WishListedItems = () => {
       .catch(err => console.log(err));
   }
 
-  const ValiDateLimit = (event, setWishListRowData, TotalCalLimit, limit, TotalStdWt) => {
+  const ValiDateLimit = (event, setWishListRowData, TotalCalLimit, limit, TotalStdWt, TotalCost) => {
     console.log("limit==>", limit);
     const LimitPercent = limit + (limit * 0.1);
     const LimitPercent_Ve = limit - (limit * 0.1);
@@ -151,7 +152,7 @@ const WishListedItems = () => {
         const isConfirmed = window.confirm(alertMessage);
         if (isConfirmed === true) {
           WishListToEndent(event, setWishListRowData);
-          InseartCatPBLimit(event, TotalCalLimit, TotalStdWt);
+          InseartCatPBLimit(event, TotalCost, TotalStdWt);
         }
         setLoading(false);
       } else if (TotalCalLimit > LimitPercent_Ve) {
@@ -159,7 +160,7 @@ const WishListedItems = () => {
         const isConfirmed = window.confirm(alertMessage);
         if (isConfirmed === true) {
           WishListToEndent(event, setWishListRowData);
-          InseartCatPBLimit(event, TotalCalLimit, TotalStdWt);
+          InseartCatPBLimit(event, TotalCost, TotalStdWt);
         }
         setLoading(false);
       } else if (TotalCalLimit > LimitPercent) {
@@ -173,16 +174,16 @@ const WishListedItems = () => {
       const isConfirmed = window.confirm(alertMessage);
       if (isConfirmed === true) {
         WishListToEndent(event, setWishListRowData);
-        InseartCatPBLimit(event, TotalCalLimit, TotalStdWt);
+        InseartCatPBLimit(event, TotalCost, TotalStdWt);
       }
       setLoading(false);
     } else {
       WishListToEndent(event, setWishListRowData);
-      InseartCatPBLimit(event, TotalCalLimit, TotalStdWt);
+      InseartCatPBLimit(event, TotalCost, TotalStdWt);
     }
   }
 
-  const GetCatPBLimit = (event, setWishListRowData, TotalCalLimit, TotalStdWt) => {
+  const GetCatPBLimit = (event, setWishListRowData, TotalCalLimit, TotalStdWt, TotalCost) => {
     setLoading(true);
     const encodedCatPB = encodeURIComponent(event.catPB);
     APIGetLimitCatPBWise(`/NPIML3/limit/against/total?storeCode=${storeCode}&catPB=${encodedCatPB}`)
@@ -191,10 +192,8 @@ const WishListedItems = () => {
           console.log("response==>", response.data);
           const getLimit = response.data.limitResp.length > 0 ? response.data.limitResp.map(item => item.limit)[0] : 0;
           const limit = parseFloat(getLimit).toFixed(2);
-          const sumTotCost = response.data.sumTableResp.length > 0 ? response.data.sumTableResp.map(item => item.sumTotCost)[0] : 0;
-          console.log("sumTotCost==>", sumTotCost);
           console.log("limit==>", Number(limit));
-          ValiDateLimit(event, setWishListRowData, TotalCalLimit + sumTotCost, Number(limit), TotalStdWt);
+          ValiDateLimit(event, setWishListRowData, TotalCalLimit, Number(limit), TotalStdWt, TotalCost);
         }
       }).catch(error => {
         console.log("error==>", error);
@@ -226,7 +225,6 @@ const WishListedItems = () => {
     }
 
     const tolSum = await GetItemWiseReports(storeCode);
-    console.log("tolSum==>", tolSum);
 
     // <------------------------------------ UMO UCP LIMIT CALUCATION-------------------------------->
     let TotalCalLimit = 0;
@@ -237,7 +235,6 @@ const WishListedItems = () => {
     } else {
       TotalCalLimit = Number(event.itemQty) * Number(event.stdUCP);
     }
-    console.log("TotalCalLimit + tolSum==>", TotalCalLimit + tolSum);
 
     // <------------------------------------ UMO STD WT CALUCATION-------------------------------->
     let TotalStdWt = 0;
@@ -248,7 +245,7 @@ const WishListedItems = () => {
       TotalStdWt = Number(event.itemQty) * Number(event.stdWt);
     }
     console.log("TotalStdWt==>", TotalStdWt);
-    GetCatPBLimit(event, setWishListRowData, TotalCalLimit + tolSum, TotalStdWt);
+    GetCatPBLimit(event, setWishListRowData, TotalCalLimit + tolSum, TotalStdWt, TotalCalLimit);
   }
 
   const reportDropHandler = (input) => {

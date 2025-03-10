@@ -27,7 +27,6 @@ const StatusTabularL1L2 = ({ statusData }) => {
             remainingSKUcount: Number(item.totalSku) - Number(item.feedbackGiven)
         }
     })
-
     return (
         <React.Fragment>
             {statusData.row.length > 0 ? <Table className={classes.table} size="small" aria-label="a dense table">
@@ -56,7 +55,7 @@ const StatusTabularL1L2 = ({ statusData }) => {
                                     <TableCell className={classes.tableCell}>{statusColoum.needState}</TableCell>
                                     <TableCell className={classes.tableCell} align="center">{statusColoum.totalSku}</TableCell>
                                     <TableCell className={classes.tableCell} align="center">{statusColoum.feedbackGiven}</TableCell>
-                                    <TableCell className={classes.tableCell} align="center">{statusColoum.remainingSKUcount}</TableCell>
+                                    <TableCell className={classes.tableCell} align="center">{statusColoum.remainingSKUcount || "N/A"}</TableCell>
                                 </TableRow>)
                         })
                     )}

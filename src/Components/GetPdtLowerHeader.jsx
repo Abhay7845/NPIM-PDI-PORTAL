@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { BsCardList, BsCart3 } from "react-icons/bs";
 import { BiHomeAlt } from "react-icons/bi";
 import { AiOutlineHeart, AiOutlineBarChart } from "react-icons/ai";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import StatusTabular from "./StatusTabular";
 import { Drawer } from "@material-ui/core";
-import { APIGetReportL3, APIGetStatuL3 } from "../HostManager/CommonApiCallL3";
+import { APIGetStatuL3 } from "../HostManager/CommonApiCallL3";
 import { feedbackl1l2Navigate } from "../DataCenter/DataList";
 
 const GetPdtLowerHeader = () => {
@@ -15,10 +15,7 @@ const GetPdtLowerHeader = () => {
         row: [],
     });
 
-    const location = useLocation();
     const [statusCloserOpener, setStatusCloserOpener] = useState(false);
-    const [cardStuddData, setCardStuddData] = useState([]);
-    const [cardPlainData, setCardPlainData] = useState([]);
     const navigate = useNavigate();
     const loginData = JSON.parse(sessionStorage.getItem("loginData"));
 
@@ -34,29 +31,8 @@ const GetPdtLowerHeader = () => {
             }).catch((error) => { });
     }
 
-
-    const GetCardSttudValue = (storeCode) => {
-        APIGetReportL3(`/NPIML3/npim/summary/report/L3/${storeCode}/StuddedValue`)
-            .then(res => res).then(response => {
-                if (response.data.code === "1000") {
-                    setCardStuddData(response.data.value);
-                }
-            }).catch(error => console.log(""));
-    }
-
-    const GetCardPlainValue = (storeCode) => {
-        APIGetReportL3(`/NPIML3/npim/summary/report/L3/${storeCode}/PlainValue`)
-            .then(res => res).then(response => {
-                if (response.data.code === "1000") {
-                    setCardPlainData(response.data.value);
-                }
-            }).catch(error => console.log(""));
-    }
-
     useEffect(() => {
         GetStatusReport(storeCode);
-        GetCardSttudValue(storeCode);
-        GetCardPlainValue(storeCode);
     }, [storeCode]);
 
     const HomePageRouting = () => {
@@ -102,21 +78,17 @@ const GetPdtLowerHeader = () => {
                         </div>
                     </div>
 
-                    {location.pathname === `/NpimPortal/added/cart/products/${storeCode}/${rsoName}` && (loginData.role === "L3" && <div className="d-flex mt-4">
-                        <h6><span className="text-primary">▣ </span><b style={{ color: "#832729" }}>STUDDED VALUE (Crs) - {cardStuddData.length > 0 ? parseFloat(parseFloat(cardStuddData[0].tolValue) / 10000000).toFixed(3) : 0}</b></h6>
-                        <h6 className="mx-4"><span className="text-primary">▣ </span><b style={{ color: "#832729" }}>PLAIN VALUE (Kgs) - {cardPlainData.length > 0 ? (parseFloat(cardPlainData[0].totWeight) / 1000).toFixed(3) : 0}</b></h6>
-                    </div>)}
+                    {/* <div className="d-flex mt-4">
+                        <h6><span className="text-primary">▣ </span><b style={{ color: "#832729" }}>STUDDED VALUE(Crs) - {cardStuddData ? parseFloat(cardStuddData.sumTotWeight / 100000).toFixed(3) : 0}</b></h6>
+                        <h6 className="mx-4"><span className="text-primary">▣ </span><b style={{ color: "#832729" }}>PLAIN VALUE (Kgs) - {cardPlainData ? parseFloat(cardPlainData.sumTotWeight / 1000).toFixed(3) : 0}</b></h6>
+                    </div> */}
 
                     <div className="d-flex mx-3">
                         {loginData.role === "L3" && <div className="IconsStyle" onClick={() => navigate(`/NpimPortal/added/cart/products/${loginData.userID}/${rsoName}`)}>
                             <BsCart3 size={23} />
                             <b>Cart</b>
                         </div>}
-                        <div className="IconsStyle" onClick={() => {
-                            navigate(`/NpimPortal/get/products/home/${storeCode}/${rsoName}`)
-                            GetCardPlainValue(storeCode);
-                            GetCardSttudValue(storeCode);
-                        }}>
+                        <div className="IconsStyle" onClick={() => { navigate(`/NpimPortal/get/products/home/${storeCode}/${rsoName}`) }}>
                             <BiHomeAlt size={23} />
                             <b>Home</b>
                         </div>

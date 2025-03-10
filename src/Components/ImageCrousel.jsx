@@ -99,13 +99,13 @@ const ImageCrousel = ({ advariantDetails, statusData, cardStuddData, cardPlainDa
                 <div className="card border-secondary my-4">
                     <div className="card-header" style={{ background: "black", color: "#fff", fontWeight: "bold" }}>Value Of Studded Products Indented(In Crs)</div>
                     <div className="card-body">
-                        <h6 className="card-title">{cardStuddData.length > 0 ? parseFloat(parseFloat(cardStuddData[0].tolValue) / 10000000).toFixed(3) : "Studded Products Not Indented"}</h6>
+                        <h6 className="card-title">{cardStuddData ? parseFloat(cardStuddData.sumTotWeight / 100000).toFixed(3) : "Studded Products Not Indented"}</h6>
                     </div>
                 </div>
                 <div className="card border-secondary">
                     <div className="card-header" style={{ background: "black", color: "#fff", fontWeight: "bold" }}>Plain Products Indented (In Kgs)</div>
                     <div className="card-body">
-                        <h6 className="card-title">{cardPlainData.length > 0 ? (parseFloat(cardPlainData[0].totWeight) / 1000).toFixed(3) : "Plain Products Not Indented"}</h6>
+                        <h6 className="card-title">{cardPlainData ? parseFloat(cardPlainData.sumTotWeight / 1000).toFixed(3) : "Plain Products Not Indented"}</h6>
                     </div>
                 </div>
             </div>

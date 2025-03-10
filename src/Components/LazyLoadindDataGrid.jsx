@@ -70,7 +70,6 @@ function CustomToolbar(props) {
             ? `${response?.data?.value?.storeNPIMStatus} and mail already sent!`
             : response?.data?.mailStatus === "sent successfully" && success;
           setAlertPopupStatus({
-
             status: true,
             main: msg,
             contain: "",
@@ -96,18 +95,8 @@ function CustomToolbar(props) {
       {props.reportLabel === "Item_Wise_Report" && (
         <React.Fragment>
           <Grid item container>
-            <h6>
-              Total:
-              <span>
-                <b>{props?.rows.length}</b>
-              </span>
-            </h6>
-            <h6 className="ml-5">
-              Successful Indent Count:
-              <span>
-                <b>{successCountArray.length}</b>
-              </span>
-            </h6>
+            <h6> Total:<span><b>{props?.rows.length}</b></span></h6>
+            <h6 className="ml-5"> Successful Indent Count: <span><b>{successCountArray.length}</b></span></h6>
           </Grid>
           <Grid item container justifyContent="flex-end">
             <Button
@@ -260,7 +249,7 @@ const LazyLoadindDataGrid = (props) => {
         flex: 1,
         disableClickEventBubbling: true,
         renderCell: (params) => {
-          const { limit, totalIndentForCatPB } = params.row;
+          const { totalIndentForCatPB } = params.row;
           return (
             <b>{totalIndentForCatPB}</b>
           );
@@ -274,9 +263,9 @@ const LazyLoadindDataGrid = (props) => {
         flex: 1,
         disableClickEventBubbling: true,
         renderCell: (params) => {
-          const { limit, totalIndentForCatPB } = params.row;
+          const { limit } = params.row;
           return (
-            <b>{limit}</b>
+            <b>{limit || "N/A"}</b>
           );
         },
       }

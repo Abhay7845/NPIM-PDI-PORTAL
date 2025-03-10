@@ -120,11 +120,6 @@ const EditItemWiseProducts = ({ itemWiseData, rows, productsData, AlertPopupStat
         });
     }, [productsData.itemCode, productsData.id]);
 
-    const isCatPB = rows.filter(item => item.catPB);
-    const catPbDataUpper = isCatPB.filter(item => item.catPB.toUpperCase() === productsData.catPB.toUpperCase());
-    const catPbWiseData = catPbDataUpper.filter(item => item.catPB.replace(/\s+/g, '').trim() === productsData.catPB.replace(/\s+/g, '').trim());
-    const tolCostVal = catPbWiseData.map(item => Number(item.tolCost));
-    const tolSum = tolCostVal.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
     const UpdateIndentedProduct = (report) => {
         const itemsToExclude = ['Only_MANGALSUTRA', 'Only_BANGLE', 'Only_FINGERRING'];
@@ -180,12 +175,13 @@ const EditItemWiseProducts = ({ itemWiseData, rows, productsData, AlertPopupStat
             }).catch((error) => setLoading(false));
     }
 
-    const InseartCatPBLimit = (TotalCalLimit, TotalStdWt, TolQInpQnty) => {
+    const InseartCatPBLimit = (TotalCost, TotalStdWt, TolQInpQnty) => {
         const InsLimitPayload = {
+            uniqueId: `${storeCode}${productsData.itemCode}`,
             activity: productsData.activity,
             totWeight: TotalStdWt,
             totQty: TolQInpQnty,
-            totCost: TotalCalLimit,
+            totCost: TotalCost,
             catPB: productsData.catPB,
             storeCode: storeCode,
         }
@@ -195,7 +191,7 @@ const EditItemWiseProducts = ({ itemWiseData, rows, productsData, AlertPopupStat
             .catch(err => console.log(err));
     }
 
-    const ValiDateLimit = (TotalCalLimit, limit, TotalStdWt, TolQInpQnty) => {
+    const ValiDateLimit = (TotalCalLimit, limit, TotalStdWt, TolQInpQnty, TotalCost) => {
         console.log("limit==>", limit);
         const LimitPercent = limit + (limit * 0.1);
         const LimitPercent_Ve = limit - (limit * 0.1);
@@ -207,7 +203,7 @@ const EditItemWiseProducts = ({ itemWiseData, rows, productsData, AlertPopupStat
                 const isConfirmed = window.confirm(alertMessage);
                 if (isConfirmed === true) {
                     UpdateIndentedProduct("report");
-                    InseartCatPBLimit(TotalCalLimit, TotalStdWt, TolQInpQnty);
+                    InseartCatPBLimit(TotalCost, TotalStdWt, TolQInpQnty);
                 }
                 setLoading(false);
             } else if (TotalCalLimit > LimitPercent_Ve) {
@@ -215,7 +211,7 @@ const EditItemWiseProducts = ({ itemWiseData, rows, productsData, AlertPopupStat
                 const isConfirmed = window.confirm(alertMessage);
                 if (isConfirmed === true) {
                     UpdateIndentedProduct("report");
-                    InseartCatPBLimit(TotalCalLimit, TotalStdWt, TolQInpQnty);
+                    InseartCatPBLimit(TotalCost, TotalStdWt, TolQInpQnty);
                 }
                 setLoading(false);
             } else if (TotalCalLimit > LimitPercent) {
@@ -229,17 +225,16 @@ const EditItemWiseProducts = ({ itemWiseData, rows, productsData, AlertPopupStat
             const isConfirmed = window.confirm(alertMessage);
             if (isConfirmed === true) {
                 UpdateIndentedProduct("report");
-                InseartCatPBLimit(TotalCalLimit, TotalStdWt, TolQInpQnty);
+                InseartCatPBLimit(TotalCost, TotalStdWt, TolQInpQnty);
             }
             setLoading(false);
         } else {
             UpdateIndentedProduct("report");
-            InseartCatPBLimit(TotalCalLimit, TotalStdWt, TolQInpQnty);
+            InseartCatPBLimit(TotalCost, TotalStdWt, TolQInpQnty);
         }
     }
 
-
-    const GetCatPBLimit = (TotalCalLimit, TotalStdWt, TolQInpQnty) => {
+    const GetCatPBLimit = (TotalCalLimit, TotalStdWt, TolQInpQnty, TotalCost) => {
         setLoading(true);
         const encodedCatPB = encodeURIComponent(productsData.catPB);
         APIGetLimitCatPBWise(`/NPIML3/limit/against/total?storeCode=${storeCode}&catPB=${encodedCatPB}`)
@@ -248,16 +243,16 @@ const EditItemWiseProducts = ({ itemWiseData, rows, productsData, AlertPopupStat
                     console.log("response==>", response.data);
                     const getLimit = response.data.limitResp.length > 0 ? response.data.limitResp.map(item => item.limit)[0] : 0;
                     const limit = parseFloat(getLimit).toFixed(2);
-                    const sumTotCost = response.data.sumTableResp.length > 0 ? response.data.sumTableResp.map(item => item.sumTotCost)[0] : 0;
                     console.log("limit==>", Number(limit));
-                    ValiDateLimit(TotalCalLimit + sumTotCost, Number(limit), TotalStdWt, TolQInpQnty);
+                    ValiDateLimit(TotalCalLimit, Number(limit), TotalStdWt, TolQInpQnty, TotalCost);
                 }
             }).catch(error => {
-                console.log(error)
+                console.log(error);
                 setLoading(false);
                 toast.error("CatPB Is Not Available Hence Data Can't Be Saved!", { theme: "colored" });
             });
     }
+    console.log("productsData==>", productsData);
 
     const UpdateReportsPdtDetails = async () => {
         // UpdateIndentedProduct("report");
@@ -280,8 +275,10 @@ const EditItemWiseProducts = ({ itemWiseData, rows, productsData, AlertPopupStat
                 return setLoading(false);
             }
         }
-        const tolSum = await GetItemWiseReports(storeCode);
-        console.log("tolSum==>", tolSum);
+        const tolIndentedLimit = await GetItemWiseReports(storeCode);
+        console.log("tolIndentedLimit==>", tolIndentedLimit);
+        const rowTolLimit = tolIndentedLimit - Number(productsData.tolCost);
+        console.log("rowTolLimit==>", rowTolLimit);
 
         const itemsToExclude = ['Only_MANGALSUTRA', 'ONLY_BANGLE', 'Only_FINGERRING'];
         const filteredTags = allDataFromValidation.tegQuantityRes.filter(item => !itemsToExclude.includes(item.size));
@@ -431,7 +428,7 @@ const EditItemWiseProducts = ({ itemWiseData, rows, productsData, AlertPopupStat
         } else {
             sizeUCPLimit = SizeQuntyTotal * parseFloat(Number(stdUcpVal[1] ? stdUcpVal[1] : productsData.stdUCP).toFixed(2));
         }
-
+        console.log("sizeUCPLimit==>", sizeUCPLimit);
 
         // < --------------------------------------- SIZABLE CALCULATION FOR STD WT--------------------------------------->
         let TotalsizeStdWt = 0;
@@ -452,11 +449,13 @@ const EditItemWiseProducts = ({ itemWiseData, rows, productsData, AlertPopupStat
         const InputStdWt = Number(allDataFromValidation.quantityRes) * Number(productsData.stdWt);
         console.log("InputStdWt==>", InputStdWt);
 
-        const TotalCalLimit = tagSizeLimit + sizeUCPLimit + Number(parseFloat(UmoSizeLimit).toFixed(3)) + indQuntyLimit + tolSum;
+        const TotalCalLimit = tagSizeLimit + sizeUCPLimit + Number(parseFloat(UmoSizeLimit).toFixed(3)) + indQuntyLimit + rowTolLimit;
         console.log("TotalCalLimit==>", TotalCalLimit);
+        const TotalCost = tagSizeLimit + sizeUCPLimit + Number(parseFloat(UmoSizeLimit).toFixed(3)) + indQuntyLimit;
+        console.log("TotalCost==>", TotalCost);
         const TotalStdWt = TolTagSdtWeith + TotalsizeStdWt + Number(parseFloat(UmoSizeStdWt).toFixed(3)) + InputStdWt;
         console.log("TotalStdWt==>", TotalStdWt);
-        GetCatPBLimit(TotalCalLimit, TotalStdWt, TolQInpQnty);
+        GetCatPBLimit(TotalCalLimit, TotalStdWt, TolQInpQnty, TotalCost);
     }
 
     const onClickCancelBtnHandler = () => {

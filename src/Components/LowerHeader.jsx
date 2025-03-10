@@ -9,7 +9,7 @@ import { L1L2Reports, specialChars } from "../DataCenter/DataList";
 import { BsCardList, BsCart3 } from "react-icons/bs";
 import { BiHomeAlt } from "react-icons/bi";
 import { AiOutlineHeart, AiOutlineBarChart } from "react-icons/ai";
-// import { APIGetReportL3 } from "../HostManager/CommonApiCallL3";
+import { APIGetReportL3 } from "../HostManager/CommonApiCallL3";
 import StatusTabularL1L2 from "./StatusTabularL1L2";
 
 const LowerHeader = (props) => {
@@ -19,8 +19,8 @@ const LowerHeader = (props) => {
   const [statusCloserOpener, setStatusCloserOpener] = useState(false);
   const [dropState, setDropState] = useState("");
   const [itemCodeValid, setItemCodeValid] = useState(false);
-  // const [cardStuddData, setCardStuddData] = useState([]);
-  // const [cardPlainData, setCardPlainData] = useState([]);
+  const [cardStuddData, setCardStuddData] = useState(null);
+  const [cardPlainData, setCardPlainData] = useState(null);
   const loginData = JSON.parse(sessionStorage.getItem("loginData"));
 
   const newChangeHandler = (inputValue) => {
@@ -68,28 +68,32 @@ const LowerHeader = (props) => {
     }
   }
 
-  // const GetCardSttudValue = (storeCode) => {
-  //   APIGetReportL3(`/NPIML3/npim/summary/report/L3/${storeCode}/StuddedValue`)
-  //     .then(res => res).then(response => {
-  //       if (response.data.code === "1000") {
-  //         setCardStuddData(response.data.value);
-  //       }
-  //     }).catch(error => console.log(""));
-  // }
+  const GetCardSttudValue = (storeCode) => {
+    APIGetReportL3(`/NPIML3/home/item/summary?storeCode=${storeCode}&reportWise=StuddedValue`)
+      .then(res => res).then(response => {
+        if (response.data.code === "1000") {
+          setCardStuddData(response.data.value);
+        } else {
+          setCardStuddData(null);
+        }
+      }).catch(error => { });
+  }
 
-  // const GetCardPlainValue = (storeCode) => {
-  //   APIGetReportL3(`/NPIML3/npim/summary/report/L3/${storeCode}/PlainValue`)
-  //     .then(res => res).then(response => {
-  //       if (response.data.code === "1000") {
-  //         setCardPlainData(response.data.value);
-  //       }
-  //     }).catch(error => console.log(""));
-  // }
+  const GetCardPlainValue = (storeCode) => {
+    APIGetReportL3(`/NPIML3/home/item/summary?storeCode=${storeCode}&reportWise=PlainValue`)
+      .then(res => res).then(response => {
+        if (response.data.code === "1000") {
+          setCardPlainData(response.data.value);
+        } else {
+          setCardPlainData(null);
+        }
+      }).catch(error => { });
+  }
 
-  // useEffect(() => {
-  //   GetCardSttudValue(storeCode);
-  //   GetCardPlainValue(storeCode);
-  // }, [storeCode, dropState]);
+  useEffect(() => {
+    GetCardSttudValue(storeCode);
+    GetCardPlainValue(storeCode);
+  }, [storeCode, dropState]);
 
   return (
     <React.Fragment>
@@ -130,10 +134,10 @@ const LowerHeader = (props) => {
                     <SearchIcon />
                   </IconButton>
                 </div>
-                {/* {loginData.role === "L3" && <div className="d-flex mt-4">
-                  <h6><span className="text-primary">▣ </span><b style={{ color: "#832729" }}>STUDDED VALUE (Crs) - {cardStuddData.length > 0 ? parseFloat(parseFloat(cardStuddData[0].tolValue) / 10000000).toFixed(3) : 0}</b></h6>
-                  <h6 className="mx-4"><span className="text-primary">▣ </span><b style={{ color: "#832729" }}>PLAIN VALUE (Kgs) - {cardPlainData.length > 0 ? (parseFloat(cardPlainData[0].totWeight) / 1000).toFixed(3) : 0}</b></h6>
-                </div>} */}
+                {loginData.role === "L3" && <div className="d-flex mt-4">
+                  <h6><span className="text-primary">▣ </span><b style={{ color: "#832729" }}>STUDDED VALUE (Crs) - {cardStuddData ? parseFloat(cardStuddData.sumTotWeight / 100000).toFixed(3) : 0}</b></h6>
+                  <h6 className="mx-4"><span className="text-primary">▣ </span><b style={{ color: "#832729" }}>PLAIN VALUE (Kgs) - {cardPlainData ? parseFloat(cardPlainData.sumTotWeight / 1000).toFixed(3) : 0}</b></h6>
+                </div>}
                 <div className="d-flex">
                   {loginData.role === "L3" && <div className="IconsStyle" onClick={() => navigate(`/NpimPortal/get/products/home/${storeCode}/${rsoName}`)}>
                     <BiHomeAlt size={23} />

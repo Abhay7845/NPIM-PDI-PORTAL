@@ -28,6 +28,7 @@ const style = {
   borderRadius: "2px",
   borderColor: "#fff"
 };
+
 const Login = ({ open, setOpen }) => {
   const navigate = useNavigate();
   const { instance } = useMsal();
@@ -219,10 +220,10 @@ const Login = ({ open, setOpen }) => {
                   </div>
                 </Form>
               </Formik>
-              <button className="m_LoginBtn" onClick={LoginByAzzure}>
+              {/* <button className="m_LoginBtn" onClick={LoginByAzzure}>
                 <img src={micIcon} width="23" alt="micIcon" />
                 <span className="mx-3 mt-3">Continue With Microsoft</span>
-              </button>
+              </button> */}
             </div>
           </div>
         </Box>

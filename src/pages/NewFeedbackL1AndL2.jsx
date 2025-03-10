@@ -99,6 +99,7 @@ const NewFeedbackL1AndL2 = () => {
 
     // FOR DNPIM LOGIN TYPE
     const GetProductDetailsDnpim = (productDetails) => {
+        console.log("productDetails==>", productDetails);
         setLoading(true);
         APIDNPIMProductData(`/NPIM/base/dnpim/get/product/details/`, productDetails)
             .then(res => res).then((response) => {
@@ -128,7 +129,6 @@ const NewFeedbackL1AndL2 = () => {
                 setLoading(false);
             }).catch((error) => setLoading(false));
     }
-
 
 
     // FOR PNPIM LOGIN TYPE

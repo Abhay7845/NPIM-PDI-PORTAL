@@ -24,8 +24,8 @@ const GetProductsHome = () => {
     });
     const [homePdtDetailsRegion, setHomePdtDetailsRegion] = useState([]);
     const [homePdtDetailsAdvariant, setHomePdtDetailsAdvariant] = useState([]);
-    const [cardStuddData, setCardStuddData] = useState([]);
-    const [cardPlainData, setCardPlainData] = useState([]);
+    const [cardStuddData, setCardStuddData] = useState(null);
+    const [cardPlainData, setCardPlainData] = useState(null);
     const [alertPopupStatus, setAlertPopupStatus] = useState({
         status: false,
         main: "",
@@ -105,11 +105,12 @@ const GetProductsHome = () => {
 
     const GetCardSttudValue = (storeCode) => {
         setLoading(true);
-        APIGetReportL3(`/NPIML3/npim/summary/report/L3/${storeCode}/StuddedValue`)
+        APIGetReportL3(`/NPIML3/home/item/summary?storeCode=${storeCode}&reportWise=StuddedValue`)
             .then(res => res).then(response => {
-                console.log("response==>", response.data);
                 if (response.data.code === "1000") {
                     setCardStuddData(response.data.value);
+                } else {
+                    setCardStuddData(null);
                 }
                 setLoading(false);
             }).catch(error => setLoading(false));
@@ -117,10 +118,12 @@ const GetProductsHome = () => {
 
     const GetCardPlainValue = (storeCode) => {
         setLoading(true);
-        APIGetReportL3(`/NPIML3/npim/summary/report/L3/${storeCode}/PlainValue`)
+        APIGetReportL3(`/NPIML3/home/item/summary?storeCode=${storeCode}&reportWise=PlainValue`)
             .then(res => res).then(response => {
                 if (response.data.code === "1000") {
                     setCardPlainData(response.data.value);
+                } else {
+                    setCardPlainData(null);
                 }
                 setLoading(false);
             }).catch(error => setLoading(false));
@@ -130,6 +133,8 @@ const GetProductsHome = () => {
 
     useEffect(() => {
         GetStatusReport(storeCode);
+        GetCardSttudValue(storeCode);
+        GetCardPlainValue(storeCode);
     }, [storeCode]);
 
 
@@ -137,7 +142,7 @@ const GetProductsHome = () => {
         <div style={{ backgroundColor: "#f0ebec", height: "100vh" }}>
             {loading === true && <Loader />}
             <UpperHeader />
-            <GetPdtLowerHeader GetCardSttudValue={GetCardSttudValue} GetCardPlainValue={GetCardPlainValue} />
+            <GetPdtLowerHeader />
             <AlertPopup
                 status={alertPopupStatus.status}
                 mainLable={alertPopupStatus.main}
@@ -190,13 +195,13 @@ const GetProductsHome = () => {
                         <div className="card border-secondary my-4">
                             <div className="card-header" style={{ background: "black", color: "#fff", fontWeight: "bold" }}>Value Of Studded Products Indented(In Crs)</div>
                             <div className="card-body">
-                                <h6 className="card-title">{cardStuddData.length > 0 ? parseFloat(parseFloat(cardStuddData[0].tolValue) / 10000000).toFixed(3) : "Studded Products Not Indented"}</h6>
+                                <h6 className="card-title">{cardStuddData ? (cardStuddData.sumTotWeight / 100000).toFixed(3) : "Studded Products Not Indented"}</h6>
                             </div>
                         </div>
                         <div className="card border-secondary">
                             <div className="card-header" style={{ background: "black", color: "#fff", fontWeight: "bold" }}>Plain Products Indented (In Kgs)</div>
                             <div className="card-body">
-                                <h6 className="card-title">{cardPlainData.length > 0 ? (parseFloat(cardPlainData[0].totWeight) / 1000).toFixed(3) : "Plain Products Not Indented"}</h6>
+                                <h6 className="card-title">{cardPlainData ? parseFloat(cardPlainData.sumTotWeight / 1000).toFixed(3) : "Plain Products Not Indented"}</h6>
                             </div>
                         </div>
                     </div>

@@ -417,12 +417,13 @@ const IndentL3Digital = () => {
             }).catch((error) => setLoading(false));
     }
 
-    const InseartCatPBLimit = (TotalCalLimit, TotalStdWt, TolQInpQnty) => {
+    const InseartCatPBLimit = (TotalCost, TotalStdWt, TolQInpQnty) => {
         const InsLimitPayload = {
+            uniqueId: `${storeCode}${feedShowState.itemCode}`,
             activity: feedShowState.activity,
             totWeight: TotalStdWt,
             totQty: TolQInpQnty,
-            totCost: TotalCalLimit,
+            totCost: TotalCost,
             catPB: feedShowState.catPB,
             storeCode: storeCode,
         }
@@ -432,7 +433,7 @@ const IndentL3Digital = () => {
             .catch(err => console.log(err));
     }
 
-    const ValiDateLimit = (TotalCalLimit, limit, indtype, TotalStdWt, TolQInpQnty) => {
+    const ValiDateLimit = (TotalCalLimit, limit, indtype, TotalStdWt, TolQInpQnty, TotalCost) => {
         console.log("limit==>", limit);
         const LimitPercent = limit + (limit * 0.1);
         const LimitPercent_Ve = limit - (limit * 0.1);
@@ -444,7 +445,7 @@ const IndentL3Digital = () => {
                 const isConfirmed = window.confirm(alertMessage);
                 if (isConfirmed === true) {
                     IndentYourProduct(indtype);
-                    InseartCatPBLimit(TotalCalLimit, TotalStdWt, TolQInpQnty);
+                    InseartCatPBLimit(TotalCost, TotalStdWt, TolQInpQnty);
                 }
                 setLoading(false);
             } else if (TotalCalLimit > LimitPercent_Ve) {
@@ -452,7 +453,7 @@ const IndentL3Digital = () => {
                 const isConfirmed = window.confirm(alertMessage);
                 if (isConfirmed === true) {
                     IndentYourProduct(indtype);
-                    InseartCatPBLimit(TotalCalLimit, TotalStdWt, TolQInpQnty);
+                    InseartCatPBLimit(TotalCost, TotalStdWt, TolQInpQnty);
                 }
                 setLoading(false);
             } else if (TotalCalLimit > LimitPercent) {
@@ -466,16 +467,16 @@ const IndentL3Digital = () => {
             const isConfirmed = window.confirm(alertMessage);
             if (isConfirmed === true) {
                 IndentYourProduct(indtype);
-                InseartCatPBLimit(TotalCalLimit, TotalStdWt, TolQInpQnty);
+                InseartCatPBLimit(TotalCost, TotalStdWt, TolQInpQnty);
             }
             setLoading(false);
         } else {
             IndentYourProduct(indtype);
-            InseartCatPBLimit(TotalCalLimit, TotalStdWt, TolQInpQnty);
+            InseartCatPBLimit(TotalCost, TotalStdWt, TolQInpQnty);
         }
     }
 
-    const GetCatPBLimit = (TotalCalLimit, indtype, TotalStdWt, TolQInpQnty) => {
+    const GetCatPBLimit = (TotalCalLimit, indtype, TotalStdWt, TolQInpQnty, TotalCost) => {
         setLoading(true);
         const encodedCatPB = encodeURIComponent(feedShowState.catPB);
         APIGetLimitCatPBWise(`/NPIML3/limit/against/total?storeCode=${storeCode}&catPB=${encodedCatPB}`)
@@ -486,10 +487,10 @@ const IndentL3Digital = () => {
                     const limit = parseFloat(getLimit).toFixed(2);
                     const sumTotCost = response.data.sumTableResp.length > 0 ? response.data.sumTableResp.map(item => item.sumTotCost)[0] : 0;
                     console.log("sumTotCost==>", sumTotCost);
-                    console.log("limit==>", Number(limit));
-                    ValiDateLimit(TotalCalLimit + sumTotCost, Number(limit), indtype, TotalStdWt, TolQInpQnty);
+                    ValiDateLimit(TotalCalLimit + sumTotCost, Number(limit), indtype, TotalStdWt, TolQInpQnty, TotalCost);
                 }
             }).catch(error => {
+                console.log(error);
                 setLoading(false);
                 toast.error("CatPB Is Not Available Hence Data Can't Be Saved!", { theme: "colored" });
             });
@@ -693,12 +694,14 @@ const IndentL3Digital = () => {
 
         const TotalCalLimit = tagSizeLimit + sizeUCPLimit + Number(parseFloat(UmoSizeLimit).toFixed(3)) + indQuntyLimit + tolSum;
         console.log("TotalCalLimit==>", TotalCalLimit);
+        const TotalCost = tagSizeLimit + sizeUCPLimit + Number(parseFloat(UmoSizeLimit).toFixed(3)) + indQuntyLimit;
+        console.log("TotalCost==>", TotalCost);
         const TotalStdWt = TolTagSdtWeith + TotalsizeStdWt + Number(parseFloat(UmoSizeStdWt).toFixed(3)) + InputStdWt;
         console.log("TotalStdWt==>", TotalStdWt);
         if (indtype === "Wishlist") {
             IndentYourProduct(indtype);
         } else if (indtype === "Indent") {
-            GetCatPBLimit(TotalCalLimit, indtype, TotalStdWt, TolQInpQnty);
+            GetCatPBLimit(TotalCalLimit, indtype, TotalStdWt, TolQInpQnty, TotalCost);
         }
         window.scrollTo({ top: "0", behavior: "smooth" });
     };

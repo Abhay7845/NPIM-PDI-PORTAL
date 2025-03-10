@@ -28,8 +28,7 @@ const ReportL3 = () => {
     col: [],
     row: [],
   });
-  const catPbRpt = sessionStorage.getItem("CatPBReport");
-  const [reportLabel, setReportLabel] = useState(catPbRpt ? catPbRpt : "NeedState");
+  const [reportLabel, setReportLabel] = useState("NeedState");
   const [dataRowInformation, setDataRowInformation] = useState({});
   const [showInfo, setShowInfo] = useState(false);
   const [digit, setDigit] = useState("");
@@ -84,8 +83,13 @@ const ReportL3 = () => {
       case "Cancel_Item_List":
         urlReport = `/NPIML3/npim/get/item/cancel/list/${storeCode}`;
         break;
+      case "CatPB_Report":
+        urlReport = `/NPIML3/get/catPB/reports/${storeCode}`
+        break;
     }
+    console.log("urlReport==>", urlReport);
     APIGetAllDropdownList(urlReport).then(res => res).then((response) => {
+      console.log("response==>", response.data);
       if (response.data.code === "1000") {
         setCol(response.data.coloum);
         setRows(response.data.value);
@@ -116,66 +120,19 @@ const ReportL3 = () => {
       }).catch((error) => setLoading(false));
   }
 
-  const GetCatPBRepots = (storeCode) => {
-    APIGetAllDropdownList(`/NPIML3/get/catPB/reports/${storeCode}`).then(res => res)
-      .then((response) => {
-        console.log("response==>", response.data);
-        if (response.data.code === "1000") {
-          setCol(response.data.coloum);
-          setRows(response.data.value);
-        } else {
-          setCol([]);
-          setRows([]);
-        }
-        setLoading(false);
-      }).catch((error) => {
-        setLoading(false);
-        setCol([]);
-        setRows([]);
-      });
-  }
-
-  const InsertIntoLimitCatPb = (storeCode) => {
-    setLoading(true);
-    APIInsLimit(`/NPIML3/ins/limit/table/${storeCode}/""`)
-      .then(res => res).then((response) => {
-        console.log("response==>", response.data);
-        if (response.data.Code === "1000") {
-          if (response.data.value.toUpperCase() === "SUCCESS") {
-            GetCatPBRepots(storeCode);
-          }
-        }
-        setLoading(false);
-      }).catch(err => {
-        setLoading(false);
-        setCol([]);
-        setRows([]);
-      });
-  }
-
   useEffect(() => {
-    if (reportLabel === "CatPB_Report") {
-      InsertIntoLimitCatPb(storeCode);
-    } else {
-      GetCatByReports(storeCode);
-    }
+    GetCatByReports(storeCode);
     GetStatuaDetials(storeCode);
   }, [statusCloserOpener, reportLabel, modification, popupOpen, storeCode]);
 
 
   const reportDropHandler = (input) => {
-    if (input === "CatPB_Report") {
-      sessionStorage.setItem("CatPBReport", input);
-    } else {
-      sessionStorage.removeItem("CatPBReport")
-    }
     setLoading(true);
     setShowInfo(false);
     DisplayValidationRunner();
     setReportLabel(input);
     setLoading(false);
   };
-
 
   const LoadDataOnWishListing = () => {
     APIGetItemWiseRptL3(`/NPIML3/npim/item/wise/rpt/L3/${storeCode}`)
