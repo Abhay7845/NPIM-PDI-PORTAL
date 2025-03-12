@@ -31,7 +31,7 @@ export const ProductCartL3 = () => {
     const [statusCloserOpener, setStatusCloserOpener] = useState(false);
     const [collectionList, setCollectionList] = useState([]);
     const [cateogryList, setCateogryList] = useState([]);
-    const [collectionValue, setCollectionValue] = useState("");
+    const [collectionValue, setCollectionValue] = useState("ALL");
     const [categoryValue, setCategoryValue] = useState("");
     const [cartDataList, setCartDataList] = useState([]);
     const [page, setPage] = useState(0);
@@ -67,6 +67,7 @@ export const ProductCartL3 = () => {
         setLoading(true);
         APIGetDropdownList(`/NPIM/base/npim/dropdown/ALL/ALL/ALL/ALL`)
             .then(res => res).then(response => {
+                console.log("response==>", response.data);
                 if (response.data.code === "1000") {
                     setCollectionList(response.data.value);
                 }
@@ -80,6 +81,7 @@ export const ProductCartL3 = () => {
             setLoading(true);
             APIGetDropdownCategory(`/NPIM/base/npim/dropdown/${collectionVal}/1/1/ALL`)
                 .then(res => res).then(response => {
+                    console.log("response==>", response.data);
                     if (response.data.code === "1000") {
                         setCateogryList(response.data.value);
                     }
@@ -94,6 +96,7 @@ export const ProductCartL3 = () => {
         const categoryVal = categoryValue ? categoryValue : catVal;
         APIGetCollCatListL3(`/NPIML3/item/list/dnpim/?storecode=${storeCode}&collection=${collectionVal}&category=${categoryVal}`)
             .then(res => res).then(response => {
+                console.log("response==>", response.data);
                 if (response.data.Code === "1000") {
                     setCartDataList(response.data.value);
                 } else if (response.data.Code === "1001") {
@@ -113,6 +116,7 @@ export const ProductCartL3 = () => {
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
+
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
