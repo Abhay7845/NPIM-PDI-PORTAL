@@ -19,6 +19,7 @@ import {
   APIGetDropdownList,
   APIGetStatuL3,
 } from "../HostManager/CommonApiCallL3";
+import { toast } from "react-toastify";
 
 export const ProductCartL3 = () => {
   const classes = useStyles();
@@ -114,6 +115,10 @@ export const ProductCartL3 = () => {
           setCartDataList(response.data.value);
         } else if (response.data.Code === "1001") {
           setCartDataList([]);
+          toast.warn("Data Not Available", {
+            theme: "colored",
+            autoClose: 2000,
+          });
         }
         setLoading(false);
       })
