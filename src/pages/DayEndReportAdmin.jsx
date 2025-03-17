@@ -1,16 +1,35 @@
 import React, { useState } from "react";
-import { Container, CssBaseline, Grid, Button, Drawer } from "@material-ui/core";
+import {
+  Container,
+  CssBaseline,
+  Grid,
+  Button,
+  Drawer,
+} from "@material-ui/core";
 import { DataGrid } from "@material-ui/data-grid";
 import { useParams } from "react-router-dom";
-import { CustomToolbar, DataGridForAdmin, SelectOfMUI, TextFieldOfMUI } from "../Components/ComponentForAdmin";
+import {
+  CustomToolbar,
+  DataGridForAdmin,
+  SelectOfMUI,
+  TextFieldOfMUI,
+} from "../Components/ComponentForAdmin";
 import Loading from "../Components/Loading";
 import ReportsAppBar from "../Components/ReportsAppBar";
 import SideAppBar from "../Components/SideAppBar";
 import UpperHeader from "../Components/UpperHeader";
 import "../Style/CssStyle/DayEndReportAdmin.css";
-import { L1L2Header, L3Header, wishlistHeader } from "../DataCenter/AdminDataList";
-import { APIAdminGetParameter, APIGetEndDayRtp, APIGetWishEndDayRtp } from "../HostManager/CommonApiCallL3";
-import { hitRateColItemCode, hitRateColRegion, } from "../DataCenter/DataList";
+import {
+  L1L2Header,
+  L3Header,
+  wishlistHeader,
+} from "../DataCenter/AdminDataList";
+import {
+  APIAdminGetParameter,
+  APIGetEndDayRtp,
+  APIGetWishEndDayRtp,
+} from "../HostManager/CommonApiCallL3";
+import { hitRateColItemCode, hitRateColRegion } from "../DataCenter/DataList";
 import { toast } from "react-toastify";
 import Modal from "../Components/Dashboard/Modal";
 
@@ -33,7 +52,7 @@ const DayEndReportAdmin = () => {
   const [loading, setLoading] = useState(false);
   const [ParameterData, setParameterData] = useState({
     col: [],
-    row: []
+    row: [],
   });
 
   const navBarList = [
@@ -59,41 +78,50 @@ const DayEndReportAdmin = () => {
 
   function endDayReportCall(inputData) {
     if (endDayReportInput.level === "Wishist_Report") {
-      APIGetWishEndDayRtp(`/NPIML3/wishlist/end/day/report/${inputData}`).then((response) => {
-        if (response.data.code === "1000") {
-          setEndDayReport({
-            col: wishlistHeader,
-            rows: response.data.value,
-          });
-        } else if (response.data.code === "1001") {
-          toast.warn("Data Not Found", { theme: "colored", autoClose: 1000 });
-        }
-        setLoading(false);
-      }).catch((error) => setLoading(false));
+      APIGetWishEndDayRtp(`/NPIML3/wishlist/end/day/report/${inputData}`)
+        .then((response) => {
+          if (response.data.code === "1000") {
+            setEndDayReport({
+              col: wishlistHeader,
+              rows: response.data.value,
+            });
+          } else if (response.data.code === "1001") {
+            toast.warn("Data Not Found", { theme: "colored", autoClose: 1000 });
+          }
+          setLoading(false);
+        })
+        .catch((error) => setLoading(false));
     } else {
       let urlReport;
       switch (endDayReportInput.level) {
         case "L1/L2":
-          urlReport = `/ADMIN/end/day/report/${inputData}`
+          urlReport = `/ADMIN/end/day/report/${inputData}`;
           break;
         case "L3":
-          urlReport = `/ADMIN/end/day/report/${inputData}`
+          urlReport = `/ADMIN/end/day/report/${inputData}`;
           break;
         default:
           break;
       }
       setLoading(true);
-      APIGetEndDayRtp(urlReport).then((response) => {
-        if (response.data.code === "1000") {
-          setEndDayReport({
-            col: endDayReportInput.level === "L3" ? L3Header : endDayReportInput.level === "L1/L2" ? L1L2Header : wishlistHeader,
-            rows: response.data.value,
-          });
-        } else if (response.data.code === "1001") {
-          toast.warn("Data Not Found", { theme: "colored", autoClose: 1000 });
-        }
-        setLoading(false);
-      }).catch((error) => setLoading(false));
+      APIGetEndDayRtp(urlReport)
+        .then((response) => {
+          if (response.data.code === "1000") {
+            setEndDayReport({
+              col:
+                endDayReportInput.level === "L3"
+                  ? L3Header
+                  : endDayReportInput.level === "L1/L2"
+                  ? L1L2Header
+                  : wishlistHeader,
+              rows: response.data.value,
+            });
+          } else if (response.data.code === "1001") {
+            toast.warn("Data Not Found", { theme: "colored", autoClose: 1000 });
+          }
+          setLoading(false);
+        })
+        .catch((error) => setLoading(false));
     }
   }
 
@@ -107,7 +135,7 @@ const DayEndReportAdmin = () => {
     });
     setParameterData({
       col: [],
-      row: []
+      row: [],
     });
     setEndDayReport({
       col: [],
@@ -132,7 +160,8 @@ const DayEndReportAdmin = () => {
   const getParameterData = (parameter) => {
     setLoading(true);
     APIAdminGetParameter(`/ADMIN/npim/scanned/report/L1/hit/rates/${parameter}`)
-      .then((res) => res).then((result) => {
+      .then((res) => res)
+      .then((result) => {
         if (result.data.code === "1000") {
           setParameterData({
             col: parameter === "Region" ? hitRateColRegion : hitRateColItemCode,
@@ -142,7 +171,8 @@ const DayEndReportAdmin = () => {
           toast.warn("Data Not Found", { theme: "colored", autoClose: 1000 });
         }
         setLoading(false);
-      }).catch((error) => setLoading(false));
+      })
+      .catch((error) => setLoading(false));
   };
 
   const validateParameter = () => {
@@ -166,9 +196,9 @@ const DayEndReportAdmin = () => {
         sortable: false,
         flex: 150,
         renderCell: (params) => {
-          return <h6>{params.row.hitRate} %</h6>
-        }
-      }
+          return <h6>{params.row.hitRate} %</h6>;
+        },
+      };
     } else {
       filedResp = {
         field: element,
@@ -179,15 +209,15 @@ const DayEndReportAdmin = () => {
     return filedResp;
   });
 
-
   return (
     <React.Fragment>
       <CssBaseline />
       <Drawer
-        anchor='left'
+        anchor="left"
         open={barOpener}
-        onClose={() => setBarOpener(false)}>
-        <SideAppBar navBarList={navBarList} pageName='admin' />
+        onClose={() => setBarOpener(false)}
+      >
+        <SideAppBar navBarList={navBarList} pageName="admin" />
       </Drawer>
       <Grid item xs={12} sm={12}>
         <UpperHeader itemCode={123} storeCode={storeCode} />
@@ -196,101 +226,126 @@ const DayEndReportAdmin = () => {
       <Grid item xs={12} sm={12}>
         <ReportsAppBar barHandler={() => setBarOpener(true)} />
       </Grid>
-      <Grid className='ReportGenerateStyle'>
-        <Grid item xs={6} sm={3} className='mx-2 Level_Style'>
+      <Grid className="ReportGenerateStyle">
+        <Grid item xs={6} sm={3} className="mx-2 Level_Style">
           <SelectOfMUI
-            label='Level'
+            label="Level"
             optionList={levelDropDown}
             selectHandleChange={onChangeInputHandler}
             value={endDayReportInput.level}
-            name='level'
+            name="level"
           />
         </Grid>
         <br />
         {endDayReportInput.level === "HitRate_Report" ? (
-          <Grid item xs={6} sm={3} className='mx-2 Parameter_style'>
+          <Grid item xs={6} sm={3} className="mx-2 Parameter_style">
             <SelectOfMUI
-              label='Parameter'
+              label="Parameter"
               optionList={parameterOption}
               selectHandleChange={onChangeInputHandler}
               value={endDayReportInput.parameter}
-              name='parameter'
+              name="parameter"
             />
           </Grid>
         ) : (
           <React.Fragment>
-            <Grid item xs={6} sm={3} className='Parameter_style'>
+            <Grid item xs={6} sm={3} className="Parameter_style">
               <TextFieldOfMUI
-                lable='From'
-                type='date'
+                lable="From"
+                type="date"
                 textFieldHandlerChange={onChangeInputHandler}
                 value={endDayReportInput.fromDate}
-                name='fromDate'
-                placeholder='Select Date'
+                name="fromDate"
+                placeholder="Select Date"
               />
             </Grid>
             <br />
-            <Grid item xs={6} sm={3} className='mx-2 Parameter_style'>
+            <Grid item xs={6} sm={3} className="mx-2 Parameter_style">
               <TextFieldOfMUI
-                lable='To'
-                type='date'
+                lable="To"
+                type="date"
                 textFieldHandlerChange={onChangeInputHandler}
                 value={endDayReportInput.toDate}
-                name='toDate'
+                name="toDate"
               />
             </Grid>
           </React.Fragment>
         )}
         <br />
-        <Grid className='d-flex mx-1'>
+        <Grid className="d-flex mx-1">
           {endDayReportInput.level === "HitRate_Report" ? (
             <Button
-              color='primary'
-              variant='contained'
-              onClick={validateParameter}>
+              color="primary"
+              variant="contained"
+              onClick={validateParameter}
+            >
               GENERATE REPORT
             </Button>
           ) : (
             <div style={{ display: "flex", marginTop: "-5px" }}>
-              <Button color='primary' variant='contained' onClick={validateFiled}>
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={validateFiled}
+              >
                 GENERATE REPORT
               </Button>
-              {(endDayReportInput.level === "L3" || endDayReportInput.level === "Wishist_Report") && endDayReport.rows.length > 0 && <Button color='primary' className="mx-1" variant='contained' onClick={() => setOpenModal(true)}>
-                VIEW DASHBOARD
-              </Button>}
+              {(endDayReportInput.level === "L3" ||
+                endDayReportInput.level === "Wishist_Report") &&
+                endDayReport.rows.length > 0 && (
+                  <Button
+                    color="primary"
+                    className="mx-1"
+                    variant="contained"
+                    onClick={() => setOpenModal(true)}
+                  >
+                    VIEW DASHBOARD
+                  </Button>
+                )}
             </div>
           )}
         </Grid>
       </Grid>
       {endDayReportInput.level === "L1/L2" ||
-        endDayReportInput.level === "Wishist_Report" ||
-        endDayReportInput.level === "L3" ? (
-        <Container maxWidth='xl' className='my-3'>
-          {endDayReport.rows.length > 0 &&
+      endDayReportInput.level === "Wishist_Report" ||
+      endDayReportInput.level === "L3" ? (
+        <Container maxWidth="xl" className="my-3">
+          {endDayReport.rows.length > 0 && (
             <DataGridForAdmin
               col={endDayReport.col}
               rows={endDayReport.rows}
               reportLabel={endDayReportInput.level}
-            />}
+            />
+          )}
         </Container>
       ) : null}
 
       {endDayReportInput.level === "L1/L2" ||
-        endDayReportInput.level === "Wishist_Report" ||
-        endDayReportInput.level === "L3" ? (
+      endDayReportInput.level === "Wishist_Report" ||
+      endDayReportInput.level === "L3" ? (
         ""
       ) : (
-        <Container maxWidth='xl' className='my-3'>
-          {ParameterData.row.length > 0 &&
+        <Container maxWidth="xl" className="my-3">
+          {ParameterData.row.length > 0 && (
             <DataGrid
               rows={ParameterData.row}
               columns={column}
               autoHeight={true}
               pageSize={50}
-              components={{ Toolbar: () => CustomToolbar({ reportLabel: endDayReportInput.level }) }}
-            />}
-        </Container>)}
-      {openModal && endDayReport.rows && <Modal endDayReport={endDayReport.rows} close={() => setOpenModal(false)} />}
+              components={{
+                Toolbar: () =>
+                  CustomToolbar({ reportLabel: endDayReportInput.level }),
+              }}
+            />
+          )}
+        </Container>
+      )}
+      {openModal && endDayReport.rows && (
+        <Modal
+          endDayReport={endDayReport.rows}
+          close={() => setOpenModal(false)}
+        />
+      )}
     </React.Fragment>
   );
 };

@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Container, Grid, Typography, CssBaseline, Drawer, Button } from "@material-ui/core";
+import {
+  Container,
+  Grid,
+  Typography,
+  CssBaseline,
+  Drawer,
+  Button,
+} from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import AlertPopup from "../Components/AlertPopup";
 import { ProductDetailsTabularL3 } from "../Components/ComponentForL3";
@@ -13,7 +20,18 @@ import UpperHeader from "../Components/UpperHeader";
 import useStyle from "../Style/ReportL3";
 import { imageUrl } from "../DataCenter/DataList";
 import Loader from "../Components/Loader";
-import { APIDeleteUpdate, APIGetAllDropdownList, APIGetCatList, APIGetItemWiseRptL3, APIGetStatuL3, APIInsLimit, APIMoveToWishList, APISetCatCode, APIUpdateFormL3, APIYesItemWiseRtp } from "../HostManager/CommonApiCallL3";
+import {
+  APIDeleteUpdate,
+  APIGetAllDropdownList,
+  APIGetCatList,
+  APIGetItemWiseRptL3,
+  APIGetStatuL3,
+  APIInsLimit,
+  APIMoveToWishList,
+  APISetCatCode,
+  APIUpdateFormL3,
+  APIYesItemWiseRtp,
+} from "../HostManager/CommonApiCallL3";
 import { toast } from "react-toastify";
 
 const ReportL3 = () => {
@@ -56,12 +74,14 @@ const ReportL3 = () => {
 
   const handelYes = () => {
     APIYesItemWiseRtp(`/NPIML3/npim/item/wise/rpt/edr/L3/${storeCode}`, rows)
-      .then(res => res).then(response => {
+      .then((res) => res)
+      .then((response) => {
         if (response.data.code === "1000") {
           setPopupOpen(false);
           setsConfirmed(true);
         }
-      }).then(error => setLoading(false));
+      })
+      .then((error) => setLoading(false));
   };
 
   const GetCatByReports = (storeCode) => {
@@ -84,32 +104,36 @@ const ReportL3 = () => {
         urlReport = `/NPIML3/npim/get/item/cancel/list/${storeCode}`;
         break;
       case "CatPB_Report":
-        urlReport = `/NPIML3/get/catPB/reports/${storeCode}`
+        urlReport = `/NPIML3/get/catPB/reports/${storeCode}`;
         break;
     }
     console.log("urlReport==>", urlReport);
-    APIGetAllDropdownList(urlReport).then(res => res).then((response) => {
-      console.log("response==>", response.data);
-      if (response.data.code === "1000") {
-        setCol(response.data.coloum);
-        setRows(response.data.value);
-      } else if (response.data.code === "1001") {
+    APIGetAllDropdownList(urlReport)
+      .then((res) => res)
+      .then((response) => {
+        console.log("response==>", response.data);
+        if (response.data.code === "1000") {
+          setCol(response.data.coloum);
+          setRows(response.data.value);
+        } else if (response.data.code === "1001") {
+          setCol([]);
+          setRows([]);
+        }
+        setSwitchEnable(true);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
         setCol([]);
         setRows([]);
-      }
-      setSwitchEnable(true);
-      setLoading(false);
-    }).catch((error) => {
-      setLoading(false);
-      setCol([]);
-      setRows([]);
-    });
-  }
+      });
+  };
 
   const GetStatuaDetials = (storeCode) => {
     setLoading(true);
     APIGetStatuL3(`/NPIML3/npim/get/status/L3/${storeCode}`)
-      .then(res => res).then((response) => {
+      .then((res) => res)
+      .then((response) => {
         if (response.data.code === "1000") {
           setStatusData({
             col: response.data.coloum,
@@ -117,14 +141,14 @@ const ReportL3 = () => {
           });
         }
         setLoading(false);
-      }).catch((error) => setLoading(false));
-  }
+      })
+      .catch((error) => setLoading(false));
+  };
 
   useEffect(() => {
     GetCatByReports(storeCode);
     GetStatuaDetials(storeCode);
   }, [statusCloserOpener, reportLabel, modification, popupOpen, storeCode]);
-
 
   const reportDropHandler = (input) => {
     setLoading(true);
@@ -146,8 +170,9 @@ const ReportL3 = () => {
         }
         setSwitchEnable(true);
         setLoading(false);
-      }).catch((error) => setLoading(false));
-  }
+      })
+      .catch((error) => setLoading(false));
+  };
 
   function closeHandler() {
     setAlertPopupStatus({
@@ -205,33 +230,38 @@ const ReportL3 = () => {
         if (response.data.code === "1000") {
           setAlertPopupStatus({
             status: true,
-            main: 'Item Deleted Successfully',
+            main: "Item Deleted Successfully",
             contain: "",
           });
         }
         setShowInfo(false);
         setModification(!modification);
         setLoading(false);
-      }).catch((error) => setLoading(false));
+      })
+      .catch((error) => setLoading(false));
     reportDropHandler(reportLabel);
   };
 
   const MoveToWishlist = (event) => {
     setLoading(true);
     const itemCode = event.itemCode;
-    APIMoveToWishList(`/NPIML3/npim/move/item/wishlist/to/indent/${itemCode}/${storeCode}/Wishlist`)
-      .then(res => res).then((response) => {
+    APIMoveToWishList(
+      `/NPIML3/npim/move/item/wishlist/to/indent/${itemCode}/${storeCode}/Wishlist`
+    )
+      .then((res) => res)
+      .then((response) => {
         if (response.data.Code === "1000") {
           setAlertPopupStatus({
             status: true,
-            main: 'Item wishListing Successfully',
+            main: "Item wishListing Successfully",
             contain: "",
           });
           LoadDataOnWishListing();
         }
         setLoading(false);
-      }).catch((error) => setLoading(false));
-  }
+      })
+      .catch((error) => setLoading(false));
+  };
 
   function sizeUomQuantityResHandler(sizeUomQuantityData) {
     setAllDataFromValidation({
@@ -317,7 +347,6 @@ const ReportL3 = () => {
     });
   }
 
-
   function DisplayValidationRunner() {
     setAllDataFromValidation({
       sizeUomQuantityRes: [],
@@ -340,12 +369,18 @@ const ReportL3 = () => {
     "ItGroup",
     "Category",
     "Cancel_Item_List",
-    "CatPB_Report"
+    "CatPB_Report",
   ];
 
   const UpdateReportsPdtDetails = () => {
-    const itemsToExclude = ['Only_MANGALSUTRA', 'Only_BANGLE', 'Only_FINGERRING'];
-    const filteredTags = allDataFromValidation.tegQuantityRes.filter(item => !itemsToExclude.includes(item.size));
+    const itemsToExclude = [
+      "Only_MANGALSUTRA",
+      "Only_BANGLE",
+      "Only_FINGERRING",
+    ];
+    const filteredTags = allDataFromValidation.tegQuantityRes.filter(
+      (item) => !itemsToExclude.includes(item.size)
+    );
     const updatePdtPayload = {
       itemCode: dataRowInformation.itemCode,
       strCode: storeCode,
@@ -383,14 +418,16 @@ const ReportL3 = () => {
     console.log("updatePdtPayload==>", updatePdtPayload);
     setLoading(true);
     APIUpdateFormL3(`/NPIML3/npim/update/responses/from/L3`, updatePdtPayload)
-      .then(res => res).then((response) => {
+      .then((res) => res)
+      .then((response) => {
         if (response.data.code === "1000") {
-          toast.success("Updated Successfully", { theme: "colored" })
+          toast.success("Updated Successfully", { theme: "colored" });
         }
         setDigit("");
         setLoading(false);
-      }).catch((error) => setLoading(false));
-  }
+      })
+      .catch((error) => setLoading(false));
+  };
 
   return (
     <React.Fragment>
@@ -407,8 +444,7 @@ const ReportL3 = () => {
         anchor="left"
         open={barOpener}
         onClick={() => setBarOpener(false)}
-      >
-      </Drawer>
+      ></Drawer>
       <Drawer anchor="top" open={statusCloserOpener} onClick={statusOpener}>
         <StatusTabular statusData={statusData} />
       </Drawer>
@@ -437,10 +473,7 @@ const ReportL3 = () => {
               />
             </div>
             <div className="col-md-7">
-              <Typography
-                className={classes.headingColor}
-                align="center"
-              >
+              <Typography className={classes.headingColor} align="center">
                 {dataRowInformation.itemCode}
               </Typography>
               <div className="row mt-3">
@@ -448,7 +481,9 @@ const ReportL3 = () => {
                   <ProductDetailsTabularL3 information={dataRowInformation} />
                 </div>
                 <div className="col-md-5">
-                  <h6 className="text-center"><b>INDENT DETAILS</b></h6>
+                  <h6 className="text-center">
+                    <b>INDENT DETAILS</b>
+                  </h6>
                   {dataRowInformation.itemCode[6] && digit && (
                     <DisplayValidationComponent
                       digit={dataRowInformation.itemCode[6]}
@@ -464,7 +499,8 @@ const ReportL3 = () => {
                       setSelectResHandler={tegQuantityResHandler}
                       allDataFromValidation={allDataFromValidation}
                       feedShowState={dataRowInformation}
-                    />)}
+                    />
+                  )}
                 </div>
                 <Button
                   className={classes.btnSub}
@@ -476,7 +512,9 @@ const ReportL3 = () => {
                       role="status"
                       aria-hidden="true"
                     />
-                  ) : <span>Update</span>}
+                  ) : (
+                    <span>Update</span>
+                  )}
                 </Button>
               </div>
             </div>
@@ -502,7 +540,12 @@ const ReportL3 = () => {
               MoveToWishlist={MoveToWishlist}
             />
           ) : (
-            <Typography className="mt-2" align="center" variant="h6" color="secondary">
+            <Typography
+              className="mt-2"
+              align="center"
+              variant="h6"
+              color="secondary"
+            >
               DATA NOT AVAILABLE
             </Typography>
           )}

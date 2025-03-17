@@ -1,7 +1,15 @@
 import React, { useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ReactImageMagnify from "react-image-magnify";
-import { makeStyles, Tabs, Tab, AppBar, Avatar, CardActionArea, Card } from "@material-ui/core";
+import {
+  makeStyles,
+  Tabs,
+  Tab,
+  AppBar,
+  Avatar,
+  CardActionArea,
+  Card,
+} from "@material-ui/core";
 import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
 import { loadingGif } from "../images/images";
 
@@ -67,14 +75,21 @@ const ImgShow = (props) => {
                   height: 472,
                   width: window.innerWidth * (40.41145833 / 100),
                   alt: "Image is not available",
-                  onLoad: () => { combineImage.length <= 0 ? setImgLoad(true) : setImgLoad(false) },
+                  onLoad: () => {
+                    combineImage.length <= 0
+                      ? setImgLoad(true)
+                      : setImgLoad(false);
+                  },
                 },
                 largeImage: {
                   src: ImgLoad ? loadingGif : `${combineImage}.jpg`,
                   width: 1000,
                   height: 900,
                   alt: "Image is not available",
-                  onLoad: () => combineImage.length <= 0 ? setImgLoad(true) : setImgLoad(false),
+                  onLoad: () =>
+                    combineImage.length <= 0
+                      ? setImgLoad(true)
+                      : setImgLoad(false),
                 },
                 shouldUsePositiveSpaceLens: true,
                 enlargedImagePosition: "over",

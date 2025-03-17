@@ -9,7 +9,10 @@ import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import StarIcon from "@material-ui/icons/Star";
 import { imageUrl, feedbackl1l2Navigate } from "../DataCenter/DataList";
-import { MuliSelectDropdownFieldQualityFeedback, MuliSelectDropdownField } from "../Components/MuliSelectDropdownField";
+import {
+  MuliSelectDropdownFieldQualityFeedback,
+  MuliSelectDropdownField,
+} from "../Components/MuliSelectDropdownField";
 import NpimDataDisplay from "../Components/NpimDataDisplay";
 import { Grid, Button, Typography, CssBaseline } from "@material-ui/core";
 import { useParams } from "react-router";
@@ -20,7 +23,13 @@ import ImgShow from "../Components/ImgShow";
 import AlertPopup from "../Components/AlertPopup";
 import { useStyles } from "../Style/FeedbackL1AndL2ForPhysical";
 import Loader from "../Components/Loader";
-import { APIDNPIMProductData, APIGetPreNextProductData, APIGetStatusReports, APIInsertDataL1L2, APIPNPIMProductData } from "../HostManager/CommonApiCallL3";
+import {
+  APIDNPIMProductData,
+  APIGetPreNextProductData,
+  APIGetStatusReports,
+  APIInsertDataL1L2,
+  APIPNPIMProductData,
+} from "../HostManager/CommonApiCallL3";
 
 const FeedbackL1AndL2 = () => {
   const classes = useStyles();
@@ -79,7 +88,8 @@ const FeedbackL1AndL2 = () => {
   const GetProductDetailsDnpim = (productDetails) => {
     setLoading(true);
     APIDNPIMProductData(`/NPIM/base/dnpim/get/product/details/`, productDetails)
-      .then(res => res).then((response) => {
+      .then((res) => res)
+      .then((response) => {
         if (response.data.code === "1001") {
           document.getElementById("result").style.visibility = "hidden";
           setAlertPopupStatus({
@@ -103,10 +113,11 @@ const FeedbackL1AndL2 = () => {
           setFeedShowState(response.data.value);
         }
         setLoading(false);
-      }).catch((error) => setLoading(false));
-  }
+      })
+      .catch((error) => setLoading(false));
+  };
 
-  // FOR PNPIM LOGIN TYPE 
+  // FOR PNPIM LOGIN TYPE
   const GetProductDetailsPnpim = (productDetails) => {
     setLoading(true);
     APIPNPIMProductData(`/NPIM/base/npim/get/product/details`, productDetails)
@@ -134,20 +145,31 @@ const FeedbackL1AndL2 = () => {
           setFeedShowState(response.data.value);
         }
         setLoading(false);
-      }).catch((error) => setLoading(false));
-  }
+      })
+      .catch((error) => setLoading(false));
+  };
 
   useEffect(() => {
-    APIGetStatusReports(`/api/NPIM/l1l2/get/feedback/status?strCode=${storeCode}`)
-      .then(res => res).then((response) => {
+    APIGetStatusReports(
+      `/api/NPIM/l1l2/get/feedback/status?strCode=${storeCode}`
+    )
+      .then((res) => res)
+      .then((response) => {
         if (response.data.code === "1000") {
           setStatusData({
             // col: response.data.coloum,
-            col: ["ID", "NEEDSTATE", "TOTALSKU", "GIVENFEEDBACK", "REMAININGSKUCOUNT"],
+            col: [
+              "ID",
+              "NEEDSTATE",
+              "TOTALSKU",
+              "GIVENFEEDBACK",
+              "REMAININGSKUCOUNT",
+            ],
             row: response.data.value,
           });
         }
-      }).catch(error => setLoading(false));
+      })
+      .catch((error) => setLoading(false));
   }, [storeCode]);
 
   useEffect(() => {
@@ -157,7 +179,10 @@ const FeedbackL1AndL2 = () => {
   }, [productDetailsDigital]);
 
   useEffect(() => {
-    if (sessionStorage.getItem("Npim-type") === "PNPIM" && productDetails.itemCode !== "") {
+    if (
+      sessionStorage.getItem("Npim-type") === "PNPIM" &&
+      productDetails.itemCode !== ""
+    ) {
       GetProductDetailsPnpim(productDetails);
     }
   }, [productDetails]);
@@ -173,8 +198,12 @@ const FeedbackL1AndL2 = () => {
       itemCode: feedShowState.itemCode,
       direction: direction,
     };
-    APIGetPreNextProductData(`/NPIM/base/npim/get/product/details/PreNex`, Input)
-      .then(res => res).then((response) => {
+    APIGetPreNextProductData(
+      `/NPIM/base/npim/get/product/details/PreNex`,
+      Input
+    )
+      .then((res) => res)
+      .then((response) => {
         let mailSms = "";
         if (response.data.code === "1001") {
           mailSms = "No more data available for the selected category.";
@@ -200,7 +229,8 @@ const FeedbackL1AndL2 = () => {
           setMultiSelectQualityFeedback([]);
         }
         setLoading(false);
-      }).catch((error) => setLoading(false));
+      })
+      .catch((error) => setLoading(false));
   };
 
   const onSearchClick = (dropState, setDropState) => {
@@ -269,12 +299,20 @@ const FeedbackL1AndL2 = () => {
       setLoading(false);
       return;
     }
-    if (value > 0 && value <= 4 && multiSelectQltyfeed.toString().length === 0) {
+    if (
+      value > 0 &&
+      value <= 4 &&
+      multiSelectQltyfeed.toString().length === 0
+    ) {
       alert("Please select Reason For Low Quality Rating");
       setLoading(false);
       return;
     }
-    if (feedValue > 0 && feedValue <= 4 && multiSelectDrop.toString().length === 0) {
+    if (
+      feedValue > 0 &&
+      feedValue <= 4 &&
+      multiSelectDrop.toString().length === 0
+    ) {
       alert("Please select Reason for no");
       setLoading(false);
       return;
@@ -349,11 +387,12 @@ const FeedbackL1AndL2 = () => {
       uom: feedShowState.uom,
       videoLink: feedShowState.videoLink,
       vsGh: feedShowState.vsGh,
-      vvs1: feedShowState.vvs1
-    }
+      vvs1: feedShowState.vvs1,
+    };
     APIInsertDataL1L2(`/npim/insert/responses`, insertDataFeedBack)
-      .then(res => res).then((response) => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+      .then((res) => res)
+      .then((response) => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
         const PortalType = sessionStorage.getItem("Npim-type");
         if (response.data.code === "1001") {
           document.getElementById("result").style.visibility = "hidden";
@@ -389,7 +428,8 @@ const FeedbackL1AndL2 = () => {
           setMultiSelectQualityFeedback([]);
         }
         setLoading(false);
-      }).catch((error) => {
+      })
+      .catch((error) => {
         setMultiSelectDrop([]);
         setMultiSelectQualityFeedback([]);
         setValue(0);
@@ -421,7 +461,9 @@ const FeedbackL1AndL2 = () => {
         containLable={alertPopupStatus.contain}
         procideHandler=""
         discardHandler=""
-        closeHandler={() => alertPopupStatus.mode ? closeHandlerForRest() : closeHandler()}
+        closeHandler={() =>
+          alertPopupStatus.mode ? closeHandlerForRest() : closeHandler()
+        }
       />
       <Grid item xs={12}>
         <UpperHeader
@@ -430,7 +472,7 @@ const FeedbackL1AndL2 = () => {
         />
         <Loading flag={loading} />
         {loading === true && <Loader />}
-        {sessionStorage.getItem("Npim-type") === "DNPIM" ?
+        {sessionStorage.getItem("Npim-type") === "DNPIM" ? (
           resetDrop ? (
             <LowerHeaderDigital
               onSear={onSearchClick}
@@ -438,8 +480,13 @@ const FeedbackL1AndL2 = () => {
               statusData={statusData}
               L3={false}
             />
-          ) : "" : ""}
-        {sessionStorage.getItem("Npim-type") === "PNPIM" ?
+          ) : (
+            ""
+          )
+        ) : (
+          ""
+        )}
+        {sessionStorage.getItem("Npim-type") === "PNPIM" ? (
           resetDrop ? (
             <LowerHeader
               onSear={onSearchClick}
@@ -447,10 +494,19 @@ const FeedbackL1AndL2 = () => {
               statusData={statusData}
               L3={false}
             />
-          ) : "" : ""}
+          ) : (
+            ""
+          )
+        ) : (
+          ""
+        )}
       </Grid>
       <Grid item xs={12} className="my-4">
-        <div id="result" className="container-fluid" style={{ marginTop: "1%", visibility: "hidden" }}>
+        <div
+          id="result"
+          className="container-fluid"
+          style={{ marginTop: "1%", visibility: "hidden" }}
+        >
           <div className="row mx-0">
             <div className="col-md-5">
               <div className="img_info_show ">
@@ -553,7 +609,11 @@ const FeedbackL1AndL2 = () => {
                           </td>
                         </tr>
                         <tr>
-                          <th className={classes.hadding}>{feedShowState.category === "CHAINS" ? "HOOK TYPE" : "FINDING"}</th>
+                          <th className={classes.hadding}>
+                            {feedShowState.category === "CHAINS"
+                              ? "HOOK TYPE"
+                              : "FINDING"}
+                          </th>
                           <td>-</td>
                           <td className={classes.rowData}>
                             {feedShowState.findings}
@@ -562,7 +622,9 @@ const FeedbackL1AndL2 = () => {
                         <tr>
                           <th className={classes.hadding}>CATPB</th>
                           <td>-</td>
-                          <td className={classes.rowData}>{feedShowState.catPB}</td>
+                          <td className={classes.rowData}>
+                            {feedShowState.catPB}
+                          </td>
                         </tr>
                       </tbody>
                     </table>
@@ -618,7 +680,11 @@ const FeedbackL1AndL2 = () => {
                   </div>
                 </div>
               </div>
-              {feedShowState.si2Gh || feedShowState.vsGh || feedShowState.vvs1 || feedShowState.i2Gh || feedShowState.si2Ij ? (
+              {feedShowState.si2Gh ||
+              feedShowState.vsGh ||
+              feedShowState.vvs1 ||
+              feedShowState.i2Gh ||
+              feedShowState.si2Ij ? (
                 <StaticTabularInformation
                   si2Gh={feedShowState.si2Gh}
                   vsGh={feedShowState.vsGh}
@@ -628,7 +694,7 @@ const FeedbackL1AndL2 = () => {
                 />
               ) : null}
               <div className="d-flex mt-2 justify-contetn-between with-100">
-                {(sessionStorage.getItem("Npim-type") === "DNPIM") &&
+                {sessionStorage.getItem("Npim-type") === "DNPIM" && (
                   <Button
                     className={classes.btn}
                     onClick={() => onClickNextPreBtnHandler("pre")}
@@ -637,7 +703,7 @@ const FeedbackL1AndL2 = () => {
                   >
                     Previous
                   </Button>
-                }
+                )}
                 <Button
                   className={classes.btnSub}
                   onClick={onClickSubmitBtnHandler}
@@ -652,7 +718,7 @@ const FeedbackL1AndL2 = () => {
                     <span>Submit</span>
                   )}
                 </Button>
-                {(sessionStorage.getItem("Npim-type") === "DNPIM") &&
+                {sessionStorage.getItem("Npim-type") === "DNPIM" && (
                   <Button
                     className={classes.btn}
                     onClick={() => onClickNextPreBtnHandler("next")}
@@ -660,7 +726,8 @@ const FeedbackL1AndL2 = () => {
                     variant="outlined"
                   >
                     Next
-                  </Button>}
+                  </Button>
+                )}
               </div>
             </div>
           </div>

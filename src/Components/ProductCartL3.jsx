@@ -26,7 +26,7 @@ export const ProductCartL3 = () => {
   const [imgLoad, setImgLoad] = useState(true);
   const [loading, setLoading] = useState(false);
   const loginData = JSON.parse(sessionStorage.getItem("loginData"));
-  const collval = sessionStorage.getItem("collval");
+  const collval = sessionStorage.getItem("collal");
   const catVal = sessionStorage.getItem("catVal");
   const [statusData, setStatusData] = useState({
     col: [],
@@ -35,12 +35,15 @@ export const ProductCartL3 = () => {
   const [statusCloserOpener, setStatusCloserOpener] = useState(false);
   const [collectionList, setCollectionList] = useState([]);
   const [cateogryList, setCateogryList] = useState([]);
-  const [collectionValue, setCollectionValue] = useState("ALL");
-  const [categoryValue, setCategoryValue] = useState("");
+  const [collectionValue, setCollectionValue] = useState(
+    sessionStorage.getItem("collVal") || "ALL"
+  );
+  const [categoryValue, setCategoryValue] = useState(
+    sessionStorage.getItem("catVal") || "ALL"
+  );
   const [cartDataList, setCartDataList] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(8);
-
   const GetStatusReport = (storeCode) => {
     setLoading(true);
     APIGetStatuL3(`/NPIML3/npim/get/status/L3/${storeCode}`)
@@ -74,7 +77,6 @@ export const ProductCartL3 = () => {
     APIGetDropdownList(`/NPIM/base/npim/dropdown/ALL/ALL/ALL/ALL`)
       .then((res) => res)
       .then((response) => {
-        console.log("response==>", response.data);
         if (response.data.code === "1000") {
           setCollectionList(response.data.value);
         }
@@ -92,7 +94,6 @@ export const ProductCartL3 = () => {
       )
         .then((res) => res)
         .then((response) => {
-          console.log("response==>", response.data);
           if (response.data.code === "1000") {
             setCateogryList(response.data.value);
           }
@@ -104,14 +105,11 @@ export const ProductCartL3 = () => {
 
   const GetCartDetails = (storeCode) => {
     setLoading(true);
-    const collectionVal = collectionValue ? collectionValue : collval;
-    const categoryVal = categoryValue ? categoryValue : catVal;
     APIGetCollCatListL3(
-      `/NPIML3/item/list/dnpim/?storecode=${storeCode}&collection=${collectionVal}&category=${categoryVal}`
+      `/NPIML3/item/list/dnpim/?storecode=${storeCode}&collection=${collectionValue}&category=${categoryValue}`
     )
       .then((res) => res)
       .then((response) => {
-        console.log("response==>", response.data);
         if (response.data.Code === "1000") {
           setCartDataList(response.data.value);
         } else if (response.data.Code === "1001") {
@@ -167,6 +165,8 @@ export const ProductCartL3 = () => {
                     dropList={collectionList}
                     myChangeHandler={(e) => {
                       setCollectionValue(e.target.value);
+                      sessionStorage.setItem("collVal", e.target.value);
+
                       setImgLoad(true);
                     }}
                   />
@@ -178,7 +178,10 @@ export const ProductCartL3 = () => {
                     labelName="Category"
                     bigSmall={true}
                     dropList={cateogryList}
-                    myChangeHandler={(e) => setCategoryValue(e.target.value)}
+                    myChangeHandler={(e) => {
+                      setCategoryValue(e.target.value);
+                      sessionStorage.setItem("catVal", e.target.value);
+                    }}
                   />
                 </div>
               </div>
@@ -261,14 +264,8 @@ export const ProductCartL3 = () => {
                         style={{ cursor: "pointer" }}
                         onClick={() => {
                           sessionStorage.setItem("CartItemCode", item);
-                          sessionStorage.setItem(
-                            "collval",
-                            collectionValue ? collectionValue : collval
-                          );
-                          sessionStorage.setItem(
-                            "catVal",
-                            categoryValue ? categoryValue : catVal
-                          );
+                          //  sessionStorage.setItem("collval", collectionValue ? collectionValue : collval);
+                          // sessionStorage.setItem("catVal", categoryValue ? categoryValue : catVal);
                           navigate(
                             `/NpimPortal/indentL3Digital/${storeCode}/${rsoName}`
                           );

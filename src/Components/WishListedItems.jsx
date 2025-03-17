@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Container, Grid, Typography, CssBaseline, Drawer } from "@material-ui/core";
+import {
+  Container,
+  Grid,
+  Typography,
+  CssBaseline,
+  Drawer,
+} from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import AlertPopup from "../Components/AlertPopup";
 import LazyLoadingDataGridForWishlist from "../Components/LazyLoadingDataGridForWishlist";
@@ -10,8 +16,19 @@ import UpperHeader from "../Components/UpperHeader";
 import useStyle from "../Style/ReportL3";
 import { WislistLeHeaders } from "../DataCenter/DataList";
 import Loader from "./Loader";
-import { toast } from 'react-toastify';
-import { APIDeleteUpdate, APIGetCatPBStoreWise, APIGetItemWiseRptL3, APIGetLimitCatPBWise, APIGetStatuL3, APIGetWishlistData, APIInsLimit, APIInsWishList, APIMoveToIndent, APIPNPIMProductData } from "../HostManager/CommonApiCallL3";
+import { toast } from "react-toastify";
+import {
+  APIDeleteUpdate,
+  APIGetCatPBStoreWise,
+  APIGetItemWiseRptL3,
+  APIGetLimitCatPBWise,
+  APIGetStatuL3,
+  APIGetWishlistData,
+  APIInsLimit,
+  APIInsWishList,
+  APIMoveToIndent,
+  APIPNPIMProductData,
+} from "../HostManager/CommonApiCallL3";
 
 const WishListedItems = () => {
   const classes = useStyle();
@@ -38,7 +55,6 @@ const WishListedItems = () => {
     contain: "",
   });
 
-
   const [allDataFromValidation, setAllDataFromValidation] = useState({
     sizeUomQuantityRes: [],
     sizeQuantityRes: [],
@@ -56,7 +72,8 @@ const WishListedItems = () => {
 
   const handelYes = () => {
     APIInsWishList(`/NPIML3/get/wishlisted/listdata/${storeCode}`, rows)
-      .then(res => res).then(response => {
+      .then((res) => res)
+      .then((response) => {
         if (response.data.code === "1000") {
           setPopupOpen(false);
           setsConfirmed(true);
@@ -67,7 +84,8 @@ const WishListedItems = () => {
   const GetWhishlistData = (storeCode) => {
     setLoading(true);
     APIGetWishlistData(`/NPIML3/get/wishlisted/listdata/${storeCode}`)
-      .then(res => res).then((response) => {
+      .then((res) => res)
+      .then((response) => {
         if (response.data.Code === "1000") {
           setCol(WislistLeHeaders);
           setRows(response.data.value);
@@ -76,14 +94,15 @@ const WishListedItems = () => {
         }
         setSwitchEnable(true);
         setLoading(false);
-      }).catch((error) => setLoading(false));
-  }
-
+      })
+      .catch((error) => setLoading(false));
+  };
 
   useEffect(() => {
     GetWhishlistData(storeCode);
     APIGetStatuL3(`/NPIML3/npim/get/status/L3/${storeCode}`)
-      .then(res => res).then((response) => {
+      .then((res) => res)
+      .then((response) => {
         if (response.data.code === "1000") {
           setStatusData({
             col: response.data.coloum,
@@ -91,7 +110,8 @@ const WishListedItems = () => {
           });
         }
         setLoading(false);
-      }).catch((error) => setLoading(false));
+      })
+      .catch((error) => setLoading(false));
   }, [statusCloserOpener, reportLabel, modification, popupOpen, storeCode]);
 
   const LoadDataOnWishListing = (storeCode) => {
@@ -103,17 +123,21 @@ const WishListedItems = () => {
         }
         setSwitchEnable(true);
         setLoading(false);
-      }).catch((error) => setLoading(false));
-  }
+      })
+      .catch((error) => setLoading(false));
+  };
 
   const WishListToEndent = (event, setWishListRowData) => {
     setLoading(true);
-    APIMoveToIndent(`/NPIML3/npim/move/item/wishlist/to/indent/${event.itemCode}/${storeCode}/Indent`)
-      .then(res => res).then((response) => {
+    APIMoveToIndent(
+      `/NPIML3/npim/move/item/wishlist/to/indent/${event.itemCode}/${storeCode}/Indent`
+    )
+      .then((res) => res)
+      .then((response) => {
         if (response.data.Code === "1000") {
           setAlertPopupStatus({
             status: true,
-            main: 'Item Indented Successfully',
+            main: "Item Indented Successfully",
             contain: "",
           });
           LoadDataOnWishListing(storeCode);
@@ -121,8 +145,9 @@ const WishListedItems = () => {
           setLoading(false);
         }
         GetWhishlistData(storeCode);
-      }).catch((error) => setLoading(false));
-  }
+      })
+      .catch((error) => setLoading(false));
+  };
 
   const InseartCatPBLimit = (event, TotalCost, TotalStdWt) => {
     const InsLimitPayload = {
@@ -133,22 +158,31 @@ const WishListedItems = () => {
       totCost: TotalCost,
       catPB: event.catPB,
       storeCode: storeCode,
-    }
+    };
     console.log("InsLimitPayload==>", InsLimitPayload);
-    APIInsLimit('/NPIML3/new/limit/table/ins', InsLimitPayload).then(res => res)
-      .then(response => console.log("response==>", response.data))
-      .catch(err => console.log(err));
-  }
+    APIInsLimit("/NPIML3/new/limit/table/ins", InsLimitPayload)
+      .then((res) => res)
+      .then((response) => console.log("response==>", response.data))
+      .catch((err) => console.log(err));
+  };
 
-  const ValiDateLimit = (event, setWishListRowData, TotalCalLimit, limit, TotalStdWt, TotalCost) => {
+  const ValiDateLimit = (
+    event,
+    setWishListRowData,
+    TotalCalLimit,
+    limit,
+    TotalStdWt,
+    TotalCost
+  ) => {
     console.log("limit==>", limit);
-    const LimitPercent = limit + (limit * 0.1);
-    const LimitPercent_Ve = limit - (limit * 0.1);
+    const LimitPercent = limit + limit * 0.1;
+    const LimitPercent_Ve = limit - limit * 0.1;
     console.log("LimitPercent==>", LimitPercent);
     console.log("LimitPercent_Ve==>", LimitPercent_Ve);
-    if (TotalCalLimit > LimitPercent) {
+    if (TotalCalLimit > LimitPercent && limit > 0) {
       if (TotalCalLimit > LimitPercent && TotalCalLimit > limit) {
-        const alertMessage = 'The Indent Limit has been crossed for this CatPB, Click on "OK" if you still wish to proceed for Indenting this Product. Instead you can also Wishlist this Product!';
+        const alertMessage =
+          'The Indent Limit has been crossed for this CatPB, Click on "OK" if you still wish to proceed for Indenting this Product. Instead you can also Wishlist this Product!';
         const isConfirmed = window.confirm(alertMessage);
         if (isConfirmed === true) {
           WishListToEndent(event, setWishListRowData);
@@ -156,7 +190,8 @@ const WishListedItems = () => {
         }
         setLoading(false);
       } else if (TotalCalLimit > LimitPercent_Ve) {
-        const alertMessage = 'You are reaching the max limit For CatPB Click Ok to Proceed';
+        const alertMessage =
+          "You are reaching the max limit For CatPB Click Ok to Proceed";
         const isConfirmed = window.confirm(alertMessage);
         if (isConfirmed === true) {
           WishListToEndent(event, setWishListRowData);
@@ -164,7 +199,8 @@ const WishListedItems = () => {
         }
         setLoading(false);
       } else if (TotalCalLimit > LimitPercent) {
-        const alertMessage = 'The Indent Limit has been crossed for this CatPB, Click on "OK" if you still wish to proceed for Indenting this Product. Instead you can also Wishlist this Product!';
+        const alertMessage =
+          'The Indent Limit has been crossed for this CatPB, Click on "OK" if you still wish to proceed for Indenting this Product. Instead you can also Wishlist this Product!';
         alert(alertMessage);
         setLoading(false);
       }
@@ -181,26 +217,48 @@ const WishListedItems = () => {
       WishListToEndent(event, setWishListRowData);
       InseartCatPBLimit(event, TotalCost, TotalStdWt);
     }
-  }
+  };
 
-  const GetCatPBLimit = (event, setWishListRowData, TotalCalLimit, TotalStdWt, TotalCost) => {
+  const GetCatPBLimit = (
+    event,
+    setWishListRowData,
+    TotalCalLimit,
+    TotalStdWt,
+    TotalCost
+  ) => {
     setLoading(true);
     const encodedCatPB = encodeURIComponent(event.catPB);
-    APIGetLimitCatPBWise(`/NPIML3/limit/against/total?storeCode=${storeCode}&catPB=${encodedCatPB}`)
-      .then(res => res).then((response) => {
+    APIGetLimitCatPBWise(
+      `/NPIML3/limit/against/total?storeCode=${storeCode}&catPB=${encodedCatPB}`
+    )
+      .then((res) => res)
+      .then((response) => {
         if (response.data.code === "1000") {
           console.log("response==>", response.data);
-          const getLimit = response.data.limitResp.length > 0 ? response.data.limitResp.map(item => item.limit)[0] : 0;
+          const getLimit =
+            response.data.limitResp.length > 0
+              ? response.data.limitResp.map((item) => item.limit)[0]
+              : 0;
           const limit = parseFloat(getLimit).toFixed(2);
           console.log("limit==>", Number(limit));
-          ValiDateLimit(event, setWishListRowData, TotalCalLimit, Number(limit), TotalStdWt, TotalCost);
+          ValiDateLimit(
+            event,
+            setWishListRowData,
+            TotalCalLimit,
+            Number(limit),
+            TotalStdWt,
+            TotalCost
+          );
         }
-      }).catch(error => {
+      })
+      .catch((error) => {
         console.log("error==>", error);
         setLoading(false);
-        toast.error("CatPB Is Not Available Hence Data Can't Be Saved!", { theme: "colored" });
+        toast.error("CatPB Is Not Available Hence Data Can't Be Saved!", {
+          theme: "colored",
+        });
       });
-  }
+  };
 
   const MoveToWishlist = async (event, setWishListRowData) => {
     // WishListToEndent(event.itemCode, setWishListRowData);
@@ -208,45 +266,76 @@ const WishListedItems = () => {
     const GetItemWiseReports = async (storeCode) => {
       try {
         setLoading(true);
-        const response = await APIGetItemWiseRptL3(`/NPIML3/npim/item/wise/rpt/L3/${storeCode}`);
+        const response = await APIGetItemWiseRptL3(
+          `/NPIML3/npim/item/wise/rpt/L3/${storeCode}`
+        );
         setLoading(false);
         if (response.data.code === "1000") {
-          const isCatPB = response.data.value.filter(item => item.catPB);
-          const catPbDataUpper = isCatPB.filter(item_1 => item_1.catPB.toUpperCase() === event.catPB.toUpperCase());
-          const catPbWiseData = catPbDataUpper.filter(item_2 => item_2.catPB.replace(/\s+/g, '').trim() == event.catPB.replace(/\s+/g, '').trim());
-          const tolCostVal = catPbWiseData.map(item_3 => Number(item_3.tolCost));
-          return tolCostVal.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+          const isCatPB = response.data.value.filter((item) => item.catPB);
+          const catPbDataUpper = isCatPB.filter(
+            (item_1) => item_1.catPB.toUpperCase() === event.catPB.toUpperCase()
+          );
+          const catPbWiseData = catPbDataUpper.filter(
+            (item_2) =>
+              item_2.catPB.replace(/\s+/g, "").trim() ==
+              event.catPB.replace(/\s+/g, "").trim()
+          );
+          const tolCostVal = catPbWiseData.map((item_3) =>
+            Number(item_3.tolCost)
+          );
+          return tolCostVal.reduce(
+            (accumulator, currentValue) => accumulator + currentValue,
+            0
+          );
         } else {
-          return 0
+          return 0;
         }
       } catch (error) {
         return setLoading(false);
       }
-    }
+    };
 
     const tolSum = await GetItemWiseReports(storeCode);
 
     // <------------------------------------ UMO UCP LIMIT CALUCATION-------------------------------->
     let TotalCalLimit = 0;
-    const bangle11Digit = (event.category === "BANGLE" || event.category === "BANGLES") && event.itemCode.charAt(10);
-    if (event.category.toUpperCase() === "BANGLE" || event.category === "BANGLES") {
-      const singleBanglePrice = Number(event.stdUCP) / Number(bangle11Digit) || 1;
-      TotalCalLimit = singleBanglePrice * Number(event.uom) * Number(event.itemQty);
+    const bangle11Digit =
+      (event.category === "BANGLE" || event.category === "BANGLES") &&
+      event.itemCode.charAt(10);
+    if (
+      event.category.toUpperCase() === "BANGLE" ||
+      event.category === "BANGLES"
+    ) {
+      const singleBanglePrice =
+        Number(event.stdUCP) / Number(bangle11Digit) || 1;
+      TotalCalLimit =
+        singleBanglePrice * Number(event.uom) * Number(event.itemQty);
     } else {
       TotalCalLimit = Number(event.itemQty) * Number(event.stdUCP);
     }
 
     // <------------------------------------ UMO STD WT CALUCATION-------------------------------->
     let TotalStdWt = 0;
-    if (event.category.toUpperCase() === "BANGLE" || event.category === "BANGLES") {
-      const singleBanglePrice = Number(event.stdWt) / Number(bangle11Digit) || 1;
-      TotalStdWt = singleBanglePrice * Number(event.uom) * Number(event.itemQty);
+    if (
+      event.category.toUpperCase() === "BANGLE" ||
+      event.category === "BANGLES"
+    ) {
+      const singleBanglePrice =
+        Number(event.stdWt) / Number(bangle11Digit) || 1;
+      TotalStdWt =
+        singleBanglePrice * Number(event.uom) * Number(event.itemQty);
     } else {
       TotalStdWt = Number(event.itemQty) * Number(event.stdWt);
     }
     console.log("TotalStdWt==>", TotalStdWt);
-    GetCatPBLimit(event, setWishListRowData, TotalCalLimit + tolSum, TotalStdWt, TotalCalLimit);
-  }
+    GetCatPBLimit(
+      event,
+      setWishListRowData,
+      TotalCalLimit + tolSum,
+      TotalStdWt,
+      TotalCalLimit
+    );
+  };
 
   const reportDropHandler = (input) => {
     setLoading(true);
@@ -313,7 +402,7 @@ const WishListedItems = () => {
         if (response.data.code === "1000") {
           setAlertPopupStatus({
             status: true,
-            main: 'Deleted Successfully',
+            main: "Deleted Successfully",
             contain: "",
           });
         }
@@ -322,7 +411,8 @@ const WishListedItems = () => {
         setModification(!modification);
         setLoading(true);
         reportDropHandler(reportLabel);
-      }).catch((error) => setLoading(false));
+      })
+      .catch((error) => setLoading(false));
   };
 
   function DisplayValidationRunner() {
@@ -348,65 +438,71 @@ const WishListedItems = () => {
     "Cancel_Item_List",
   ];
 
-  return (<React.Fragment>
-    <CssBaseline />
-    <AlertPopup
-      status={alertPopupStatus.status}
-      mainLable={alertPopupStatus.main}
-      containLable={alertPopupStatus.contain}
-      procideHandler=""
-      discardHandler=""
-      closeHandler={closeHandler}
-    />
-    <Drawer anchor="top" open={statusCloserOpener} onClick={statusOpener}>
-      <StatusTabular statusData={statusData} />
-    </Drawer>
-    <Container className={classes.root} maxWidth="xl">
-      <Grid item xs={12}>
-        <UpperHeader storeCode={storeCode} />
-        <Loading flag={loading} />
-        {loading === true && <Loader />}
-        <ReportsAppBar
-          reportDropHandler={reportDropHandler}
-          reportOptions={reportOption}
-          barHandler={barHandler}
-          showInformationHandler={showInformationHandler}
-          showInfo={showInfo}
-          switchEnable={switchEnable}
-          droptype="Wishlist"
-          statusOpener={statusOpener}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        {rows.length > 0 ? (
-          <LazyLoadingDataGridForWishlist
-            col={col}
-            rows={rows}
-            autoHeight={true}
-            autoPageSize={true}
-            reportLabel="Wishlist"
-            rowDataHandler={rowDataHandler}
-            handelOpen={handelOpen}
-            handelClose={handelClose}
-            handelYes={handelYes}
-            popupOpen={popupOpen}
-            isConfirmed={isConfirmed}
-            dataRowInformation={dataRowInformation}
-            allDataFromValidation={allDataFromValidation}
-            DeleteRowData={DeleteRowData}
-            MoveToWishlist={MoveToWishlist}
-            getCatPbRow={getCatPbRow}
-            showInfo={setShowInfo}
-            switchEnable={setSwitchEnable}
+  return (
+    <React.Fragment>
+      <CssBaseline />
+      <AlertPopup
+        status={alertPopupStatus.status}
+        mainLable={alertPopupStatus.main}
+        containLable={alertPopupStatus.contain}
+        procideHandler=""
+        discardHandler=""
+        closeHandler={closeHandler}
+      />
+      <Drawer anchor="top" open={statusCloserOpener} onClick={statusOpener}>
+        <StatusTabular statusData={statusData} />
+      </Drawer>
+      <Container className={classes.root} maxWidth="xl">
+        <Grid item xs={12}>
+          <UpperHeader storeCode={storeCode} />
+          <Loading flag={loading} />
+          {loading === true && <Loader />}
+          <ReportsAppBar
+            reportDropHandler={reportDropHandler}
+            reportOptions={reportOption}
+            barHandler={barHandler}
+            showInformationHandler={showInformationHandler}
+            showInfo={showInfo}
+            switchEnable={switchEnable}
+            droptype="Wishlist"
+            statusOpener={statusOpener}
           />
-        ) : (
-          <Typography className="mt-2" align="center" variant="h6" color="secondary">
-            DATA NOT AVAILABLE
-          </Typography>
-        )}
-      </Grid>
-    </Container>
-  </React.Fragment>
+        </Grid>
+        <Grid item xs={12}>
+          {rows.length > 0 ? (
+            <LazyLoadingDataGridForWishlist
+              col={col}
+              rows={rows}
+              autoHeight={true}
+              autoPageSize={true}
+              reportLabel="Wishlist"
+              rowDataHandler={rowDataHandler}
+              handelOpen={handelOpen}
+              handelClose={handelClose}
+              handelYes={handelYes}
+              popupOpen={popupOpen}
+              isConfirmed={isConfirmed}
+              dataRowInformation={dataRowInformation}
+              allDataFromValidation={allDataFromValidation}
+              DeleteRowData={DeleteRowData}
+              MoveToWishlist={MoveToWishlist}
+              getCatPbRow={getCatPbRow}
+              showInfo={setShowInfo}
+              switchEnable={setSwitchEnable}
+            />
+          ) : (
+            <Typography
+              className="mt-2"
+              align="center"
+              variant="h6"
+              color="secondary"
+            >
+              DATA NOT AVAILABLE
+            </Typography>
+          )}
+        </Grid>
+      </Container>
+    </React.Fragment>
   );
 };
 export default WishListedItems;
