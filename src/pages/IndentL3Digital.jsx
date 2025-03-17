@@ -395,7 +395,6 @@ const IndentL3Digital = () => {
       tagQuantitys: filteredTags,
     };
     console.log("IndentPdtPayload==>", IndentPdtPayload);
-
     setLoading(true);
     APISaveFormDataL3(`/NPIML3/npim/insert/responses/from/L3`, IndentPdtPayload)
       .then((res) => res)
@@ -443,7 +442,7 @@ const IndentL3Digital = () => {
           } else {
             setAlertPopupStatus({
               status: true,
-              main: "All Products has been Indented Successfully",
+              main: response.data.value,
               contain: "",
               mode: true,
             });

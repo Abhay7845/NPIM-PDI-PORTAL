@@ -3,6 +3,7 @@ import UpperHeader from "./UpperHeader";
 import DropdownFieldDigital from "./DropdownFieldDigital";
 import { AppBar, Drawer, Toolbar } from "@material-ui/core";
 import TablePagination from "@mui/material/TablePagination";
+import "../Style/CssStyle/ScalePagination.css";
 import { useStyles } from "../Style/LowerHeader";
 import { BsCardList, BsCart3 } from "react-icons/bs";
 import { BiHomeAlt } from "react-icons/bi";
@@ -26,6 +27,7 @@ export const ProductCartL3 = () => {
   const [imgLoad, setImgLoad] = useState(true);
   const [loading, setLoading] = useState(false);
   const loginData = JSON.parse(sessionStorage.getItem("loginData"));
+  const [currentPage, setCurrentPage] = useState(1);
   const collval = sessionStorage.getItem("collal");
   const catVal = sessionStorage.getItem("catVal");
   const [statusData, setStatusData] = useState({
@@ -42,8 +44,6 @@ export const ProductCartL3 = () => {
     sessionStorage.getItem("catVal") || "ALL"
   );
   const [cartDataList, setCartDataList] = useState([]);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(8);
   const GetStatusReport = (storeCode) => {
     setLoading(true);
     APIGetStatuL3(`/NPIML3/npim/get/status/L3/${storeCode}`)
@@ -123,17 +123,18 @@ export const ProductCartL3 = () => {
   useEffect(() => {
     if ((collectionValue || collval) && (categoryValue || catVal)) {
       GetCartDetails(storeCode);
-      setPage(0);
     }
   }, [collectionValue, categoryValue, catVal, collval]);
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+  const itemsPerPage = 8;
+  const totalPages = Math.ceil(cartDataList.length / itemsPerPage);
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
+  // Get current page data
+  const startIdx = (currentPage - 1) * itemsPerPage;
+  const currentData = cartDataList.slice(startIdx, startIdx + itemsPerPage);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   return (
@@ -166,7 +167,6 @@ export const ProductCartL3 = () => {
                     myChangeHandler={(e) => {
                       setCollectionValue(e.target.value);
                       sessionStorage.setItem("collVal", e.target.value);
-
                       setImgLoad(true);
                     }}
                   />
@@ -241,52 +241,66 @@ export const ProductCartL3 = () => {
       </AppBar>
       {cartDataList.length > 0 ? (
         <div className="row g-4 mx-3 my-4">
-          {cartDataList
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((item, i) => {
-              const imageCode = item.substring(2, 9);
-              const imgUrl = `${imageUrl}${imageCode}.jpg`;
-              return (
-                <div key={i} className="col-md-3">
-                  <div className="card" style={{ border: "1.8px solid gray" }}>
-                    <img
-                      src={imgLoad === true ? deImgUrl : imgUrl}
-                      onLoad={() => setImgLoad(false)}
-                      alt={item}
-                      height="240"
-                    />
-                    <div
-                      className="d-flex justify-content-between p-3"
-                      style={{ backgroundColor: "#832729", color: "#fff" }}
+          {currentData.map((item, i) => {
+            const imageCode = item.substring(2, 9);
+            const imgUrl = `${imageUrl}${imageCode}.jpg`;
+            return (
+              <div key={i} className="col-md-3">
+                <div className="card" style={{ border: "1.8px solid gray" }}>
+                  <img
+                    src={imgLoad === true ? deImgUrl : imgUrl}
+                    onLoad={() => setImgLoad(false)}
+                    alt={item}
+                    height="240"
+                  />
+                  <div
+                    className="d-flex justify-content-between p-3"
+                    style={{ backgroundColor: "#832729", color: "#fff" }}
+                  >
+                    <b>{item}</b>
+                    <b
+                      style={{ cursor: "pointer" }}
+                      onClick={() => {
+                        sessionStorage.setItem("CartItemCode", item);
+                        navigate(
+                          `/NpimPortal/indentL3Digital/${storeCode}/${rsoName}`
+                        );
+                      }}
                     >
-                      <b>{item}</b>
-                      <b
-                        style={{ cursor: "pointer" }}
-                        onClick={() => {
-                          sessionStorage.setItem("CartItemCode", item);
-                          //  sessionStorage.setItem("collval", collectionValue ? collectionValue : collval);
-                          // sessionStorage.setItem("catVal", categoryValue ? categoryValue : catVal);
-                          navigate(
-                            `/NpimPortal/indentL3Digital/${storeCode}/${rsoName}`
-                          );
-                        }}
-                      >
-                        View More
-                      </b>
-                    </div>
+                      View More
+                    </b>
                   </div>
                 </div>
-              );
-            })}
-          <TablePagination
-            rowsPerPageOptions={[8, 16, 24, cartDataList.length]}
-            component="div"
-            count={cartDataList.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
+              </div>
+            );
+          })}
+          <div className="paginationContainer">
+            <button
+              className="navButton"
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+            >
+              Pre
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                className={`pageButton ${page === currentPage ? "active" : ""}`}
+                onClick={() => handlePageChange(page)}
+              >
+                {page}
+              </button>
+            ))}
+            <button
+              className="navButton"
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </div>
         </div>
       ) : (
         <p />

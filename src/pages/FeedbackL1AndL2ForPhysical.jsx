@@ -22,7 +22,11 @@ import ImgShow from "../Components/ImgShow";
 import AlertPopup from "../Components/AlertPopup";
 import { useStyles } from "../Style/FeedbackL1AndL2ForPhysical";
 import { imageUrl } from "../DataCenter/DataList";
-import { APIGetStatusReports, APIInsertDataL1L2, APIPNPIMProductData } from "../HostManager/CommonApiCallL3";
+import {
+  APIGetStatusReports,
+  APIInsertDataL1L2,
+  APIPNPIMProductData,
+} from "../HostManager/CommonApiCallL3";
 import { MuliSelectDropdownField } from "../Components/MuliSelectDropdownField";
 
 const FeedbacL1AndL2ForPhysical = () => {
@@ -73,7 +77,8 @@ const FeedbacL1AndL2ForPhysical = () => {
   useEffect(() => {
     setLoading(true);
     APIPNPIMProductData(`/NPIM/base/npim/get/product/details`, productDetails)
-      .then(res => res).then((response) => {
+      .then((res) => res)
+      .then((response) => {
         if (response.data.code === "1001") {
           setAlertPopupStatus({
             status: true,
@@ -85,19 +90,29 @@ const FeedbacL1AndL2ForPhysical = () => {
           setFeedShowState(response.data.value);
         }
         setLoading(false);
-      }).catch((error) => setLoading(false));
+      })
+      .catch((error) => setLoading(false));
 
-    APIGetStatusReports(`/api/NPIM/l1l2/get/feedback/status?strCode=${storeCode}`)
+    APIGetStatusReports(
+      `/api/NPIM/l1l2/get/feedback/status?strCode=${storeCode}`
+    )
       .then((response) => {
         if (response.data.code === "1000") {
           setStatusData({
             // col: response.data.coloum,
-            col: ["ID", "NEEDSTATE", "TOTALSKU", "GIVENFEEDBACK", "REMAININGSKUCOUNT"],
+            col: [
+              "ID",
+              "NEEDSTATE",
+              "TOTALSKU",
+              "GIVENFEEDBACK",
+              "REMAININGSKUCOUNT",
+            ],
             row: response.data.value,
           });
         }
         setLoading(false);
-      }).catch((error) => setLoading(false));
+      })
+      .catch((error) => setLoading(false));
   }, [productDetails]);
 
   const onSearchClick = (dropState) => {
@@ -165,7 +180,8 @@ const FeedbacL1AndL2ForPhysical = () => {
       return old;
     });
     APIInsertDataL1L2(`/npim/insert/responses`, feedShowState)
-      .then(res => res).then((response) => {
+      .then((res) => res)
+      .then((response) => {
         let mailSms = "";
         if (response.data.code === "1001") {
           if (
@@ -194,7 +210,8 @@ const FeedbacL1AndL2ForPhysical = () => {
         } else {
           setFeedShowState(response.data.value);
         }
-      }).catch((error) => setLoading(false));
+      })
+      .catch((error) => setLoading(false));
     setMultiSelectDrop([]);
     setSwitchData(true);
   };
@@ -220,7 +237,9 @@ const FeedbacL1AndL2ForPhysical = () => {
         containLable={alertPopupStatus.contain}
         procideHandler=""
         discardHandler=""
-        closeHandler={() => alertPopupStatus.mode ? closeHandlerForRest() : closeHandler()}
+        closeHandler={() =>
+          alertPopupStatus.mode ? closeHandlerForRest() : closeHandler()
+        }
       />
 
       <Grid container className={classes.root} spacing={2}>
@@ -393,12 +412,18 @@ const FeedbacL1AndL2ForPhysical = () => {
                               feedShowState={feedShowState}
                             />
                           </div>
-                        ) : ""}
+                        ) : (
+                          ""
+                        )}
                       </div>
                     </div>
                   </div>
                 </div>
-                {feedShowState.si2Gh || feedShowState.vsGh || feedShowState.vvs1 || feedShowState.i2Gh || feedShowState.si2Ij ? (
+                {feedShowState.si2Gh ||
+                feedShowState.vsGh ||
+                feedShowState.vvs1 ||
+                feedShowState.i2Gh ||
+                feedShowState.si2Ij ? (
                   <StaticTabularInformation
                     si2Gh={feedShowState.si2Gh}
                     vsGh={feedShowState.vsGh}

@@ -7,11 +7,14 @@ import IconButton from "@mui/material/IconButton";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import { Formik, Field, Form } from "formik";
 import { useNavigate } from "react-router-dom";
-import { LoginInitialValue, LoginSchema } from "../validationSchema/LoginSchema";
+import {
+  LoginInitialValue,
+  LoginSchema,
+} from "../validationSchema/LoginSchema";
 import ShowError from "../validationSchema/ShowError";
-import { useMsal } from '@azure/msal-react';
+import { useMsal } from "@azure/msal-react";
 import { loginRequest } from "../DataCenter/AzurConfig";
-import micIcon from "../images/mic-icon.png"
+import micIcon from "../images/mic-icon.png";
 import { APILogin } from "../HostManager/CommonApiCallL3";
 import { INDENT_HOST_URL } from "../HostManager/UrlManager";
 import axios from "axios";
@@ -26,7 +29,7 @@ const style = {
   bgcolor: "background.paper",
   p: 4,
   borderRadius: "2px",
-  borderColor: "#fff"
+  borderColor: "#fff",
 };
 
 const Login = ({ open, setOpen }) => {
@@ -48,17 +51,31 @@ const Login = ({ open, setOpen }) => {
     };
     setLoading(true);
     if (PortalType === "INDENT_EXPRESS") {
-      axios.post(`${INDENT_HOST_URL}/INDENT/express/user/login`, inputPayloadData)
-        .then(res => res).then((response) => {
+      axios
+        .post(`${INDENT_HOST_URL}/INDENT/express/user/login`, inputPayloadData)
+        .then((res) => res)
+        .then((response) => {
           if (response.data.code === "1000") {
             if (response.data.value.status === "open") {
-              if (response.data.value.role === "L1" || response.data.value.role === "L2" || response.data.value.role === "L3") {
-                sessionStorage.setItem("store_code", response.data.value.userID);
-                sessionStorage.setItem("indent-expressRole", response.data.value.role);
+              if (
+                response.data.value.role === "L1" ||
+                response.data.value.role === "L2" ||
+                response.data.value.role === "L3"
+              ) {
+                sessionStorage.setItem(
+                  "store_code",
+                  response.data.value.userID
+                );
+                sessionStorage.setItem(
+                  "indent-expressRole",
+                  response.data.value.role
+                );
                 navigate("/NpimPortal/Indent-express/direction/home");
               } else if (response.data.value.role === "Admin") {
                 sessionStorage.setItem("store_code", response.data.value.role);
-                navigate("/NpimPortal/Indent-express/admin/update/tortal/status");
+                navigate(
+                  "/NpimPortal/Indent-express/admin/update/tortal/status"
+                );
               }
             } else if (response.data.value.status === "close") {
               setErrorSms("Portal is Closed");
@@ -67,26 +84,37 @@ const Login = ({ open, setOpen }) => {
             setErrorSms("Please enter valid Username and Password!");
           }
           setLoading(false);
-        }).catch((error) => {
+        })
+        .catch((error) => {
           setLoading(false);
           setErrorSms("Please Enter valid Username and Password!");
         });
     } else {
       APILogin(`/NPIM/base/npim/user/login`, inputPayloadData)
-        .then(res => res).then((response) => {
+        .then((res) => res)
+        .then((response) => {
           sessionStorage.setItem("rsoName", inputPayloadData.region);
           sessionStorage.setItem("store_value", response.data.value.role);
           sessionStorage.setItem("store_code", response.data.value.userID);
-          sessionStorage.setItem("loginData", JSON.stringify(response.data.value));
+          sessionStorage.setItem(
+            "loginData",
+            JSON.stringify(response.data.value)
+          );
           if (response.data.code === "1000") {
             if (response.data.value.status === "open") {
               if (response.data.value.role === "Admin") {
-                navigate(`/NpimPortal/AdminHome/${response.data.value.userID}/${inputPayloadData.region}`);
+                navigate(
+                  `/NpimPortal/AdminHome/${response.data.value.userID}/${inputPayloadData.region}`
+                );
               } else if (response.data.value.role === "L3") {
-                navigate(`/NpimPortal/get/products/home/${response.data.value.userID}/${inputPayloadData.region}`);
+                navigate(
+                  `/NpimPortal/get/products/home/${response.data.value.userID}/${inputPayloadData.region}`
+                );
               } else {
                 // navigate(`/NpimPortal/feedbackL1andL2/${response.data.value.userID}/${inputPayloadData.region}`);
-                navigate(`/NpimPortal/new/feedbackL1andL2/${response.data.value.userID}/${inputPayloadData.region}`);
+                navigate(
+                  `/NpimPortal/new/feedbackL1andL2/${response.data.value.userID}/${inputPayloadData.region}`
+                );
               }
             } else {
               setErrorSms("Portal is Closed");
@@ -95,27 +123,30 @@ const Login = ({ open, setOpen }) => {
             setErrorSms("Please Enter Valid Username and Password!");
           }
           setLoading(false);
-        }).catch((error) => {
+        })
+        .catch((error) => {
           setErrorSms("Please Enter Valid Username and Password!");
           setLoading(false);
         });
     }
   };
 
-
   const LoginByAzzure = async () => {
-    instance.loginPopup(loginRequest).then(response => {
-      console.log("response==>", response);
-      const headers = {
-        'Authorization': `Bearer ${response.idToken}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Cache-Control': "no-cach",
-        "access-control-allow-origin": "*"
-      }
-      console.log("headers==>", headers);
-      sessionStorage.setItem("authToken", response.idToken);
-    }).catch(error => console.log("error==>", error));
+    instance
+      .loginPopup(loginRequest)
+      .then((response) => {
+        console.log("response==>", response);
+        const headers = {
+          Authorization: `Bearer ${response.idToken}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Cache-Control": "no-cach",
+          "access-control-allow-origin": "*",
+        };
+        console.log("headers==>", headers);
+        sessionStorage.setItem("authToken", response.idToken);
+      })
+      .catch((error) => console.log("error==>", error));
   };
 
   return (
@@ -158,9 +189,15 @@ const Login = ({ open, setOpen }) => {
                 onSubmit={(payload) => OnClickLoginHandler(payload)}
               >
                 <Form>
-                  {errorSms && <h6 className="text-center text-danger my-3"><b>{errorSms}</b></h6>}
+                  {errorSms && (
+                    <h6 className="text-center text-danger my-3">
+                      <b>{errorSms}</b>
+                    </h6>
+                  )}
                   <div className="my-1">
-                    <b>Username <span className="text-danger"> *</span></b>
+                    <b>
+                      Username <span className="text-danger"> *</span>
+                    </b>
                     <Field
                       placeholder="Username"
                       name="userName"
@@ -169,7 +206,9 @@ const Login = ({ open, setOpen }) => {
                     <ShowError name="userName" />
                   </div>
                   <div className="my-2">
-                    <b>Password <span className="text-danger"> *</span></b>
+                    <b>
+                      Password <span className="text-danger"> *</span>
+                    </b>
                     <div className="d-flex">
                       <Field
                         type={passwordShown ? "text" : "password"}
@@ -198,7 +237,9 @@ const Login = ({ open, setOpen }) => {
                     <ShowError name="password" />
                   </div>
                   <div className="my-2">
-                    <b>RSO Name <span className="text-danger"> *</span></b>
+                    <b>
+                      RSO Name <span className="text-danger"> *</span>
+                    </b>
                     <Field
                       placeholder="RSO Name"
                       className="GInput"

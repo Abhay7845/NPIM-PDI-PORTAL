@@ -1,0 +1,34 @@
+.paginationContainer {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.pageButton, .navButton {
+  padding: 10px;
+  border: none;
+  background-color: #ddd;
+  cursor: pointer;
+  transition: transform 0.3s, background-color 0.3s;
+}
+
+.pageButton:hover, .navButton:hover {
+  background-color: #bbb;
+}
+
+.pageButton.active {
+  background-color: #832729;
+  color: white;
+}
+
+.navButton {
+  background-color: #832729;
+  color: white;
+}
+
+.navButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

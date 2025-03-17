@@ -1,16 +1,34 @@
 import { useEffect } from "react";
-import { Container, Grid, makeStyles, Typography, Accordion, AccordionSummary, AccordionDetails, Drawer } from "@material-ui/core";
+import {
+  Container,
+  Grid,
+  makeStyles,
+  Typography,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Drawer,
+} from "@material-ui/core";
 import { CssBaseline } from "@material-ui/core";
 import React, { useState } from "react";
 import Loading from "../Components/Loading";
 import ReportsAppBar from "../Components/ReportsAppBar";
 import UpperHeader from "../Components/UpperHeader";
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { MultiSelectFroAdmin, TextFieldOfMUI } from "../Components/ComponentForAdmin";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import {
+  MultiSelectFroAdmin,
+  TextFieldOfMUI,
+} from "../Components/ComponentForAdmin";
 import { useParams } from "react-router-dom";
-import Alert from '@mui/material/Alert';
+import Alert from "@mui/material/Alert";
 import SideAppBar from "../Components/SideAppBar";
-import { APIGetMailerContent, APIGetStoreListFromDate, APIInsContentMailer, APISendMail, APISendTestMail } from "../HostManager/CommonApiCallL3";
+import {
+  APIGetMailerContent,
+  APIGetStoreListFromDate,
+  APIInsContentMailer,
+  APISendMail,
+  APISendTestMail,
+} from "../HostManager/CommonApiCallL3";
 
 const useStyle = makeStyles({
   root: {
@@ -77,31 +95,50 @@ function SendStoreReportAdmin() {
   useEffect(() => {
     if (tabularData) {
       APIGetMailerContent(`/ADMIN/fetch/automailer/content/${tabularData}`)
-        .then(res => res).then(response => {
+        .then((res) => res)
+        .then((response) => {
           if (response.data.code === "1000") {
             setFetchAutoMailer(response.data);
           } else if (response.data.code === "1001") {
             setFetchAutoMailer({});
           }
-        }).catch(error => setLoading(false));
+        })
+        .catch((error) => setLoading(false));
     }
-  }, [tabularData])
+  }, [tabularData]);
 
-  const FetchMailBody = fetchAutoMailer.body === undefined ? "" : fetchAutoMailer.body.replace(/<br><br>/g, "").replace(/<br>/g, "");
-  const mailBodyText = FetchMailBody.replace(/\s+/g, ' ');
+  const FetchMailBody =
+    fetchAutoMailer.body === undefined
+      ? ""
+      : fetchAutoMailer.body.replace(/<br><br>/g, "").replace(/<br>/g, "");
+  const mailBodyText = FetchMailBody.replace(/\s+/g, " ");
 
-  // UPDATE AUTO MAIL 
+  // UPDATE AUTO MAIL
   const UpdateAutoMail = () => {
-    if ((sendReportInput.from || fetchAutoMailer.from) && (sendReportInput.subject || fetchAutoMailer.subject) && (sendReportInput.mailBody || mailBodyText)) {
+    if (
+      (sendReportInput.from || fetchAutoMailer.from) &&
+      (sendReportInput.subject || fetchAutoMailer.subject) &&
+      (sendReportInput.mailBody || mailBodyText)
+    ) {
       const updateAutoMailPayload = {
-        fromMailId: sendReportInput.from ? sendReportInput.from : fetchAutoMailer.from,
-        mailSubject: sendReportInput.subject ? sendReportInput.subject : fetchAutoMailer.subject,
-        mailBody: sendReportInput.mailBody ? sendReportInput.mailBody : mailBodyText,
-        reportType: tabularData
+        fromMailId: sendReportInput.from
+          ? sendReportInput.from
+          : fetchAutoMailer.from,
+        mailSubject: sendReportInput.subject
+          ? sendReportInput.subject
+          : fetchAutoMailer.subject,
+        mailBody: sendReportInput.mailBody
+          ? sendReportInput.mailBody
+          : mailBodyText,
+        reportType: tabularData,
       };
       setLoading(true);
-      APIInsContentMailer(`/ADMIN/npim/insert/auto/mailer/content`, updateAutoMailPayload)
-        .then(res => res).then((responce) => {
+      APIInsContentMailer(
+        `/ADMIN/npim/insert/auto/mailer/content`,
+        updateAutoMailPayload
+      )
+        .then((res) => res)
+        .then((responce) => {
           if (responce.data.code === "1000") {
             setAlertState({
               alertFlag1: true,
@@ -116,7 +153,7 @@ function SendStoreReportAdmin() {
               storeCode: "",
               to: "",
               cc: "",
-            })
+            });
             setTabularData("");
           } else {
             setAlertState({
@@ -126,7 +163,8 @@ function SendStoreReportAdmin() {
             });
           }
           setLoading(false);
-        }).catch((error) => setLoading(false));
+        })
+        .catch((error) => setLoading(false));
     } else {
       setAlertState({
         alertFlag1: true,
@@ -134,22 +172,25 @@ function SendStoreReportAdmin() {
         alertMessage: "Invalid Input Data",
       });
     }
-  }
+  };
 
   const SendStoreReport = () => {
     setLoading(true);
     if (sendReportInput.storeCode.length > 0) {
-      const sendReportPaylod = sendReportInput.storeCode.map(data => {
+      const sendReportPaylod = sendReportInput.storeCode.map((data) => {
         return {
           to: data.to,
           cc: data.cc,
-          storeCode: data.storeCode
-        }
-      })
+          storeCode: data.storeCode,
+        };
+      });
       APISendMail(`/ADMIN/npim/send/mail`, sendReportPaylod)
-        .then(res => res).then((responce) => {
+        .then((res) => res)
+        .then((responce) => {
           if (responce.data.code === "1000") {
-            let notSent = responce.data.notSent[0] && `But fro this stores not send mail plz check mail content and mail Ids ${responce.data.notSent}`;
+            let notSent =
+              responce.data.notSent[0] &&
+              `But fro this stores not send mail plz check mail content and mail Ids ${responce.data.notSent}`;
             setAlertState({
               alertFlag2: true,
               alertSeverity: "success",
@@ -163,7 +204,7 @@ function SendStoreReportAdmin() {
               storeCode: "",
               to: "",
               cc: "",
-            })
+            });
             setStoreList([]);
           } else {
             setAlertState({
@@ -172,7 +213,8 @@ function SendStoreReportAdmin() {
               alertMessage: responce.data.value,
             });
           }
-        }).catch((error) => setLoading(false));
+        })
+        .catch((error) => setLoading(false));
     } else {
       setAlertState({
         lertFlag2: false,
@@ -181,18 +223,20 @@ function SendStoreReportAdmin() {
       });
     }
     setLoading(false);
-  }
+  };
 
   const GetStoreCode = (fromDate) => {
     setLoading(true);
     APIGetStoreListFromDate(`/ADMIN/npim/from/store/list/${fromDate}`)
-      .then(res => res).then((response) => {
+      .then((res) => res)
+      .then((response) => {
         if (response.data.code === "1000") {
-          setStoreList(response.data.value)
+          setStoreList(response.data.value);
         }
         setLoading(false);
-      }).catch(error => setLoading(false));
-  }
+      })
+      .catch((error) => setLoading(false));
+  };
 
   useEffect(() => {
     if (sendReportInput.fromDate) {
@@ -204,11 +248,12 @@ function SendStoreReportAdmin() {
     const testMailPaylod = {
       to: sendReportInput.to,
       cc: sendReportInput.cc,
-    }
+    };
     if (sendReportInput.to && sendReportInput.cc) {
       setLoading(true);
       APISendTestMail(`/ADMIN/npim/test/send/mail`, testMailPaylod)
-        .then(res => res).then((responce) => {
+        .then((res) => res)
+        .then((responce) => {
           if (responce.data.code === "1000") {
             setAlertState({
               alertFlag3: true,
@@ -223,7 +268,7 @@ function SendStoreReportAdmin() {
               storeCode: "",
               to: "",
               cc: "",
-            })
+            });
           } else {
             setAlertState({
               alertFlag3: true,
@@ -232,7 +277,8 @@ function SendStoreReportAdmin() {
             });
           }
           setLoading(false);
-        }).catch((error) => setLoading(false));
+        })
+        .catch((error) => setLoading(false));
     } else {
       setAlertState({
         alertFlag3: true,
@@ -240,7 +286,7 @@ function SendStoreReportAdmin() {
         alertMessage: "Invalid Input Data",
       });
     }
-  }
+  };
 
   function ccCombiner(inputCc) {
     let resData = [];
@@ -278,10 +324,7 @@ function SendStoreReportAdmin() {
           setBarOpener(false);
         }}
       >
-        <SideAppBar
-          navBarList={navBarList}
-          pageName="admin"
-        />
+        <SideAppBar navBarList={navBarList} pageName="admin" />
       </Drawer>
       <Container maxWidth="xl" className={classes.root}>
         <Grid container>
@@ -313,77 +356,114 @@ function SendStoreReportAdmin() {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Container>
-                        <div className='mb-2 w-100'>
-                          <div className='d-flex w-100'>
-                            <div className={`${tabularData === "Indent" ? "activeTab col-md-6" : "redirectionTab col-md-6"}`} onClick={() => setTabularData("Indent")}>INDENT</div>
-                            <div className={`${tabularData === "Wishlist" ? "activeTab col-md-6" : "redirectionTab col-md-6"}`} onClick={() => setTabularData("Wishlist")}>WISHLIST</div>
+                        <div className="mb-2 w-100">
+                          <div className="d-flex w-100">
+                            <div
+                              className={`${
+                                tabularData === "Indent"
+                                  ? "activeTab col-md-6"
+                                  : "redirectionTab col-md-6"
+                              }`}
+                              onClick={() => setTabularData("Indent")}
+                            >
+                              INDENT
+                            </div>
+                            <div
+                              className={`${
+                                tabularData === "Wishlist"
+                                  ? "activeTab col-md-6"
+                                  : "redirectionTab col-md-6"
+                              }`}
+                              onClick={() => setTabularData("Wishlist")}
+                            >
+                              WISHLIST
+                            </div>
                           </div>
                         </div>
                         <Grid item xs={12} sm={12} className="mb-3">
-                          {alertState.alertFlag1 && <Alert severity={alertState.alertSeverity} onClose={() => {
-                            setAlertState({
-                              alertFlag1: false,
-                              alertSeverity: "",
-                              alertMessage: "",
-                            })
-                          }}>
-                            {alertState.alertMessage}
-                          </Alert>}
-                        </Grid>
-                        {tabularData && <Grid container spacing={3}>
-                          <Grid item xs={12} sm={12}>
-                            <TextFieldOfMUI
-                              label="From"
-                              type="email"
-                              textFieldHandlerChange={onChangeInputHandler}
-                              value={sendReportInput.from ? sendReportInput.from : fetchAutoMailer.from}
-                              name="from"
-                              autoComplete="email"
-                              required={true}
-                              mailData={fetchAutoMailer}
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={12}>
-                            <TextFieldOfMUI
-                              label="Subject"
-                              type="textarea"
-                              textFieldHandlerChange={onChangeInputHandler}
-                              value={sendReportInput.subject ? sendReportInput.subject : fetchAutoMailer.subject}
-                              name="subject"
-                              multiline={true}
-                              minRows={0}
-                              required={true}
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={12}>
-                            <TextFieldOfMUI
-                              label="Mail Body"
-                              type="textarea"
-                              textFieldHandlerChange={onChangeInputHandler}
-                              value={sendReportInput.mailBody ? sendReportInput.mailBody : mailBodyText}
-                              name="mailBody"
-                              multiline={true}
-                              minRows={3}
-                              required={true}
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={12}>
-                            <button
-                              className="btn btn-primary w-100"
-                              onClick={UpdateAutoMail}
+                          {alertState.alertFlag1 && (
+                            <Alert
+                              severity={alertState.alertSeverity}
+                              onClose={() => {
+                                setAlertState({
+                                  alertFlag1: false,
+                                  alertSeverity: "",
+                                  alertMessage: "",
+                                });
+                              }}
                             >
-                              {loading ? (
-                                <span
-                                  className="spinner-border spinner-border-sm text-light"
-                                  role="status"
-                                  aria-hidden="true"
-                                />
-                              ) : (
-                                <span>UPDATE</span>
-                              )}
-                            </button>
+                              {alertState.alertMessage}
+                            </Alert>
+                          )}
+                        </Grid>
+                        {tabularData && (
+                          <Grid container spacing={3}>
+                            <Grid item xs={12} sm={12}>
+                              <TextFieldOfMUI
+                                label="From"
+                                type="email"
+                                textFieldHandlerChange={onChangeInputHandler}
+                                value={
+                                  sendReportInput.from
+                                    ? sendReportInput.from
+                                    : fetchAutoMailer.from
+                                }
+                                name="from"
+                                autoComplete="email"
+                                required={true}
+                                mailData={fetchAutoMailer}
+                              />
+                            </Grid>
+                            <Grid item xs={12} sm={12}>
+                              <TextFieldOfMUI
+                                label="Subject"
+                                type="textarea"
+                                textFieldHandlerChange={onChangeInputHandler}
+                                value={
+                                  sendReportInput.subject
+                                    ? sendReportInput.subject
+                                    : fetchAutoMailer.subject
+                                }
+                                name="subject"
+                                multiline={true}
+                                minRows={0}
+                                required={true}
+                              />
+                            </Grid>
+                            <Grid item xs={12} sm={12}>
+                              <TextFieldOfMUI
+                                label="Mail Body"
+                                type="textarea"
+                                textFieldHandlerChange={onChangeInputHandler}
+                                value={
+                                  sendReportInput.mailBody
+                                    ? sendReportInput.mailBody
+                                    : mailBodyText
+                                }
+                                name="mailBody"
+                                multiline={true}
+                                minRows={3}
+                                required={true}
+                              />
+                            </Grid>
+                            <Grid item xs={12} sm={12}>
+                              <button
+                                className="btn btn-primary w-100"
+                                onClick={UpdateAutoMail}
+                              >
+                                {loading ? (
+                                  <span
+                                    className="spinner-border spinner-border-sm text-light"
+                                    role="status"
+                                    aria-hidden="true"
+                                  />
+                                ) : (
+                                  <span>UPDATE</span>
+                                )}
+                              </button>
+                            </Grid>
                           </Grid>
-                        </Grid>}
+                        )}
                       </Container>
                     </AccordionDetails>
                   </Accordion>
@@ -407,15 +487,20 @@ function SendStoreReportAdmin() {
                       <Container maxWidth="sm">
                         <Grid container spacing={3}>
                           <Grid item xs={12} sm={12}>
-                            {alertState.alertFlag2 && <Alert severity={alertState.alertSeverity} onClose={() => {
-                              setAlertState({
-                                alertFlag2: false,
-                                alertSeverity: "",
-                                alertMessage: "",
-                              })
-                            }}>
-                              {alertState.alertMessage}
-                            </Alert>}
+                            {alertState.alertFlag2 && (
+                              <Alert
+                                severity={alertState.alertSeverity}
+                                onClose={() => {
+                                  setAlertState({
+                                    alertFlag2: false,
+                                    alertSeverity: "",
+                                    alertMessage: "",
+                                  });
+                                }}
+                              >
+                                {alertState.alertMessage}
+                              </Alert>
+                            )}
                           </Grid>
                           <Grid item xs={12} sm={12}>
                             <TextFieldOfMUI
@@ -474,15 +559,20 @@ function SendStoreReportAdmin() {
                       <Container maxWidth="sm">
                         <Grid container spacing={3}>
                           <Grid item xs={12} sm={12}>
-                            {alertState.alertFlag3 && <Alert severity={alertState.alertSeverity} onClose={() => {
-                              setAlertState({
-                                alertFlag3: false,
-                                alertSeverity: "",
-                                alertMessage: "",
-                              })
-                            }}>
-                              {alertState.alertMessage}
-                            </Alert>}
+                            {alertState.alertFlag3 && (
+                              <Alert
+                                severity={alertState.alertSeverity}
+                                onClose={() => {
+                                  setAlertState({
+                                    alertFlag3: false,
+                                    alertSeverity: "",
+                                    alertMessage: "",
+                                  });
+                                }}
+                              >
+                                {alertState.alertMessage}
+                              </Alert>
+                            )}
                           </Grid>
                           <Grid item xs={12} sm={12}>
                             <TextFieldOfMUI
@@ -528,8 +618,8 @@ function SendStoreReportAdmin() {
               </Grid>
             </Container>
           </Grid>
-        </Grid >
-      </Container >
+        </Grid>
+      </Container>
     </React.Fragment>
   );
 }
