@@ -12,9 +12,7 @@ const DropdownField = (props) => {
   return (
     <div className="input-group">
       <div className="input-group-prepend">
-        <label className="input-group-text mt-3">
-          {props.labelName}
-        </label>
+        <label className="input-group-text mt-3">{props.labelName}</label>
       </div>
       <select
         onChange={props.myChangeHandler}

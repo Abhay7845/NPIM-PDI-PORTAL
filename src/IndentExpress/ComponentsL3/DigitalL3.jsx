@@ -5,7 +5,12 @@ import swal from "sweetalert";
 import TablePagination from "@mui/material/TablePagination";
 import Tippy from "@tippyjs/react";
 import "../Style/ComponentL3.css";
-import { BsCardList, BsCartFill, BsFillBarChartFill, BsFillHouseDoorFill } from "react-icons/bs";
+import {
+  BsCardList,
+  BsCartFill,
+  BsFillBarChartFill,
+  BsFillHouseDoorFill,
+} from "react-icons/bs";
 import ShowImageCart from "./ShowImageCart";
 import { Link, useNavigate } from "react-router-dom";
 import { IMAGE_URL, ItemWiseReportsDropdown } from "../Data/DataList";
@@ -29,22 +34,29 @@ const DigitalL3 = () => {
   const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
-    const productDataBySearch = productsData.filter((data) => data.itemcode === searchItemCode);
+    const productDataBySearch = productsData.filter(
+      (data) => data.itemcode === searchItemCode
+    );
     setProductsData(productDataBySearch);
   }, [searchItemCode]);
 
   const GetCateogyDropdown = (categoryType) => {
     sessionStorage.setItem("categoryType", categoryType);
     setLoading(true);
-    axios.get(`${INDENT_HOST_URL}/INDENT/express/store/category/list/${storeCode}/${categoryType}`)
-      .then((res) => res).then((response) => {
+    axios
+      .get(
+        `${INDENT_HOST_URL}/INDENT/express/store/category/list/${storeCode}/${categoryType}`
+      )
+      .then((res) => res)
+      .then((response) => {
         if (response.data.code === "1000") {
           setCategoryDropwond(response.data.value);
         } else if (response.data.code === "1001") {
           setCategoryDropwond([]);
         }
         setLoading(false);
-      }).catch((error) => {
+      })
+      .catch((error) => {
         setLoading(false);
       });
   };
@@ -56,33 +68,39 @@ const DigitalL3 = () => {
 
   const GetItemCodeList = () => {
     setLoading(true);
-    axios.get(`${INDENT_HOST_URL}/INDENT/express/get/itemcode/list`)
-      .then((res) => res).then((response) => {
+    axios
+      .get(`${INDENT_HOST_URL}/INDENT/express/get/itemcode/list`)
+      .then((res) => res)
+      .then((response) => {
         if (response.data.code === "1000") {
           setProductsData(response.data.value);
         } else if (response.data.code === "1001") {
           alert("Sorry Data Not Found");
         }
         setLoading(false);
-      }).catch((error) => {
+      })
+      .catch((error) => {
         setLoading(false);
       });
-  }
+  };
   useEffect(() => {
     GetItemCodeList();
   }, [storeCode]);
 
   const SearchProductByItemCode = () => {
     setLoading(true);
-    axios.get(`${INDENT_HOST_URL}/INDENT/express/get/itemcode/list`)
-      .then((res) => res).then((response) => {
+    axios
+      .get(`${INDENT_HOST_URL}/INDENT/express/get/itemcode/list`)
+      .then((res) => res)
+      .then((response) => {
         if (response.data.code === "1000") {
           setProductsData(response.data.value);
         } else if (response.data.code === "1001") {
           alert("Sorry Data Not Found");
         }
         setLoading(false);
-      }).catch((error) => {
+      })
+      .catch((error) => {
         setLoading(false);
       });
   };
@@ -105,8 +123,13 @@ const DigitalL3 = () => {
       category: "ALL",
       itemCode: Details.itemCode,
     };
-    axios.post(`${INDENT_HOST_URL}/INDENT/express/get/product/details`, GetProductsDetails)
-      .then((res) => res).then((response) => {
+    axios
+      .post(
+        `${INDENT_HOST_URL}/INDENT/express/get/product/details`,
+        GetProductsDetails
+      )
+      .then((res) => res)
+      .then((response) => {
         if (response.data.code === "1000") {
           setSingleProductsDetails(response.data.value);
         } else if (response.data.code === "1001") {
@@ -119,7 +142,8 @@ const DigitalL3 = () => {
             buttons: "OK",
           });
         }
-      }).catch((error) => { });
+      })
+      .catch((error) => {});
   };
 
   return (
@@ -201,7 +225,8 @@ const DigitalL3 = () => {
       </div>
       {productsData.length > 0 && (
         <div className="row mx-0">
-          {productsData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+          {productsData
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((productsDetails, i) => {
               const { itemCode } = productsDetails;
               const imageCode = !itemCode ? "" : itemCode.substring(2, 9);
@@ -216,7 +241,7 @@ const DigitalL3 = () => {
                         <BsCartFill
                           size={20}
                           onClick={() => {
-                            GetProductsDetails(productsDetails)
+                            GetProductsDetails(productsDetails);
                             setOpenModal(true);
                           }}
                           className="trolleyStyle"
@@ -247,10 +272,14 @@ const DigitalL3 = () => {
           </button>
         )}
       </div>
-      {openModal && <Modal close={() => setOpenModal(false)} open={() => setOpenModal(true)}
-        singleProductsDetails={singleProductsDetails}
-        CatTypeData={GetItemCodeList}
-      />}
+      {openModal && (
+        <Modal
+          close={() => setOpenModal(false)}
+          open={() => setOpenModal(true)}
+          singleProductsDetails={singleProductsDetails}
+          CatTypeData={GetItemCodeList}
+        />
+      )}
     </React.Fragment>
   );
 };

@@ -1,4 +1,12 @@
-import { Grid, makeStyles, AppBar, Drawer, FormControlLabel, Switch, Toolbar } from "@material-ui/core";
+import {
+  Grid,
+  makeStyles,
+  AppBar,
+  Drawer,
+  FormControlLabel,
+  Switch,
+  Toolbar,
+} from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import DropdownField from "../Components/DropdownField";
 import TableComponent from "../Components/TableComponent";
@@ -8,12 +16,20 @@ import ProductInfo from "../Components/ProductInfo";
 import NpimDataDisplay from "../Components/NpimDataDisplay";
 import StatusTabular from "../Components/StatusTabular";
 import Loading from "../Components/Loading";
-import { L1L2ReportHeaders, feedbackl1l2Navigate } from "../DataCenter/DataList";
+import {
+  L1L2ReportHeaders,
+  feedbackl1l2Navigate,
+} from "../DataCenter/DataList";
 import { BsCardList } from "react-icons/bs";
 import { BiHomeAlt } from "react-icons/bi";
 import { AiOutlineHeart, AiOutlineBarChart } from "react-icons/ai";
 import Loader from "../Components/Loader";
-import { APIDeleteUpdate, APIGetL1L2Reports, APIGetStatusReports, APIInsertDataL1L2 } from "../HostManager/CommonApiCallL3";
+import {
+  APIDeleteUpdate,
+  APIGetL1L2Reports,
+  APIGetStatusReports,
+  APIInsertDataL1L2,
+} from "../HostManager/CommonApiCallL3";
 import StatusTabularL1L2 from "../Components/StatusTabularL1L2";
 
 const useStyles = makeStyles({
@@ -45,7 +61,7 @@ const ReportL1AndL2 = () => {
   const [statusCloserOpener, setStatusCloserOpener] = useState(false);
   const selectReportList = ["yet to submit", "submitted"];
   const loginData = JSON.parse(sessionStorage.getItem("loginData"));
-  const collType = report.map(item => item.collection.split(/\s+/).join(''));
+  const collType = report.map((item) => item.collection.split(/\s+/).join(""));
   const collectionFilter = ["", ...new Set(collType)];
 
   const GetL1l2ReportsData = () => {
@@ -75,7 +91,8 @@ const ReportL1AndL2 = () => {
     }
     setLoading(true);
     APIGetL1L2Reports(`${reportUrl}${storeCode}`)
-      .then(res => res).then(response => {
+      .then((res) => res)
+      .then((response) => {
         if (response.data.code === "1000") {
           setReport(response.data.value);
           setCollectionRtp([]);
@@ -86,30 +103,43 @@ const ReportL1AndL2 = () => {
           setCollectionOpt("");
         }
         setLoading(false);
-      }).catch((error) => setLoading(false));
+      })
+      .catch((error) => setLoading(false));
     setShowInfo(false);
-  }
+  };
 
   useEffect(() => {
     GetL1l2ReportsData();
   }, [selectReport, editState, storeCode]);
 
   useEffect(() => {
-    const CollFilter = report.filter(item => item.collection.split(/\s+/).join('').trim() === collectionOpt);
+    const CollFilter = report.filter(
+      (item) => item.collection.split(/\s+/).join("").trim() === collectionOpt
+    );
     setCollectionRtp(CollFilter);
-  }, [collectionOpt])
+  }, [collectionOpt]);
 
   useEffect(() => {
-    APIGetStatusReports(`/api/NPIM/l1l2/get/feedback/status?strCode=${storeCode}`)
-      .then(res => res).then((response) => {
+    APIGetStatusReports(
+      `/api/NPIM/l1l2/get/feedback/status?strCode=${storeCode}`
+    )
+      .then((res) => res)
+      .then((response) => {
         if (response.data.code === "1000") {
           setStatusData({
             // col: response.data.coloum,
-            col: ["ID", "NEEDSTATE", "TOTALSKU", "GIVENFEEDBACK", "REMAININGSKUCOUNT"],
+            col: [
+              "ID",
+              "NEEDSTATE",
+              "TOTALSKU",
+              "GIVENFEEDBACK",
+              "REMAININGSKUCOUNT",
+            ],
             row: response.data.value,
           });
         }
-      }).catch((error) => setLoading(false));
+      })
+      .catch((error) => setLoading(false));
   }, [storeCode]);
 
   const getProductData = (data) => {
@@ -226,12 +256,14 @@ const ReportL1AndL2 = () => {
       vvs1: productInfo.vvs1,
     };
     APIInsertDataL1L2(`/npim/insert/responses`, InsertInput)
-      .then(res => res).then((response) => {
+      .then((res) => res)
+      .then((response) => {
         if (response.data.code === "1000") {
           alert("Data Has Been Inserted Successfully");
           setLoading(false);
         }
-      }).catch((error) => setLoading(false));
+      })
+      .catch((error) => setLoading(false));
     setSelectReport(selectReport);
     setEditState(!editState);
   };
@@ -314,7 +346,9 @@ const ReportL1AndL2 = () => {
       submitStatus: "report",
       set2Type: productInfo.set2Type,
       stoneQuality: !productInfo.stoneQuality ? "" : productInfo.stoneQuality,
-      stoneQualityVal: !productInfo.stoneQualityVal ? "" : productInfo.stoneQualityVal,
+      stoneQualityVal: !productInfo.stoneQualityVal
+        ? ""
+        : productInfo.stoneQualityVal,
       scannedCount: productInfo.scannedCount,
       unscannedCount: productInfo.unscannedCount,
       adVariant: productInfo.adVariant,
@@ -339,13 +373,15 @@ const ReportL1AndL2 = () => {
       indentLevelType: "L1L2",
     };
     APIDeleteUpdate(`/NPIML3/npim/update/responses`, UpdateInput)
-      .then(res => res).then((response) => {
+      .then((res) => res)
+      .then((response) => {
         if (response.data.code === "1000") {
           alert("Data Updated Successfully");
           GetL1l2ReportsData();
         }
         setLoading(false);
-      }).catch((error) => setLoading(false));
+      })
+      .catch((error) => setLoading(false));
     setSelectReport(selectReport);
     setEditState(!editState);
   };
@@ -356,16 +392,17 @@ const ReportL1AndL2 = () => {
     } else if (loginData.role === "L3") {
       navigate(`/NpimPortal/reportL3/${storeCode}/${rsoName}`);
     }
-  }
-
-
-
+  };
 
   return (
     <React.Fragment>
       {loading === true && <Loader />}
       <Drawer anchor="top" open={statusCloserOpener} onClick={statusOpener}>
-        {loginData.role === "L3" ? <StatusTabular statusData={statusData} /> : <StatusTabularL1L2 statusData={statusData} />}
+        {loginData.role === "L3" ? (
+          <StatusTabular statusData={statusData} />
+        ) : (
+          <StatusTabularL1L2 statusData={statusData} />
+        )}
       </Drawer>
       <Grid item xs={12}>
         <UpperHeader storeCode={storeCode} />
@@ -381,13 +418,19 @@ const ReportL1AndL2 = () => {
                   dropList={selectReportList}
                   myChangeHandler={(e) => setSelectReport(e.target.value)}
                 />
-                {collectionFilter.length > 2 && <DropdownField
-                  name="Select Report Type"
-                  labelName="Collection"
-                  dropList={collectionFilter}
-                  value={collectionOpt}
-                  myChangeHandler={(e) => setCollectionOpt(e.target.value.split(/\s+/).join(' ').trim())}
-                />}
+                {collectionFilter.length > 2 && (
+                  <DropdownField
+                    name="Select Report Type"
+                    labelName="Collection"
+                    dropList={collectionFilter}
+                    value={collectionOpt}
+                    myChangeHandler={(e) =>
+                      setCollectionOpt(
+                        e.target.value.split(/\s+/).join(" ").trim()
+                      )
+                    }
+                  />
+                )}
                 <FormControlLabel
                   control={
                     <Switch
@@ -403,13 +446,20 @@ const ReportL1AndL2 = () => {
                 />
               </div>
               <div className="d-flex">
-                <div className="IconsStyle" onClick={() => {
-                  if (loginData.role === "L3") {
-                    navigate(`/NpimPortal/get/products/home/${storeCode}/${rsoName}`);
-                  } else {
-                    navigate(`/${feedbackl1l2Navigate}/${storeCode}/${rsoName}`);
-                  }
-                }}>
+                <div
+                  className="IconsStyle"
+                  onClick={() => {
+                    if (loginData.role === "L3") {
+                      navigate(
+                        `/NpimPortal/get/products/home/${storeCode}/${rsoName}`
+                      );
+                    } else {
+                      navigate(
+                        `/${feedbackl1l2Navigate}/${storeCode}/${rsoName}`
+                      );
+                    }
+                  }}
+                >
                   <BiHomeAlt size={23} />
                   <b>Home</b>
                 </div>
@@ -417,10 +467,17 @@ const ReportL1AndL2 = () => {
                   <AiOutlineBarChart size={23} />
                   <b>Status</b>
                 </div>
-                {loginData.role === "L3" && <div className="IconsStyle" onClick={() => navigate(`/NpimPortal/wishlist/${storeCode}/${rsoName}`)}>
-                  <AiOutlineHeart size={23} />
-                  <b>Wishlist</b>
-                </div>}
+                {loginData.role === "L3" && (
+                  <div
+                    className="IconsStyle"
+                    onClick={() =>
+                      navigate(`/NpimPortal/wishlist/${storeCode}/${rsoName}`)
+                    }
+                  >
+                    <AiOutlineHeart size={23} />
+                    <b>Wishlist</b>
+                  </div>
+                )}
                 <div className="IconsStyle" onClick={ReportsRouting}>
                   <BsCardList size={23} />
                   <b>Reports</b>
@@ -450,7 +507,9 @@ const ReportL1AndL2 = () => {
             getProductData={getProductData}
             reportName={selectReport}
           />
-        ) : <div className="text-center">Data Not Available</div>}
+        ) : (
+          <div className="text-center">Data Not Available</div>
+        )}
       </Grid>
     </React.Fragment>
   );

@@ -57,8 +57,15 @@ export default function AlertPopup(props) {
   );
 }
 
-export function ModelPopup({ open, message, option1, option2, handelClose, onyes, loading }) {
-
+export function ModelPopup({
+  open,
+  message,
+  option1,
+  option2,
+  handelClose,
+  onyes,
+  loading,
+}) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   return (
@@ -76,11 +83,7 @@ export function ModelPopup({ open, message, option1, option2, handelClose, onyes
         <Button autoFocus color="primary" onClick={handelClose}>
           {option1}
         </Button>
-        <Button
-          color="primary"
-          autoFocus
-          onClick={() => onyes()}
-        >
+        <Button color="primary" autoFocus onClick={() => onyes()}>
           {option2}
         </Button>
       </DialogActions>

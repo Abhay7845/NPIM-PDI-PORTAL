@@ -6,30 +6,28 @@ import Typography from "@material-ui/core/Typography";
 import Logo from "../images/Tanishq_Logo.png";
 
 const useStyles = makeStyles({
-    root: {
-        flexGrow: 1,
-        backgroundColor: "#832729",
-        color: "#ffff",
-    },
-    projectLogo: {
-        flexGrow: 1,
-    },
+  root: {
+    flexGrow: 1,
+    backgroundColor: "#832729",
+    color: "#ffff",
+  },
+  projectLogo: {
+    flexGrow: 1,
+  },
 });
 
 export default function UpperHeader() {
-    const classes = useStyles();
-    return (
-        <div className={classes.root}>
-            <AppBar position="static" color="transparent">
-                <Toolbar>
-                    <div className={classes.projectLogo}>
-                        <img src={Logo} alt="NOT LOADED" width="80" height="55" />
-                    </div>
-                    <Typography variant="h6">
-                        NPIM
-                    </Typography>
-                </Toolbar>
-            </AppBar>
-        </div>
-    );
+  const classes = useStyles();
+  return (
+    <div className={classes.root}>
+      <AppBar position="static" color="transparent">
+        <Toolbar>
+          <div className={classes.projectLogo}>
+            <img src={Logo} alt="NOT LOADED" width="80" height="55" />
+          </div>
+          <Typography variant="h6">NPIM</Typography>
+        </Toolbar>
+      </AppBar>
+    </div>
+  );
 }

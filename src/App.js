@@ -15,7 +15,7 @@ import AdminHome from "./pages/AdminHome";
 import PortalCloseReport from "./pages/PortalCloseReport";
 import FeedbackL1AndL2ForPhysical from "./pages/FeedbackL1AndL2ForPhysical";
 import AddedCartTable from "./Components/AddedCartTable";
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from "react-toastify";
 import { ProductCartL3 } from "./Components/ProductCartL3";
 import { FeedBackFormL1L2 } from "./IndentExpress/ComponentsL1L2/FeedBackFormL1L2";
 import RedirectionHomePage from "./IndentExpress/Common/RedirectionHomePage";
@@ -123,78 +123,78 @@ function App() {
             />
             {/* INDENT EXPRESS COMPONENTS  */}
             <Route
-              path='/NpimPortal/Indent-express/direction/home'
+              path="/NpimPortal/Indent-express/direction/home"
               element={<RedirectionHomePage />}
             />
             {/* L1L2 COMPONENTS */}
             <Route
-              path='/NpimPortal/Indent-express/feedback/L1/L2'
+              path="/NpimPortal/Indent-express/feedback/L1/L2"
               element={<FeedBackFormL1L2 />}
             />
             <Route
-              path='/NpimPortal/Indent-express/L1/L2/physical/home'
+              path="/NpimPortal/Indent-express/L1/L2/physical/home"
               element={<PhysicalL1L2 />}
             />
             <Route
-              path='/NpimPortal/Indent-express/L1/L2/products/reports'
+              path="/NpimPortal/Indent-express/L1/L2/products/reports"
               element={<ReportsL1L2 />}
             />
             <Route
-              path='/NpimPortal/Indent-express/L1/L2/status/reports'
+              path="/NpimPortal/Indent-express/L1/L2/status/reports"
               element={<StatusReportsL1L2 />}
             />
             {/* L3 COMPONENTS */}
             <Route
-              path='/NpimPortal/Indent-express/L3/digital/home'
+              path="/NpimPortal/Indent-express/L3/digital/home"
               element={<DigitalL3 />}
             />
             <Route
-              path='/NpimPortal/Indent-express/L3/digital/:categoryType'
+              path="/NpimPortal/Indent-express/L3/digital/:categoryType"
               element={<CategoryTypeL3 />}
             />
             <Route
-              path='/NpimPortal/Indent-express/L3/status/reports'
+              path="/NpimPortal/Indent-express/L3/status/reports"
               element={<StatusReportsL3 />}
             />
             <Route
-              path='/NpimPortal/Indent-express/L3/cancel/item/list'
+              path="/NpimPortal/Indent-express/L3/cancel/item/list"
               element={<CancelDataReport />}
             />
             <Route
-              path='/NpimPortal/Indent-express/L3/physical/home'
+              path="/NpimPortal/Indent-express/L3/physical/home"
               element={<PhysicalL3 />}
             />
             <Route
-              path='/NpimPortal/Indent-express/L3/your/cart/reports'
+              path="/NpimPortal/Indent-express/L3/your/cart/reports"
               element={<YourProductsCart />}
             />
             {/* ADMIN COMPONENTS */}
             <Route
-              path='/NpimPortal/Indent-express/admin/home'
+              path="/NpimPortal/Indent-express/admin/home"
               element={<IndentAdminHome />}
             />
             <Route
-              path='/NpimPortal/Indent-express/admin/update/tortal/status'
+              path="/NpimPortal/Indent-express/admin/update/tortal/status"
               element={<UpdatePortalStatus />}
             />
             <Route
-              path='/NpimPortal/Indent-express/admin/master/file/upload'
+              path="/NpimPortal/Indent-express/admin/master/file/upload"
               element={<MasterFileUplaod />}
             />
             <Route
-              path='/NpimPortal/Indent-express/admin/get/master/sku'
+              path="/NpimPortal/Indent-express/admin/get/master/sku"
               element={<GetMasterSKU />}
             />
             <Route
-              path='/NpimPortal/Indent-express/admin/login/credentials'
+              path="/NpimPortal/Indent-express/admin/login/credentials"
               element={<LoginCredentials />}
             />
             <Route
-              path='/NpimPortal/Indent-express/admin/day/end/report'
+              path="/NpimPortal/Indent-express/admin/day/end/report"
               element={<DayEndReport />}
             />
             <Route
-              path='/NpimPortal/Indent-express/admin/update/automail'
+              path="/NpimPortal/Indent-express/admin/update/automail"
               element={<UpdateAutomail />}
             />
           </Route>

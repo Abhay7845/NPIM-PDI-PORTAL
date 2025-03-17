@@ -37,18 +37,23 @@ const CategoryTypeL3 = () => {
 
   const GetDataByCategoryType = () => {
     setLoading(true);
-    axios.get(`${INDENT_HOST_URL}/INDENT/express/category/list/homepage/${storeCode}/${categoryType}/${category}`)
-      .then((res) => res).then((response) => {
+    axios
+      .get(
+        `${INDENT_HOST_URL}/INDENT/express/category/list/homepage/${storeCode}/${categoryType}/${category}`
+      )
+      .then((res) => res)
+      .then((response) => {
         if (response.data.code === "1000") {
           setProductsData(response.data.value);
         } else if (response.data.code === "1001") {
           alert("Sorry Data Not Found");
         }
         setLoading(false);
-      }).catch((error) => {
+      })
+      .catch((error) => {
         setLoading(false);
       });
-  }
+  };
   useEffect(() => {
     if (categoryType && category) {
       GetDataByCategoryType();
@@ -57,15 +62,20 @@ const CategoryTypeL3 = () => {
 
   const GetCateogyWiseProducts = () => {
     setLoading(true);
-    axios.get(`${INDENT_HOST_URL}/INDENT/express/category/list/homepage/${storeCode}/${categoryType}/${category}`)
-      .then((res) => res).then((response) => {
+    axios
+      .get(
+        `${INDENT_HOST_URL}/INDENT/express/category/list/homepage/${storeCode}/${categoryType}/${category}`
+      )
+      .then((res) => res)
+      .then((response) => {
         if (response.data.code === "1000") {
           setProductsData(response.data.value);
         } else if (response.data.code === "1001") {
           alert("Sorry Data Not Found", "danger");
         }
         setLoading(false);
-      }).catch((error) => setLoading(false));
+      })
+      .catch((error) => setLoading(false));
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -85,8 +95,13 @@ const CategoryTypeL3 = () => {
       category: "ALL",
       itemCode: Details.itemCode,
     };
-    axios.post(`${INDENT_HOST_URL}/INDENT/express/get/product/details`, GetProductsDetails)
-      .then((res) => res).then((response) => {
+    axios
+      .post(
+        `${INDENT_HOST_URL}/INDENT/express/get/product/details`,
+        GetProductsDetails
+      )
+      .then((res) => res)
+      .then((response) => {
         if (response.data.code === "1000") {
           setSingleProductsDetails(response.data.value);
         } else if (response.data.code === "1001") {
@@ -99,7 +114,8 @@ const CategoryTypeL3 = () => {
             buttons: "OK",
           });
         }
-      }).catch((error) => { });
+      })
+      .catch((error) => {});
   };
 
   return (
@@ -158,7 +174,8 @@ const CategoryTypeL3 = () => {
       {/* <---------------CART DATA DETAILS =----------------------->*/}
       {productsData.length > 0 && (
         <div className="row mx-0">
-          {productsData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+          {productsData
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((productsDetails, i) => {
               const { itemCode } = productsDetails;
               const imageCode = !itemCode ? "" : itemCode.substring(2, 9);
@@ -173,7 +190,7 @@ const CategoryTypeL3 = () => {
                         <BsCartFill
                           size={20}
                           onClick={() => {
-                            GetProductsDetails(productsDetails)
+                            GetProductsDetails(productsDetails);
                             setOpenModal(true);
                           }}
                           className="trolleyStyle"
@@ -204,10 +221,14 @@ const CategoryTypeL3 = () => {
           </button>
         )}
       </div>
-      {openModal && <Modal close={() => setOpenModal(false)} open={() => setOpenModal(true)}
-        singleProductsDetails={singleProductsDetails}
-        CatTypeData={GetDataByCategoryType}
-      />}
+      {openModal && (
+        <Modal
+          close={() => setOpenModal(false)}
+          open={() => setOpenModal(true)}
+          singleProductsDetails={singleProductsDetails}
+          CatTypeData={GetDataByCategoryType}
+        />
+      )}
     </div>
   );
 };

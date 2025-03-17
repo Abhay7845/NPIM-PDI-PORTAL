@@ -47,8 +47,7 @@ const SideAppBar = (props) => {
       return <HomeIcon />;
     } else if (icon === "SendIcon") {
       return <SendIcon />;
-    }
-    else if (icon === "CheckList") {
+    } else if (icon === "CheckList") {
       return <ChecklistIcon />;
     }
   };

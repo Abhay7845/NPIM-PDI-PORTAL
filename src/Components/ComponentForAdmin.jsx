@@ -11,7 +11,11 @@ import {
   Container,
   Typography,
 } from "@material-ui/core";
-import { DataGrid, GridToolbarContainer, GridToolbarExport } from "@material-ui/data-grid";
+import {
+  DataGrid,
+  GridToolbarContainer,
+  GridToolbarExport,
+} from "@material-ui/data-grid";
 import { Multiselect } from "multiselect-react-dropdown";
 const useStyles = makeStyles({
   formControl: {
@@ -56,7 +60,7 @@ const TextFieldOfMUI = (props) => {
     rows,
     autoComplete,
     required,
-    mailData
+    mailData,
   } = props;
   return (
     <TextField
@@ -213,9 +217,7 @@ function MultiSelectFroAdmin(props) {
 
   return (
     <div className={classes.drop_multi}>
-      <Typography color="primary">
-        {labelName}
-      </Typography>
+      <Typography color="primary">{labelName}</Typography>
       <Multiselect
         options={options}
         displayValue="strCode"

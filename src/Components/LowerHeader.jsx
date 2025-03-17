@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "../Style/CssStyle/LowerHeader.css";
 import SearchIcon from "@material-ui/icons/Search";
-import { AppBar, Drawer, IconButton, TextField, Toolbar } from "@material-ui/core";
+import {
+  AppBar,
+  Drawer,
+  IconButton,
+  TextField,
+  Toolbar,
+} from "@material-ui/core";
 import StatusTabular from "./StatusTabular";
 import { useStyles } from "../Style/LowerHeader";
 import { useNavigate, useParams } from "react-router-dom";
@@ -66,29 +72,37 @@ const LowerHeader = (props) => {
     } else if (loginData.role === "L3") {
       navigate(`/NpimPortal/reportL3/${storeCode}/${rsoName}`);
     }
-  }
+  };
 
   const GetCardSttudValue = (storeCode) => {
-    APIGetReportL3(`/NPIML3/home/item/summary?storeCode=${storeCode}&reportWise=StuddedValue`)
-      .then(res => res).then(response => {
+    APIGetReportL3(
+      `/NPIML3/home/item/summary?storeCode=${storeCode}&reportWise=StuddedValue`
+    )
+      .then((res) => res)
+      .then((response) => {
         if (response.data.code === "1000") {
           setCardStuddData(response.data.value);
         } else {
           setCardStuddData(null);
         }
-      }).catch(error => { });
-  }
+      })
+      .catch((error) => {});
+  };
 
   const GetCardPlainValue = (storeCode) => {
-    APIGetReportL3(`/NPIML3/home/item/summary?storeCode=${storeCode}&reportWise=PlainValue`)
-      .then(res => res).then(response => {
+    APIGetReportL3(
+      `/NPIML3/home/item/summary?storeCode=${storeCode}&reportWise=PlainValue`
+    )
+      .then((res) => res)
+      .then((response) => {
         if (response.data.code === "1000") {
           setCardPlainData(response.data.value);
         } else {
           setCardPlainData(null);
         }
-      }).catch(error => { });
-  }
+      })
+      .catch((error) => {});
+  };
 
   useEffect(() => {
     GetCardSttudValue(storeCode);
@@ -97,9 +111,16 @@ const LowerHeader = (props) => {
 
   return (
     <React.Fragment>
-      <Drawer anchor="top" open={statusCloserOpener} onClick={() => setStatusCloserOpener(!statusCloserOpener)}>
-        {loginData.role === "L3" ? <StatusTabular statusData={props.statusData} /> :
-          <StatusTabularL1L2 statusData={props.statusData} />}
+      <Drawer
+        anchor="top"
+        open={statusCloserOpener}
+        onClick={() => setStatusCloserOpener(!statusCloserOpener)}
+      >
+        {loginData.role === "L3" ? (
+          <StatusTabular statusData={props.statusData} />
+        ) : (
+          <StatusTabularL1L2 statusData={props.statusData} />
+        )}
       </Drawer>
       <section className="lower_header_show">
         <div className={classes.root}>
@@ -134,27 +155,77 @@ const LowerHeader = (props) => {
                     <SearchIcon />
                   </IconButton>
                 </div>
-                {loginData.role === "L3" && <div className="d-flex mt-4">
-                  <h6><span className="text-primary">▣ </span><b style={{ color: "#832729" }}>STUDDED VALUE (Crs) - {cardStuddData ? parseFloat(cardStuddData.sumTotWeight / 100000).toFixed(3) : 0}</b></h6>
-                  <h6 className="mx-4"><span className="text-primary">▣ </span><b style={{ color: "#832729" }}>PLAIN VALUE (Kgs) - {cardPlainData ? parseFloat(cardPlainData.sumTotWeight / 1000).toFixed(3) : 0}</b></h6>
-                </div>}
+                {loginData.role === "L3" && (
+                  <div className="d-flex mt-4">
+                    <h6>
+                      <span className="text-primary">▣ </span>
+                      <b style={{ color: "#832729" }}>
+                        STUDDED VALUE (Crs) -{" "}
+                        {cardStuddData
+                          ? parseFloat(
+                              cardStuddData.sumTotWeight / 100000
+                            ).toFixed(3)
+                          : 0}
+                      </b>
+                    </h6>
+                    <h6 className="mx-4">
+                      <span className="text-primary">▣ </span>
+                      <b style={{ color: "#832729" }}>
+                        PLAIN VALUE (Kgs) -{" "}
+                        {cardPlainData
+                          ? parseFloat(
+                              cardPlainData.sumTotWeight / 1000
+                            ).toFixed(3)
+                          : 0}
+                      </b>
+                    </h6>
+                  </div>
+                )}
                 <div className="d-flex">
-                  {loginData.role === "L3" && <div className="IconsStyle" onClick={() => navigate(`/NpimPortal/get/products/home/${storeCode}/${rsoName}`)}>
-                    <BiHomeAlt size={23} />
-                    <b>Home</b>
-                  </div>}
-                  {loginData.role === "L3" && <div className="IconsStyle" onClick={() => navigate(`/NpimPortal/added/cart/products/${loginData.userID}/${rsoName}`)}>
-                    <BsCart3 size={23} />
-                    <b>Cart</b>
-                  </div>}
-                  <div className="IconsStyle" onClick={() => setStatusCloserOpener(!statusCloserOpener)}>
+                  {loginData.role === "L3" && (
+                    <div
+                      className="IconsStyle"
+                      onClick={() =>
+                        navigate(
+                          `/NpimPortal/get/products/home/${storeCode}/${rsoName}`
+                        )
+                      }
+                    >
+                      <BiHomeAlt size={23} />
+                      <b>Home</b>
+                    </div>
+                  )}
+                  {loginData.role === "L3" && (
+                    <div
+                      className="IconsStyle"
+                      onClick={() =>
+                        navigate(
+                          `/NpimPortal/added/cart/products/${loginData.userID}/${rsoName}`
+                        )
+                      }
+                    >
+                      <BsCart3 size={23} />
+                      <b>Cart</b>
+                    </div>
+                  )}
+                  <div
+                    className="IconsStyle"
+                    onClick={() => setStatusCloserOpener(!statusCloserOpener)}
+                  >
                     <AiOutlineBarChart size={23} />
                     <b>Status</b>
                   </div>
-                  {loginData.role === "L3" && <div className="IconsStyle" onClick={() => navigate(`/NpimPortal/wishlist/${storeCode}/${rsoName}`)}>
-                    <AiOutlineHeart size={23} />
-                    <b>Wishlist</b>
-                  </div>}
+                  {loginData.role === "L3" && (
+                    <div
+                      className="IconsStyle"
+                      onClick={() =>
+                        navigate(`/NpimPortal/wishlist/${storeCode}/${rsoName}`)
+                      }
+                    >
+                      <AiOutlineHeart size={23} />
+                      <b>Wishlist</b>
+                    </div>
+                  )}
                   <div className="IconsStyle" onClick={ReportsRouting}>
                     <BsCardList size={23} />
                     <b>Reports</b>

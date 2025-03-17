@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import UpperHeader from "./UpperHeader";
 import DropdownFieldDigital from "./DropdownFieldDigital";
 import { AppBar, Drawer, Toolbar } from "@material-ui/core";
-import TablePagination from "@mui/material/TablePagination";
 import "../Style/CssStyle/ScalePagination.css";
 import { useStyles } from "../Style/LowerHeader";
 import { BsCardList, BsCart3 } from "react-icons/bs";
@@ -128,7 +127,6 @@ export const ProductCartL3 = () => {
 
   const itemsPerPage = 8;
   const totalPages = Math.ceil(cartDataList.length / itemsPerPage);
-
   // Get current page data
   const startIdx = (currentPage - 1) * itemsPerPage;
   const currentData = cartDataList.slice(startIdx, startIdx + itemsPerPage);

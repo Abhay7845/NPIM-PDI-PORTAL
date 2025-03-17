@@ -67,7 +67,11 @@ const ProductDetailsTabular = (props) => {
             </td>
           </tr>
           <tr>
-            <th className={classes.heading}>{props.information.category.toUpperCase() === "CHAINS" ? "HOOK TYPE" : "FINDINGS"}</th>
+            <th className={classes.heading}>
+              {props.information.category.toUpperCase() === "CHAINS"
+                ? "HOOK TYPE"
+                : "FINDINGS"}
+            </th>
             <td className={classes.rowData}>-{props.information.findings}</td>
           </tr>
           <tr>
@@ -78,9 +82,7 @@ const ProductDetailsTabular = (props) => {
           </tr>
           <tr>
             <th className={classes.heading}>CAT PB</th>
-            <td className={classes.rowData}>
-              - {props.information.catPB}
-            </td>
+            <td className={classes.rowData}>- {props.information.catPB}</td>
           </tr>
         </tbody>
       </table>

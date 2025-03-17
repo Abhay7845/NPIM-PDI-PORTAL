@@ -73,7 +73,6 @@ function DataGridReport(props) {
   );
 }
 
-
 function ProductDetailsTabularL3(props) {
   const classes = useStyles();
   return (
@@ -143,7 +142,9 @@ function ProductDetailsTabularL3(props) {
               <th>STD UCP</th>
               <td>-</td>
               <td className={classes.rowData}>
-                {props.information.stdUCP ? props.information.stdUCP : props.information.stdUcp}
+                {props.information.stdUCP
+                  ? props.information.stdUCP
+                  : props.information.stdUcp}
               </td>
             </tr>
           ) : null}
@@ -184,18 +185,20 @@ function ProductDetailsTabularL3(props) {
               <td className={classes.rowData}>{props.information.uom}</td>
             </tr>
           )}
-          {props.information.itemQty &&
+          {props.information.itemQty && (
             <tr>
               <th>QUANTITY</th>
               <td>-</td>
               <td className={classes.rowData}>{props.information.itemQty}</td>
-            </tr>}
-          {props.information.catPB &&
+            </tr>
+          )}
+          {props.information.catPB && (
             <tr>
               <th>CAT PB</th>
               <td>-</td>
               <td className={classes.rowData}>{props.information.catPB}</td>
-            </tr>}
+            </tr>
+          )}
         </tbody>
       </table>
     </div>
@@ -219,7 +222,10 @@ function SmallDataTable(props) {
   ) {
     if (props.childNodesE || props.childNodesN) {
       return (
-        <table className="table table-bordered mt-3" style={{ marginLeft: "0%" }}>
+        <table
+          className="table table-bordered mt-3"
+          style={{ marginLeft: "0%" }}
+        >
           <thead>
             <tr>
               <th>CATEGORY</th>
@@ -228,51 +234,107 @@ function SmallDataTable(props) {
             </tr>
           </thead>
           <tbody>
-            {props.childNodeF && <tr>
-              <td>FINGER RING</td>
-              {props.stdWtF && <td>{parseFloat(props.stdWtF).toFixed(3)}</td>}
-              {props.stdUcpF && <td>{parseFloat(props.stdUcpF).toFixed(3)}</td>}
-            </tr>}
-            {props.childNodesE && <tr>
-              <td>EAR RING</td>
-              {props.stdWtE && <td>{parseFloat(props.stdWtE).toFixed(3)}</td>}
-              {props.stdUcpE && <td>{parseFloat(props.stdUcpE).toFixed(3)}</td>}
-            </tr>}
-            {props.childNodesN && <tr>
-              <td>NECKWEAR</td>
-              {props.stdWtN && <td>{parseFloat(props.stdWtN).toFixed(3)}</td>}
-              {props.stdUcpN && <td>{parseFloat(props.stdUcpN).toFixed(3)}</td>}
-            </tr>}
-            {props.childNodeH && <tr>
-              <td>HARAM</td>
-              {props.stdWtH && <td>{parseFloat(props.stdWtH).toFixed(3)}</td>}
-              {props.stdUcpH && <td>{parseFloat(props.stdUcpH).toFixed(3)}</td>}
-            </tr>}
-            {props.childNodeK && <tr>
-              <td>TIKKA</td>
-              {props.stdWtK && <td>{parseFloat(props.stdWtK).toFixed(3)}</td>}
-              {props.stdUcpK && <td>{parseFloat(props.stdUcpK).toFixed(3)}</td>}
-            </tr>}
-            {props.childNodeV && <tr>
-              <td>BANGLE</td>
-              {props.stdWtV && <td>{parseFloat(props.stdWtV).toFixed(3)}</td>}
-              {props.stdUcpV && <td>{parseFloat(props.stdUcpV).toFixed(3)}</td>}
-            </tr>}
-            {props.childNodeO && <tr>
-              <td>OTHER</td>
-              {props.stdWtO && <td>{parseFloat(props.stdWtO).toFixed(3)}</td>}
-              {props.stdUcpO && <td>{parseFloat(props.stdUcpO).toFixed(3)}</td>}
-            </tr>}
-            {props.childNodeH && props.childNodesE && <tr>
-              <td>SET2 TAG_H</td>
-              {props.stdWtE && props.stdWtH && <td>{parseFloat(Number(props.stdWtE) + Number(props.stdWtH)).toFixed(3)}</td>}
-              {props.stdUcpE && props.stdUcpH && <td>{parseFloat(Number(props.stdUcpE) + Number(props.stdUcpH)).toFixed(3)}</td>}
-            </tr>}
-            {props.childNodesN && props.childNodesE && <tr>
-              <td>SET2 TAG</td>
-              {props.stdWtN && props.stdWtE && <td>{parseFloat(Number(props.stdWtN) + Number(props.stdWtE)).toFixed(3)}</td>}
-              {props.stdUcpE && props.stdUcpN && <td>{parseFloat(Number(props.stdUcpE) + Number(props.stdUcpN)).toFixed(3)}</td>}
-            </tr>}
+            {props.childNodeF && (
+              <tr>
+                <td>FINGER RING</td>
+                {props.stdWtF && <td>{parseFloat(props.stdWtF).toFixed(3)}</td>}
+                {props.stdUcpF && (
+                  <td>{parseFloat(props.stdUcpF).toFixed(3)}</td>
+                )}
+              </tr>
+            )}
+            {props.childNodesE && (
+              <tr>
+                <td>EAR RING</td>
+                {props.stdWtE && <td>{parseFloat(props.stdWtE).toFixed(3)}</td>}
+                {props.stdUcpE && (
+                  <td>{parseFloat(props.stdUcpE).toFixed(3)}</td>
+                )}
+              </tr>
+            )}
+            {props.childNodesN && (
+              <tr>
+                <td>NECKWEAR</td>
+                {props.stdWtN && <td>{parseFloat(props.stdWtN).toFixed(3)}</td>}
+                {props.stdUcpN && (
+                  <td>{parseFloat(props.stdUcpN).toFixed(3)}</td>
+                )}
+              </tr>
+            )}
+            {props.childNodeH && (
+              <tr>
+                <td>HARAM</td>
+                {props.stdWtH && <td>{parseFloat(props.stdWtH).toFixed(3)}</td>}
+                {props.stdUcpH && (
+                  <td>{parseFloat(props.stdUcpH).toFixed(3)}</td>
+                )}
+              </tr>
+            )}
+            {props.childNodeK && (
+              <tr>
+                <td>TIKKA</td>
+                {props.stdWtK && <td>{parseFloat(props.stdWtK).toFixed(3)}</td>}
+                {props.stdUcpK && (
+                  <td>{parseFloat(props.stdUcpK).toFixed(3)}</td>
+                )}
+              </tr>
+            )}
+            {props.childNodeV && (
+              <tr>
+                <td>BANGLE</td>
+                {props.stdWtV && <td>{parseFloat(props.stdWtV).toFixed(3)}</td>}
+                {props.stdUcpV && (
+                  <td>{parseFloat(props.stdUcpV).toFixed(3)}</td>
+                )}
+              </tr>
+            )}
+            {props.childNodeO && (
+              <tr>
+                <td>OTHER</td>
+                {props.stdWtO && <td>{parseFloat(props.stdWtO).toFixed(3)}</td>}
+                {props.stdUcpO && (
+                  <td>{parseFloat(props.stdUcpO).toFixed(3)}</td>
+                )}
+              </tr>
+            )}
+            {props.childNodeH && props.childNodesE && (
+              <tr>
+                <td>SET2 TAG_H</td>
+                {props.stdWtE && props.stdWtH && (
+                  <td>
+                    {parseFloat(
+                      Number(props.stdWtE) + Number(props.stdWtH)
+                    ).toFixed(3)}
+                  </td>
+                )}
+                {props.stdUcpE && props.stdUcpH && (
+                  <td>
+                    {parseFloat(
+                      Number(props.stdUcpE) + Number(props.stdUcpH)
+                    ).toFixed(3)}
+                  </td>
+                )}
+              </tr>
+            )}
+            {props.childNodesN && props.childNodesE && (
+              <tr>
+                <td>SET2 TAG</td>
+                {props.stdWtN && props.stdWtE && (
+                  <td>
+                    {parseFloat(
+                      Number(props.stdWtN) + Number(props.stdWtE)
+                    ).toFixed(3)}
+                  </td>
+                )}
+                {props.stdUcpE && props.stdUcpN && (
+                  <td>
+                    {parseFloat(
+                      Number(props.stdUcpE) + Number(props.stdUcpN)
+                    ).toFixed(3)}
+                  </td>
+                )}
+              </tr>
+            )}
           </tbody>
         </table>
       );
@@ -289,8 +351,4 @@ function BlinkingComponent({ color, text, fontSize }) {
 }
 
 export default DataGridReport;
-export {
-  ProductDetailsTabularL3,
-  SmallDataTable,
-  BlinkingComponent,
-};
+export { ProductDetailsTabularL3, SmallDataTable, BlinkingComponent };

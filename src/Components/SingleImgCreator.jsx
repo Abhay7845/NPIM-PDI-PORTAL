@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import deImgUrl from "../images/Loading_icon.gif"
-
+import deImgUrl from "../images/Loading_icon.gif";
 
 const SingleImgCreator = (props) => {
   const [imgLoad, setImgLoad] = useState(true);
@@ -9,9 +8,13 @@ const SingleImgCreator = (props) => {
   const ImageURL = `${link}${imageCode}.jpg`;
 
   return (
-    <img src={imgLoad === true ? deImgUrl : ImageURL}
+    <img
+      src={imgLoad === true ? deImgUrl : ImageURL}
       onLoad={() => setImgLoad(false)}
-      alt={imageCode} width="100" height="80" />
+      alt={imageCode}
+      width="100"
+      height="80"
+    />
   );
 };
 export default SingleImgCreator;

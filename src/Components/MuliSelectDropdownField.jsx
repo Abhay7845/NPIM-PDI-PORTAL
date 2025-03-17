@@ -71,7 +71,6 @@ export const MuliSelectDropdownField = ({ onMultiSelect, feedShowState }) => {
   );
 };
 
-
 export const MuliSelectDropdownFieldQualityFeedback = (props) => {
   const multiselectRef = useRef();
 
@@ -130,4 +129,3 @@ export const MuliSelectDropdownFieldQualityFeedback = (props) => {
     </React.Fragment>
   );
 };
-
