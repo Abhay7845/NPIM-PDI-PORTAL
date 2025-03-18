@@ -13,7 +13,7 @@ import {
 import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
 import { loadingGif } from "../images/images";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     flexGrow: 1,
     maxWidth: "100%",

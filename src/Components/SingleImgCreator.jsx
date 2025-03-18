@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import deImgUrl from "../images/Loading_icon.gif";
+import NoImage from "../images/NoImg.png";
 
 const SingleImgCreator = (props) => {
   const [imgLoad, setImgLoad] = useState(true);
@@ -14,6 +15,7 @@ const SingleImgCreator = (props) => {
       alt={imageCode}
       width="100"
       height="80"
+      onError={(e) => (e.target.src = NoImage)}
     />
   );
 };

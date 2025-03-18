@@ -3,6 +3,7 @@ import UpperHeader from "./UpperHeader";
 import DropdownFieldDigital from "./DropdownFieldDigital";
 import { AppBar, Drawer, Toolbar } from "@material-ui/core";
 import "../Style/CssStyle/ScalePagination.css";
+import NoImage from "../images/NoImg.png";
 import { useStyles } from "../Style/LowerHeader";
 import { BsCardList, BsCart3 } from "react-icons/bs";
 import { BiHomeAlt } from "react-icons/bi";
@@ -318,11 +319,21 @@ export const ProductCartL3 = () => {
                     src={imgLoad === true ? deImgUrl : imgUrl}
                     onLoad={() => setImgLoad(false)}
                     alt={item}
-                    height="240"
+                    onError={(e) => (e.target.src = NoImage)}
+                    style={{
+                      height: "240px",
+                      borderTopLeftRadius: "5px",
+                      borderTopRightRadius: "5px",
+                    }}
                   />
                   <div
                     className="d-flex justify-content-between p-3"
-                    style={{ backgroundColor: "#832729", color: "#fff" }}
+                    style={{
+                      backgroundColor: "#832729",
+                      color: "#fff",
+                      borderBottomLeftRadius: "5px",
+                      borderBottomRightRadius: "5px",
+                    }}
                   >
                     <b>{item}</b>
                     <b
