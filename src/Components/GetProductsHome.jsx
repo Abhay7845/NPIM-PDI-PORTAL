@@ -302,7 +302,7 @@ const GetProductsHome = () => {
               <div className="card-body">
                 <h6 className="card-title">
                   {cardStuddData
-                    ? (cardStuddData.sumTotWeight / 100000).toFixed(3)
+                    ? (cardStuddData.sumTotWeight / 10000000).toFixed(3)
                     : "Studded Products Not Indented"}
                 </h6>
               </div>
