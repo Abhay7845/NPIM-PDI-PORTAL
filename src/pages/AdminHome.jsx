@@ -32,7 +32,6 @@ import {
   APIBulkMoveWhislist,
   APICopyIndentStore,
   APIGetAdminLoginData,
-  APIGetMailerContent,
   APIGetReportL3,
   APIGetSkuMaster,
   APIGetStoreList,

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../Style/CssStyle/NPIMHome.css";
 import PreLoginHeader from "../Components/PreLoginHeader";
-import BGImage from "../images/ProddNpimBanner.png";
+import BGImage from "../images/UATNpimBanner.jpg";
 import Login from "../pages/Login";
 import Loader from "./Loader";
 import { APIGetStatusPortal } from "../HostManager/CommonApiCallL3";

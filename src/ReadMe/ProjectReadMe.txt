@@ -9,5 +9,5 @@
 
 image link need to be change :
 
-https://tanishqdigitalnpim.titan.in/NpimImages/2721FDD_2.jpg
+https://digital.titan.in/NpimImages/2721FDD_2.jpg
 
