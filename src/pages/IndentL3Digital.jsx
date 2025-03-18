@@ -540,8 +540,8 @@ const IndentL3Digital = () => {
     )
       .then((res) => res)
       .then((response) => {
+        console.log("response1==>", response.data);
         if (response.data.code === "1000") {
-          console.log("response==>", response.data);
           const getLimit =
             response.data.limitResp.length > 0
               ? response.data.limitResp.map((item) => item.limit)[0]
@@ -570,8 +570,6 @@ const IndentL3Digital = () => {
         });
       });
   };
-
-  console.log("feedShowState==>", feedShowState);
 
   const onClickSubmitBtnHandler = async (indtype) => {
     // IndentYourProduct(indtype);

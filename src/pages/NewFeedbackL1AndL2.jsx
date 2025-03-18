@@ -63,8 +63,6 @@ const NewFeedbackL1AndL2 = () => {
     itemCode: "",
     setDropState: "",
   });
-  console.log("productDetails==>", productDetails);
-  console.log("feedShowState==>", feedShowState);
   const [productDetailsDigital, setProductDetailsDigital] = useState({
     storeCode: storeCode,
     collection: "ALL",

@@ -171,7 +171,7 @@ const LowerHeader = (props) => {
                     <h6 className="mx-4">
                       <span className="text-primary">▣ </span>
                       <b style={{ color: "#832729" }}>
-                        PLAIN VALUE (Kgs) -{" "}
+                        PLAIN VALUE 4 (Kgs) -{" "}
                         {cardPlainData
                           ? parseFloat(
                               cardPlainData.sumTotWeight / 1000

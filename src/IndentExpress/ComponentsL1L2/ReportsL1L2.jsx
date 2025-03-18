@@ -9,7 +9,11 @@ import axios from "axios";
 import { Select } from "antd";
 import swal from "sweetalert";
 import { FormControlLabel, Switch } from "@material-ui/core";
-import { BsFillBarChartFill, BsFillFileEarmarkPostFill, BsFillHouseDoorFill } from "react-icons/bs";
+import {
+  BsFillBarChartFill,
+  BsFillFileEarmarkPostFill,
+  BsFillHouseDoorFill,
+} from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { INDENT_HOST_URL } from "../../HostManager/UrlManager";
 import UpperHeader from "../../Components/UpperHeader";
@@ -49,7 +53,10 @@ const ReportsL1L2 = () => {
 
   useEffect(() => {
     setLoading(true);
-    axios.get(`${INDENT_HOST_URL}/INDENT/express/${submitted}/report/L1/${storeCode}`)
+    axios
+      .get(
+        `${INDENT_HOST_URL}/INDENT/express/${submitted}/report/L1/${storeCode}`
+      )
       .then((res) => res)
       .then((response) => {
         if (response.data.code === "1000") {
@@ -59,7 +66,8 @@ const ReportsL1L2 = () => {
           setReportsTable([]);
         }
         setLoading(false);
-      }).catch((error) => {
+      })
+      .catch((error) => {
         setLoading(false);
       });
   }, [submitted, storeCode, reports.id]);
@@ -142,8 +150,13 @@ const ReportsL1L2 = () => {
         indentLevelType: reports.indentLevelType,
       };
       console.log("getProductInputData==>", getProductInputData);
-      axios.post(`${INDENT_HOST_URL}/INDENTL3/express/update/responses`, getProductInputData)
-        .then((res) => res).then((response) => {
+      axios
+        .post(
+          `${INDENT_HOST_URL}/INDENTL3/express/update/responses`,
+          getProductInputData
+        )
+        .then((res) => res)
+        .then((response) => {
           if (response.data.code === "1000") {
             setSwitchData(true);
             setQuality_Reasons([]);
@@ -345,11 +358,14 @@ const ReportsL1L2 = () => {
       )}
       <br />
       {reportsTable.length > 0 && (
-        <div className="table-responsive mx-2" >
+        <div className="table-responsive mx-2">
           <b className="mx-1 my-3 text-secondary">
             {submitted === "scanned" ? "SUBMITTED" : "YET TO SUBMIT"}
           </b>
-          <table className="table table-hover table-bordered" style={{ marginTop: "0px", marginLeft: "0px" }}>
+          <table
+            className="table table-hover table-bordered"
+            style={{ marginTop: "0px", marginLeft: "0px" }}
+          >
             <thead>
               <tr>
                 {L1L2HeadingData.map((item, i) => {

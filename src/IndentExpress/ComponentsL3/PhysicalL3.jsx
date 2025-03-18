@@ -2,7 +2,13 @@ import React, { useState, useEffect } from "react";
 import "../Style/FeedbackFormL1L2.css";
 import Tippy from "@tippyjs/react";
 import { Link } from "react-router-dom";
-import { BsSearch, BsFillHouseDoorFill, BsFillBarChartFill, BsCartFill, BsCardList } from "react-icons/bs";
+import {
+  BsSearch,
+  BsFillHouseDoorFill,
+  BsFillBarChartFill,
+  BsCartFill,
+  BsCardList,
+} from "react-icons/bs";
 import axios from "axios";
 import swal from "sweetalert";
 import { IMAGE_URL } from "../Data/DataList";
@@ -62,7 +68,11 @@ const PhysicalL3 = () => {
         category: "ALL",
         itemCode: searchItemCode,
       };
-      axios.post(`${INDENT_HOST_URL}/INDENT/express/get/product/details`, SearchByItemCoe)
+      axios
+        .post(
+          `${INDENT_HOST_URL}/INDENT/express/get/product/details`,
+          SearchByItemCoe
+        )
         .then((res) => res)
         .then((response) => {
           if (response.data.code === "1000") {
@@ -239,48 +249,49 @@ const PhysicalL3 = () => {
     <React.Fragment>
       <UpperHeader />
       {loading === true && <Loader />}
-      <div className='DropDownFormStyle'>
-        <div className='row mx-2 w-100'>
-          <div className='d-flex justify-content-between'>
-            <div className='d-flex'>
-              <Tippy content='Home'>
-                <Link to='/NpimPortal/Indent-express/direction/home'>
-                  <BsFillHouseDoorFill size={25} className='my-2 text-dark' />
+      <div className="DropDownFormStyle">
+        <div className="row mx-2 w-100">
+          <div className="d-flex justify-content-between">
+            <div className="d-flex">
+              <Tippy content="Home">
+                <Link to="/NpimPortal/Indent-express/direction/home">
+                  <BsFillHouseDoorFill size={25} className="my-2 text-dark" />
                 </Link>
               </Tippy>
-              <Tippy content='Status Report'>
-                <Link to='/NpimPortal/Indent-express/L3/status/reports'>
+              <Tippy content="Status Report">
+                <Link to="/NpimPortal/Indent-express/L3/status/reports">
                   <BsFillBarChartFill
                     size={25}
-                    className='my-2 text-dark mx-3'
+                    className="my-2 text-dark mx-3"
                   />
                 </Link>
               </Tippy>
               <input
-                type='text'
+                type="text"
                 value={searchItemCode}
-                className='SearchInput'
-                placeholder='Search by Item Code'
+                className="SearchInput"
+                placeholder="Search by Item Code"
                 onChange={(e) => setSearchItemCode(e.target.value)}
               />
               <BsSearch
                 size={30}
-                className='my-2 mx-3'
+                className="my-2 mx-3"
                 style={{ cursor: "pointer" }}
                 onClick={GetProductsDetails}
               />
             </div>
-            <div className='d-flex'>
-              <Tippy content='Cancel Item List'>
-                <Link to='/NpimPortal/Indent-express/L3/cancel/item/list'>
-                  <BsCardList size={25} className='mt-2 mx-2 text-dark' />
+            <div className="d-flex">
+              <Tippy content="Cancel Item List">
+                <Link to="/NpimPortal/Indent-express/L3/cancel/item/list">
+                  <BsCardList size={25} className="mt-2 mx-2 text-dark" />
                 </Link>
               </Tippy>
               <Link
-                to='/NpimPortal/Indent-express/L3/your/cart/reports'
-                className='notification'>
-                <BsCartFill size={25} className='mt-2 mx-2 text-dark' />
-                <span className='badge'>{YourCart}</span>
+                to="/NpimPortal/Indent-express/L3/your/cart/reports"
+                className="notification"
+              >
+                <BsCartFill size={25} className="mt-2 mx-2 text-dark" />
+                <span className="badge">{YourCart}</span>
               </Link>
             </div>
           </div>
@@ -288,26 +299,27 @@ const PhysicalL3 = () => {
       </div>
       {/* PHYSICAL PAGE */}
       {productsDetails.itemCode ? (
-        <div className='row row-cols-1 row-cols-md-2 mx-0 my-3'>
-          <div className='col-md-5'>
+        <div className="row row-cols-1 row-cols-md-2 mx-0 my-3">
+          <div className="col-md-5">
             <ShowImage imageURL={imageURL} videoLink={videoLink} />
           </div>
-          <div className='col-md-7'>
-            <div className='card-body'>
+          <div className="col-md-7">
+            <div className="card-body">
               <h5
-                className='text-center p-1 itemCodeText'
-                style={{ backgroundColor: "#832729" }}>
+                className="text-center p-1 itemCodeText"
+                style={{ backgroundColor: "#832729" }}
+              >
                 {productsDetails.itemCode}
               </h5>
-              <div className='row my-3'>
-                <div className='col-md-5'>
+              <div className="row my-3">
+                <div className="col-md-5">
                   <div>
-                    <h6 className='text-center my-2'>
+                    <h6 className="text-center my-2">
                       <b>PRODUCT SPECIFICATION</b>
                     </h6>
                     <br />
-                    <table className='w-100'>
-                      <tbody className='productsDetailsStyle'>
+                    <table className="w-100">
+                      <tbody className="productsDetailsStyle">
                         <tr>
                           <th>COLLECTION</th>
                           <td>- &nbsp;&nbsp;</td>
@@ -362,8 +374,8 @@ const PhysicalL3 = () => {
                     </table>
                   </div>
                 </div>
-                <div className='col-md-7'>
-                  <h6 className='text-center my-2 feedBackText'>
+                <div className="col-md-7">
+                  <h6 className="text-center my-2 feedBackText">
                     <b>INDENT DETAILS</b>
                   </h6>
                   <br />
@@ -372,9 +384,9 @@ const PhysicalL3 = () => {
                   {!productsDetails.category ? (
                     ""
                   ) : productsDetails.category
-                    .toUpperCase()
-                    .replace(/\s{2,}/g, " ")
-                    .trim() === "T CATEGORY" ||
+                      .toUpperCase()
+                      .replace(/\s{2,}/g, " ")
+                      .trim() === "T CATEGORY" ||
                     digit === "0" ||
                     digit === "1" ||
                     digit === "2" ||
@@ -391,7 +403,9 @@ const PhysicalL3 = () => {
                       SizeState={SizeState}
                       GetSet2TypeData={GetSet2TypeData}
                     />
-                  ) : ""}
+                  ) : (
+                    ""
+                  )}
 
                   {digit === "V" && (
                     <BangleMultiUOMSize
@@ -404,9 +418,9 @@ const PhysicalL3 = () => {
                   {!productsDetails.category ? (
                     ""
                   ) : productsDetails.category
-                    .toUpperCase()
-                    .replace(/\s{2,}/g, " ")
-                    .trim() === "FINGER RING" ||
+                      .toUpperCase()
+                      .replace(/\s{2,}/g, " ")
+                      .trim() === "FINGER RING" ||
                     digit === "L" ||
                     digit === "C" ||
                     digit === "Y" ||
@@ -424,9 +438,9 @@ const PhysicalL3 = () => {
                   {!productsDetails.category ? (
                     ""
                   ) : productsDetails.category
-                    .toUpperCase()
-                    .replace(/\s{2,}/g, " ")
-                    .trim() === "TOE RING" ? (
+                      .toUpperCase()
+                      .replace(/\s{2,}/g, " ")
+                      .trim() === "TOE RING" ? (
                     <ChooseMultiSize
                       optionsList={SizeState}
                       singleProductsDetails={productsDetails}
@@ -437,31 +451,31 @@ const PhysicalL3 = () => {
                   )}
                   {/* <----------------------TABLE DATA--------------------------> */}
                   {digit === "0" ||
-                    digit === "1" ||
-                    digit === "2" ||
-                    digit === "3" ||
-                    digit === "4" ||
-                    digit === "5" ||
-                    digit === "6" ||
-                    digit === "7" ? (
+                  digit === "1" ||
+                  digit === "2" ||
+                  digit === "3" ||
+                  digit === "4" ||
+                  digit === "5" ||
+                  digit === "6" ||
+                  digit === "7" ? (
                     <TableDataDetails singleProductsDetails={productsDetails} />
                   ) : (
                     ""
                   )}
                   {/*<-----------------------INDENT QUANTITY BOX-----------------------------------> */}
                   {digit === "N" ||
-                    digit === "O" ||
-                    digit === "D" ||
-                    productsDetails.category.toUpperCase() === "OTHER" ||
-                    digit === "H" ||
-                    digit === "J" ||
-                    digit === "S" ||
-                    digit === "W" ||
-                    digit === "E" ||
-                    digit === "P" ||
-                    digit === "K" ||
-                    digit === "A" ||
-                    digit === "G" ? (
+                  digit === "O" ||
+                  digit === "D" ||
+                  productsDetails.category.toUpperCase() === "OTHER" ||
+                  digit === "H" ||
+                  digit === "J" ||
+                  digit === "S" ||
+                  digit === "W" ||
+                  digit === "E" ||
+                  digit === "P" ||
+                  digit === "K" ||
+                  digit === "A" ||
+                  digit === "G" ? (
                     <IndentQuantityFiled
                       GetIndentQuantityValue={GetIndentQuantityValue}
                       indentQuantity={indentQuantity}
@@ -474,54 +488,53 @@ const PhysicalL3 = () => {
                   {!productsDetails.category
                     ? ""
                     : productsDetails.category
-                      .toUpperCase()
-                      .replace(/\s{2,}/g, " ")
-                      .trim() === "COUPLE BAND" && (
-                      <div>
-                        <select
-                          className='L3SelectDropdown'
-                          onChange={(e) =>
-                            setCoupleBandValue(e.target.value)
-                          }>
-                          <option value=''>CHOOSE COUPLE TAG</option>
-                          <option value='Single_Tag'>SINGLE TAG</option>
-                          <option value='Separate_Tag'>SEPARATE TAG</option>
-                        </select>
-                        {coupleBandValue === "Single_Tag" && (
-                          <div className='mt-2'>
-                            <ChooseMultiSize
-                              optionsList={SizeState}
+                        .toUpperCase()
+                        .replace(/\s{2,}/g, " ")
+                        .trim() === "COUPLE BAND" && (
+                        <div>
+                          <select
+                            className="L3SelectDropdown"
+                            onChange={(e) => setCoupleBandValue(e.target.value)}
+                          >
+                            <option value="">CHOOSE COUPLE TAG</option>
+                            <option value="Single_Tag">SINGLE TAG</option>
+                            <option value="Separate_Tag">SEPARATE TAG</option>
+                          </select>
+                          {coupleBandValue === "Single_Tag" && (
+                            <div className="mt-2">
+                              <ChooseMultiSize
+                                optionsList={SizeState}
+                                singleProductsDetails={productsDetails}
+                                GetChooseSizeData={GetChooseSizeData}
+                              />
+                            </div>
+                          )}
+                          {coupleBandValue === "Separate_Tag" && (
+                            <div className="my-1">
+                              <span className="text-primary">FOR GENTS</span>
+                              <ChooseMultiSize
+                                optionsList={CoupleGentsSize}
+                                GetChooseSizeData={GetChooseSizeData}
+                              />
+                              <span className="text-primary mt-2">
+                                FOR LADIES
+                              </span>
+                              <ChooseMultiSizeForLadies
+                                optionsList={CoupleLadiesSize}
+                                GetLadiesSizeValue={GetLadiesSizeValue}
+                              />
+                            </div>
+                          )}
+                          {/* <----------------------STONE QUALITY DROPDOWN-----------------------> */}
+                          {stoneDropdown.length > 0 && (
+                            <StoneQualityDropdown
+                              optionsList={stoneDropdown}
+                              GetStoneData={GetStoneData}
                               singleProductsDetails={productsDetails}
-                              GetChooseSizeData={GetChooseSizeData}
                             />
-                          </div>
-                        )}
-                        {coupleBandValue === "Separate_Tag" && (
-                          <div className='my-1'>
-                            <span className='text-primary'>FOR GENTS</span>
-                            <ChooseMultiSize
-                              optionsList={CoupleGentsSize}
-                              GetChooseSizeData={GetChooseSizeData}
-                            />
-                            <span className='text-primary mt-2'>
-                              FOR LADIES
-                            </span>
-                            <ChooseMultiSizeForLadies
-                              optionsList={CoupleLadiesSize}
-                              GetLadiesSizeValue={GetLadiesSizeValue}
-                            />
-                          </div>
-                        )}
-                        {/* <----------------------STONE QUALITY DROPDOWN-----------------------> */}
-                        {stoneDropdown.length > 0 && (
-                          <StoneQualityDropdown
-                            optionsList={stoneDropdown}
-                            GetStoneData={GetStoneData}
-                            singleProductsDetails={productsDetails}
-                          />
-                        )}
-                      </div>
-                    )}
+                          )}
+                        </div>
+                      )}
                 </div>
 
                 {/* <----------------------STONE QUALITY TABLE--------------------------> */}
@@ -529,13 +542,13 @@ const PhysicalL3 = () => {
                   <StoneQualityTable tableRowData={productsDetails} />
                 )}
               </div>
-              <div className='d-flex justify-content-center'>
-                <button className='CButton' onClick={AddProductsToCard}>
+              <div className="d-flex justify-content-center">
+                <button className="CButton" onClick={AddProductsToCard}>
                   {loading ? (
                     <span
-                      className='spinner-border spinner-border-sm'
-                      role='status'
-                      aria-hidden='true'
+                      className="spinner-border spinner-border-sm"
+                      role="status"
+                      aria-hidden="true"
                     />
                   ) : (
                     <span>ADD TO CART</span>

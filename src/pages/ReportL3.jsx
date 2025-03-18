@@ -87,6 +87,7 @@ const ReportL3 = () => {
   const GetCatByReports = (storeCode) => {
     setLoading(true);
     let urlReport;
+    // eslint-disable-next-line default-case
     switch (reportLabel) {
       case "NeedState":
         urlReport = `/NPIML3/npim/summary/report/L3/${storeCode}/NeedState`;

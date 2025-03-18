@@ -16,6 +16,7 @@ import {
   APIGetCollCatListL3,
   APIGetDropdownCategory,
   APIGetDropdownList,
+  APIGetReportL3,
   APIGetStatuL3,
 } from "../HostManager/CommonApiCallL3";
 import { toast } from "react-toastify";
@@ -44,6 +45,9 @@ export const ProductCartL3 = () => {
     sessionStorage.getItem("catVal") || "ALL"
   );
   const [cartDataList, setCartDataList] = useState([]);
+  const [cardStuddData, setCardStuddData] = useState(null);
+  const [cardPlainData, setCardPlainData] = useState(null);
+
   const GetStatusReport = (storeCode) => {
     setLoading(true);
     APIGetStatuL3(`/NPIML3/npim/get/status/L3/${storeCode}`)
@@ -114,6 +118,10 @@ export const ProductCartL3 = () => {
           setCartDataList(response.data.value);
         } else if (response.data.Code === "1001") {
           setCartDataList([]);
+          toast.warn("Data Not Available", {
+            theme: "colored",
+            autoClose: 2000,
+          });
         }
         setLoading(false);
       })
@@ -135,6 +143,42 @@ export const ProductCartL3 = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
+  const GetCardSttudValue = (storeCode) => {
+    APIGetReportL3(
+      `/NPIML3/home/item/summary?storeCode=${storeCode}&reportWise=StuddedValue`
+    )
+      .then((res) => res)
+      .then((response) => {
+        if (response.data.code === "1000") {
+          setCardStuddData(response.data.value);
+        } else {
+          setCardStuddData(null);
+        }
+      })
+      .catch((error) => {});
+  };
+
+  const GetCardPlainValue = (storeCode) => {
+    APIGetReportL3(
+      `/NPIML3/home/item/summary?storeCode=${storeCode}&reportWise=PlainValue`
+    )
+      .then((res) => res)
+      .then((response) => {
+        console.log("response==>", response.data);
+        if (response.data.code === "1000") {
+          setCardPlainData(response.data.value);
+        } else {
+          setCardPlainData(null);
+        }
+      })
+      .catch((error) => {});
+  };
+
+  useEffect(() => {
+    GetCardSttudValue(storeCode);
+    GetCardPlainValue(storeCode);
+  }, [storeCode]);
 
   return (
     <React.Fragment>
@@ -185,6 +229,30 @@ export const ProductCartL3 = () => {
                 </div>
               </div>
             </div>
+            {loginData.role === "L3" && (
+              <div className="d-flex mt-3 w-100">
+                <h6>
+                  <span className="text-primary">▣ </span>
+                  <b style={{ color: "#832729", fontSize: "14px" }}>
+                    STUDDED VALUE (Crs) -{" "}
+                    {cardStuddData
+                      ? parseFloat(cardStuddData.sumTotWeight / 100000).toFixed(
+                          3
+                        )
+                      : 0}
+                  </b>
+                </h6>
+                <h6 className="mx-4">
+                  <span className="text-primary">▣ </span>
+                  <b style={{ color: "#832729", fontSize: "14px" }}>
+                    PLAIN VALUE 4 (Kgs) -{" "}
+                    {cardPlainData
+                      ? parseFloat(cardPlainData.sumTotWeight / 1000).toFixed(3)
+                      : 0}
+                  </b>
+                </h6>
+              </div>
+            )}
             <div className="d-flex">
               {loginData.role === "L3" && (
                 <div

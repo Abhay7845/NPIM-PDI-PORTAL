@@ -85,12 +85,6 @@ const GetPdtLowerHeader = () => {
               <b>Indenting Screen</b>
             </div>
           </div>
-
-          {/* <div className="d-flex mt-4">
-                        <h6><span className="text-primary">▣ </span><b style={{ color: "#832729" }}>STUDDED VALUE(Crs) - {cardStuddData ? parseFloat(cardStuddData.sumTotWeight / 100000).toFixed(3) : 0}</b></h6>
-                        <h6 className="mx-4"><span className="text-primary">▣ </span><b style={{ color: "#832729" }}>PLAIN VALUE (Kgs) - {cardPlainData ? parseFloat(cardPlainData.sumTotWeight / 1000).toFixed(3) : 0}</b></h6>
-                    </div> */}
-
           <div className="d-flex mx-3">
             {loginData.role === "L3" && (
               <div
